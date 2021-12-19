@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Issuetracker specific files
+config.json
+post_imgs/
+settings.py
+# static/
