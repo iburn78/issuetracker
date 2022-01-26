@@ -19,13 +19,33 @@
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#"><small>IssueTracker<i>(beta)</i></small></a>
-      <button id="navbar-toggle-button" class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle">
+      <button id="navbar-toggle-button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarToggle">
+        <div class="navbar-nav me-auto">
+          <a class="nav-item nav-link ms-2" href="">post</a>
+          <a class="nav-item nav-link ms-2" href="">private</a>
+        </div>
+        <!-- Navbar Right Side -->
         <div class="navbar-nav">
-          <a class="nav-item nav-link" href="">post</a>
-          <a class="nav-item nav-link" href="">private</a>
+          <a class="nav-item nav-link ms-2" href="">logout</a>
+          <a class="nav-item nav-link ms-2" href="">login</a>
+          <a class="nav-item nav-link ms-2" href="">register</a>
+          <li class="dropdown">
+            <a class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">more</a>
+            <div class="nav-item dropdown-menu ms-2">
+              <a class="dropdown-item nav-item nav-link ms-2" href="">author list</a>
+              <a class="dropdown-item nav-item nav-link ms-2" href="">tag list</a>
+              <hr class="nav-item dropdown-divider">
+              <a class="dropdown-item nav-item nav-link ms-2" href="">private tag list</a>
+            </div>
+          </li>
+          <li class="nav-link"></li>
+          <form class="d-flex" method="POST" autocomplete="off">
+            {% csrf_token %}
+            <input class="nav-item form-control" name="search_term" type="text" placeholder="search...">
+          </form>
         </div>
       </div>
     </div>
