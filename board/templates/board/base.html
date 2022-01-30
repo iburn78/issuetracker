@@ -1,6 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-100">
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -15,7 +15,7 @@
   <link rel="icon" href="{% static 'board/IssueTracker_Logo.png' %}">
   <title>IssueTracker</title>
 </head>
-<body onload="init()">
+<body class="d-flex flex-column h-100" onload="init()">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#"><small>IssueTracker<i>(beta)</i></small></a>
@@ -50,6 +50,14 @@
       </div>
     </div>
   </nav>
+  <main>
+  {% block content %}{% endblock %}
+  </main>
+  <footer class="footer mt-auto py-2 bg-dark text-light">
+    <div class="container-fluid">
+      <span class=""><a href="{% url 'about' %}" style="text-decoration: none; color: white;">About IssueTracker</a> | issuetree.tracker@gmail.com </span>
+    </div>
+  </footer>
   <script type="text/javascript">
     function init() {
       document.body.addEventListener('click', close, true);
