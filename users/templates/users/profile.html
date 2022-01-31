@@ -7,6 +7,8 @@
 		<div class="media-body">
 			<h4 class="account-heading">{{user.username}}</h4>
 			<p class="text-secondary">{{user.email}}</p>
+			active: {{user.is_active}} <br>
+			approved: {{user.is_approved}}
 		</div>
 	</div>
 	<form method="POST" enctype="multipart/form-data">

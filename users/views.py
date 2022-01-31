@@ -10,7 +10,7 @@ def register(request):
         form = UserRegisterForm(request.POST)
         if form.is_valid():
             user = form.save()
-            user.is_active = False
+            user.is_active = True
             user.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')

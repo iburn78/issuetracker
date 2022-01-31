@@ -34,7 +34,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '52.78.166.22', 'issuetracker.info']
 
-
 # Application definition
 
 INSTALLED_APPS = [
