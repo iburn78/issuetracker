@@ -1,21 +1,21 @@
-{% extends "board/base.html" %}
+{% extends "base.html" %}
 
 {% block content %}
 <div class="container-fluid">
   <div class="row gy-3 mt-1">
     <div class="col-md-6">
       <h3 id="goal-of-the-issuetracker">Goal of the IssueTracker</h3>
-      <p>IssueTracker lets tracking of various issues that we face everyday. The focus is on &quot;I&quot; rather than &quot;others&quot;.</p>
-      <p>As stages of our lives move on, environment/job/interest/network changes, responsibilities/rights/duties change, knowledge/belief/way of thinking changes, and as a result, we come to think of variety of topics in different ways and let them pass through our minds rather than building them up on another.</p>
-      <p>IssueTracker is intended to help memorizing what &quot;the wise I in the past&quot; thought on various topics, help communicating with &quot;the wise I in the past&quot;, and help advancing &quot;the current I&quot; on current issues.</p>
-      <p>At the same time, in IssueTracker, one can also get help from others, be motivated by others, and one can help/motivate others as well. All these can be done in a simple social-networking-design as described below.</p>
+      <p>IssueTracker lets tracking of various issues that we face everyday. The focus is on &quot;I&quot; rather than &quot;others&quot;</p>
+      <p>As stages of our lives move on, environment/job/interest/network changes, responsibilities/rights/duties change, knowledge/belief/way of thinking changes, and as a result, we come to think of variety of topics in different ways and let them pass through our minds rather than building them up on another</p>
+      <p>IssueTracker is intended to help memorizing what &quot;the wise I in the past&quot; thought on various topics, help communicating with &quot;the wise I in the past&quot;, and help advancing &quot;the current I&quot; on current issues</p>
+      <p>At the same time, in IssueTracker, one can also get help from others, be motivated by others, and one can help/motivate others as well. All these can be done in a simple social-networking-design as described below</p>
       <hr />
       <h3 id="issuetracker-key-features">IssueTracker Key Features</h3>
       <ol>
         <li><p>Registration and Log-in required as this is for &quot;I&quot;</p>
           <ul>
             <li>One can use IssueTracker immediately after registration</li>
-            <li>In order for one to &quot;publish&quot; one's own posts, or &quot;track&quot; posts from others, &quot;comment&quot; on the others' posts, and/or to follow others, one should get registration approval from the admin</li>
+            <li>In order for one to &quot;publish&quot; one's own posts, or &quot;import&quot; posts from others, &quot;comment&quot; on the others' posts, and/or to follow others, one should get registration approval from the admin</li>
             <li>It may take up to 1-2 days to get approval from the admin (who only checks if the new user is a bot)</li>
           </ul>
         </li>
@@ -23,20 +23,20 @@
           <ul>
             <li>Cards are like folders as a card include posts</li>
             <li>There are also public cards that are created by the admin</li>
-            <li>One can import public cards for &quot;the one&quot; and publish the one's own posts into the public cards</li>
+            <li>One can link public cards to &quot;his/her own cards&quot; and publish one's own posts into the public cards</li>
           </ul>
         </li>
         <li><p>One can create posts under each card according to the subject of the card</p>
           <ul>
             <li>Post consists of main text, at most 1 image, multiple hash tags</li>
             <li>Title is not required</li>
-            <li>Posts in an imported card can be published and others can comment on them</li>
+            <li>Posts in an linked card can be published and others can comment on them</li>
             <li>Posts in one's own cards can also be published to &quot;for-all-topic public card&quot;</li>
           </ul>
         </li>
-        <li><p>One can track specific posts in public cards.</p>
+        <li><p>One can import specific posts in public cards.</p>
           <ul>
-            <li>Posts will be imported to either imported cards or for-all-topic private card</li>
+            <li>Posts will be imported to either linked cards or for-all-topic private card</li>
           </ul>
         </li>
         <li><p>Search function is provided</p>
@@ -83,7 +83,7 @@
         <li><p>“나”를 위한 공간이므로, Registration 및 Log-in이 필요합니다.</p>
           <ul>
             <li>Registration 시에 IssueTracker를 바로 이용 가능합니다.</li>
-            <li>다만, 나의 글(Post)을 Publish하거나, 남의 글을 Track하거나, 남의 글에 Comment 하거나, 남을 Follow 하기 위해서는 관리자의 Approve가 필요합니다.</li>
+            <li>다만, 나의 글(Post)을 Publish하거나, 남의 글을 Import하거나, 남의 글에 Comment 하거나, 남을 Follow 하기 위해서는 관리자의 Approve가 필요합니다.</li>
             <li>관리자의 Approve는 최대 약 1-2일 소요됩니다. (Bot인지 아닌지만 점검합니다.)</li>
           </ul>
         </li>
@@ -91,20 +91,20 @@
           <ul>
             <li>카드는 폴더와 같습니다. 카드안에 많은 글들이 들어가게 됩니다.</li>
             <li>IssueTracker 관리자는 Public Card를 만들고 관리합니다.</li>
-            <li>“나”는 Public Card와 같은 Card를 만드는 경우(Card Import), 그 안의 Post들을 Publish 할 수 있습니다.</li>
+            <li>“나”는 Public Card와 같은 Card를 만드는 경우(Card Linking), 그 안의 Post들을 Publish 할 수 있습니다.</li>
           </ul>
         </li>
         <li><p>Card의 주제에 맞는 Post를 작성하고 관리할 수 있습니다.</p>
           <ul>
             <li>Post는 본문과, Image (최대1개), Hash Tag로 구성됩니다.</li>
-            <li>제목은 쓰지 않습니다</li>
+            <li>제목은 쓰지 않습니다.</li>
             <li>Imported Card안의 Post들은 Publish가 가능합니다. Publish되면, Public Card안에 Post가 보여지게 되고, 동시에 “남”들이 글에 Comment할 수 있습니다.</li>
             <li>나만의 Card안의 글들은 For-all-topic Public Card로 Publish가 됩니다.</li>
           </ul>
         </li>
-        <li><p>Public Card안의 Post들을 Tracking 가능합니다.</p>
+        <li><p>Public Card안의 Post들을 Import 가능합니다.</p>
           <ul>
-            <li>Public Card안의 Post를 Track할 경우, For-all-topic Private Card 또는 Imported Card로 해당 Post가 보여지게 됩니다.</li>
+            <li>Public Card안의 Post를 IMport할 경우, For-all-topic Private Card 또는 Linked Card로 해당 Post가 보여지게 됩니다.</li>
           </ul>
         </li>
         <li><p>Search기능을 제공합니다.</p>
@@ -123,7 +123,7 @@
         </li>
         <li><p>사용자들간 Follow기능을 추가할 예정입니다.</p>
           <ul>
-            <li>Card별로 Follow하거나, 모든 Card를 Follow하여, Follow하는 사람이 글을 올릴 경우 자동으로 Track되도록 합니다.</li>
+            <li>Card별로 Follow하거나, 모든 Card를 Follow하여, Follow하는 사람이 글을 올릴 경우 자동으로 Import되도록 합니다.</li>
           </ul>
         </li>
         <li><p>다양한 App기능을 추가할 예정입니다. 사용자별로 선택 설치 할 수 있습니다.</p>
@@ -135,7 +135,7 @@
         </li>
       </ol>
       <hr />
-      <p><em>IssueTracker는 현재 Beta버전 입니다</em></p>
+      <p><em>IssueTracker는 현재 Beta버전 입니다.</em></p>
     </div>
   </div>
 </div>
