@@ -1,7 +1,12 @@
+from operator import is_
 from django.db import models
 from django.db.models.fields import related
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser
 from PIL import Image
+
+class User(AbstractUser):
+    is_approved = models.BooleanField(default=False)
+    is_ok = models.BooleanField(default=False)
 
 class Profile(models.Model): 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
