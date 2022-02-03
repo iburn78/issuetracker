@@ -1,21 +1,142 @@
+{% extends "base.html" %}
+
+{% block content %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="IssueTracker - organize your issues">
-  <meta property="og:description" content="track and search issues effectively">
-  <meta property="og:image" content="{% static 'board/thumbnail_issuetracker.jpg' %}">
-  <link rel="stylesheet" href="{% static 'bs5/bootstrap.css' %}">
-  <link rel="stylesheet" href="{% static 'board/style.css' %}">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
-  <script src="{% static 'bs5/bootstrap.js' %}"></script>
-  <link rel="icon" href="{% static 'board/IssueTracker_Logo.png' %}">
-  <title>IssueTracker</title>
-</head>
-<body>
-  Things will come here.
-</body>
-</html>
+<div class="container-fluid">
+  <div class="row gy-3 mt-1">
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p1.jpg" class="card-img-top">
+        <div class="card-body {{ main_color_card1 }}">
+          <h5 class="card-title">Card title {{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p2.jpg" class="card-img-top">
+        <div class="card-body {{ main_color_card2 }}">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p3.jpg" class="card-img-top">
+        <div class="card-body {{ main_color_card3 }}">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p3.jpg" class="card-img-top">
+        <div class="card-body {{ main_color_card3 }}">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+  </div>
+  <div class="row gy-3 mt-1">
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p2.jpg" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p2.jpg" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p1.jpg" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p1.jpg" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img src="media/p3.jpg" class="card-img-top">
+        <div class="card-body">
+          <h5 class="card-title">Card title{{ media_root }}</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+      <div class="card">
+        <img class="card-img-top">
+        <a href="#"><img src="{% static 'board/plus-square-dotted.svg' %}" class="addition"></a>
+        <div class="card-body">
+          <h5 class="card-title">new card</h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
+        </div>
+      </div>
+      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
+    </div>
+  </div>
+</div>
+{% endblock content %}

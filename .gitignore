@@ -131,5 +131,5 @@ dmypy.json
 # Issuetracker specific files
 config.json
 post_imgs/
-settings.py
+# settings.py
 # static/
