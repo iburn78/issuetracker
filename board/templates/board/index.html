@@ -1,142 +1,62 @@
-{% extends "base.html" %}
+{% extends "board/base.html" %}
 
 {% block content %}
 {% load static %}
 <div class="container-fluid">
-  <div class="row gy-3 mt-1">
+  <div class="row gy-2">
+    {% for card in cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p1.jpg" class="card-img-top">
-        <div class="card-body {{ main_color_card1 }}">
-          <h5 class="card-title">Card title {{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
+      <div class="card border-0">
+        {% if card.image %}
+        <img src="{{ card.image.url }}" class="card-img">
+        {% else %}
+        <img src="" class="card-img">
+        {% endif %}
+        <a href="{% url 'card-content' card.id %}" class="card-link">
+        <div class="card-body {{ main_color }}">
+          <h5 class="card-title">{{ card.title }}</h5>
+          <p class="card-text card-text-size">
+            {{ card.desc }}
           </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
         </div>
+        </a>
       </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
     </div>
+    {% endfor %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p2.jpg" class="card-img-top">
-        <div class="card-body {{ main_color_card2 }}">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
+      <div class="card border-0">
+        <img src="" class="card-img bg-blue-100">
+        <a href="{% url 'card-create' %}" class="card-link">
+        <img src="{% static 'board/plus-square-dotted.svg' %}" class="card-img addition">
+        <div class="card-body bg-blue-300 text-white">
+          <h5 class="card-title">New Card</h5>
+          <p class="card-text card-text-size">
           </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
         </div>
+        </a>
       </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p3.jpg" class="card-img-top">
-        <div class="card-body {{ main_color_card3 }}">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p3.jpg" class="card-img-top">
-        <div class="card-body {{ main_color_card3 }}">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-  </div>
-  <div class="row gy-3 mt-1">
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p2.jpg" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p2.jpg" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p1.jpg" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p1.jpg" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img src="media/p3.jpg" class="card-img-top">
-        <div class="card-body">
-          <h5 class="card-title">Card title{{ media_root }}</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
-    </div>
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card">
-        <img class="card-img-top">
-        <a href="#"><img src="{% static 'board/plus-square-dotted.svg' %}" class="addition"></a>
-        <div class="card-body">
-          <h5 class="card-title">new card</h5>
-          <p class="card-text">
-            Some quick example text to build on the card title and make up the bulk of the card's content.
-          </p>
-          <a href="#" class="btn btn-primary cardcolor_b1">Go somewhere</a>
-        </div>
-      </div>
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo, architecto.
     </div>
   </div>
 </div>
+
+<div class="container-fluid">
+  {% if is_paginated %}
+  {% if page_obj.has_previous %}
+  <a class="btn btn-outline-info mb-4" href="?page=1">first</a>
+  {% endif %}
+  
+  {% for num in page_obj.paginator.page_range %}
+  {% if page_obj.number == num %}
+  <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
+  {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+  <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
+  {% endif %}
+  {% endfor %}
+  
+  {% if page_obj.has_next %}
+  <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">last</a>
+  {% endif %}
+  {% endif %}
+</div>
+
 {% endblock content %}

@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from django.urls import reverse
 from taggit.managers import TaggableManager
 from users.models import User
 
@@ -18,7 +19,8 @@ class Card(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=70)
-    image = models.ImageField(upload_to='post_imgs', blank=True)
+    desc = models.TextField()
+    image = models.ImageField(upload_to='uploaded_imgs', blank=True)
     card_color = models.CharField(max_length=30, default=DEFAULT_CARD_COLOR)
     is_public = models.BooleanField(default=False)
     linked_card = models.CharField(max_length=10) # for id of a public card / can link only one card
@@ -30,13 +32,15 @@ class Card(models.Model):
     def __str__(self):
         return self.title
 
+    def get_absolute_url(self):
+        return reverse('main')
 
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
     content = models.TextField()
-    image = models.ImageField(upload_to='post_imgs', blank=True)
+    image = models.ImageField(upload_to='uploaded_imgs', blank=True)
     tags = TaggableManager(blank=True)
     is_published  = models.BooleanField(default=False)
     imported_authors = [] # to include objects of User
@@ -55,3 +59,5 @@ class Post(models.Model):
         # abstract = True
         None
 
+    def get_absolute_url(self):
+        return reverse('main')

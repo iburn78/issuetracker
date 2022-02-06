@@ -1,0 +1,15 @@
+{% extends "board/base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="container {{ main_color }}">
+  <form method="POST" enctype="multipart/form-data" autocomplete="off">
+    {% csrf_token %}
+    <fieldset>
+      <legend class="border-bottom mb-4">Create a card</legend>
+      {{ form | crispy }}
+      <button class="btn btn-outline-info mb-2" type="submit">Post</button>
+    </fieldset>
+  </form>
+</div>
+{% endblock content %}
+
