@@ -40,7 +40,9 @@ class Post(models.Model):
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
     content = models.TextField()
-    image = models.ImageField(upload_to='uploaded_imgs', blank=True)
+    image1 = models.ImageField(upload_to='uploaded_imgs', blank=True)
+    image2 = models.ImageField(upload_to='uploaded_imgs', blank=True)
+    image3 = models.ImageField(upload_to='uploaded_imgs', blank=True)
     tags = TaggableManager(blank=True)
     is_published  = models.BooleanField(default=False)
     imported_authors = [] # to include objects of User

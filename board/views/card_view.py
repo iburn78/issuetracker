@@ -36,9 +36,7 @@ class CardCreateView(CreateView):
 class CardListView(ListView):
     model = Card
     template_name = 'board/index.html'
-    context_object_name = 'cards'   # context['cards'] = Card.objects.all() 
-    # however, assigning context directly does not work with pagination
-    paginate_by = 12
+    context_object_name = 'cards'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,8 +55,11 @@ class CardContentListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['card_id'] = self.kwargs.get('pk')
         context['main_color'] = 'bg-yellow-100'
         return context
 
     def get_queryset(self):
-        return super().get_queryset().order_by('-date_posted')
+        model_objects= super().get_queryset()
+        queryset = model_objects.filter(author = self.request.user).filter(card__id = self.kwargs.get('card_id'))
+        return queryset.order_by('-date_posted')

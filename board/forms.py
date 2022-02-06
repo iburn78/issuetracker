@@ -9,4 +9,4 @@ class CardForm(forms.ModelForm):
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ['content', 'image', 'tags', 'is_published']
+        fields = ['content', 'image1', 'image2', 'image3', 'tags', 'is_published']

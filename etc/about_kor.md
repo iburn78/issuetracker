@@ -1,3 +1,4 @@
+(this is outdated)
 ### IssueTracker 지향점
 
 IssueTracker는 다양한 내 삶의 Issue들을 Tracking하는 공간입니다. “남"보다는 "나"에게 초점이 맞추어져 있습니다.
