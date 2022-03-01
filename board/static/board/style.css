@@ -826,6 +826,11 @@
   border-radius: 4px;
 }
 
+.card-create-container-style {
+  max-width: 600px;
+  background-color: #e9ecef;
+}
+
 .card .card-img {
   height: 270px;
   width: auto;
@@ -856,6 +861,11 @@
   font-size: 1em;
   line-height: 1.125;
   height: 2.25em;
+}
+
+.modal .color-element {
+  height: 1.5em;
+  margin: 0.1em;
 }
 
 .article-title {
@@ -909,7 +919,7 @@ a.article-title:hover {
   height: 6em;
 }
 
-#divider_bar {
+#divider-bar {
   margin-top: 2px;
   margin-bottom: 2px;
   width: 100%;

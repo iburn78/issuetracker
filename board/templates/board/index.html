@@ -22,7 +22,7 @@
         <img src="" class="card-img">
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
-          <div class="card-body {{ main_color }}">
+          <div class="card-body {{ card.card_color }} text-light">
             <h5 class="card-title">{{ card.title }}</h5>
             <p class="card-text card-text-size">
               {{ card.desc }}

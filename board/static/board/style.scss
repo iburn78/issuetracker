@@ -143,6 +143,11 @@ xxl: 2000px
   border-radius: 4px;
 }
 
+.card-create-container-style {
+  max-width: 600px;
+  background-color: $gray-200;
+}
+
 .card .card-img{
   height: 270px;
   width: auto;
@@ -172,6 +177,11 @@ xxl: 2000px
   font-size: 1em;
   line-height: 1.125;
   height: 2.25em;
+}
+
+.modal .color-element{
+  height: 1.5em;
+  margin: 0.1em;
 }
 
 .article-title {

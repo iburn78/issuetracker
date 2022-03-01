@@ -4,8 +4,6 @@ from django.urls import reverse
 from taggit.managers import TaggableManager
 from users.models import User
 
-DEFAULT_CARD_COLOR = 'bg-primary'
-
 # Important concepts: 
 # - public card / public posts (vs private, by default)
 # - approved user to use key features
@@ -19,11 +17,11 @@ class Card(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=70)
-    desc = models.TextField()
+    desc = models.TextField(blank=True)
     image = models.ImageField(upload_to='uploaded_imgs', blank=True)
-    card_color = models.CharField(max_length=30, default=DEFAULT_CARD_COLOR)
+    card_color = models.CharField(max_length=30, default='rgb(233, 236, 239)') # gray-200
     is_public = models.BooleanField(default=False)
-    linked_card = models.CharField(max_length=10) # for id of a public card / can link only one card
+    linked_card = models.CharField(max_length=10, blank=True) # for id of a public card / can link only one card
 
     # Rules
     # only admin users can make a card public 

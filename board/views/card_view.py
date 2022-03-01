@@ -28,7 +28,7 @@ class CardCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['main_color'] = 'bg-red-100'
+        context['main_color'] = 'bg-yellow-100'
         # messages.warning(self.request, "First Message")
         # messages.info(self.request, "Second Message")
         return context
@@ -40,7 +40,7 @@ class CardListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['main_color'] = 'bg-red-100'
+        context['main_color'] = 'bg-red-300'
         return context
 
     def get_queryset(self):
