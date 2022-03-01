@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import (
     ListView,
     CreateView,
@@ -8,13 +8,14 @@ from django.views.generic import (
 )
 from board.models import Card, Post
 from board.forms import CardForm
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # from django.contrib import messages
 
 # Create your views here.
 def about(request):
     return render(request, 'board/about.html')
 
-class CardCreateView(CreateView):
+class CardCreateView(LoginRequiredMixin, CreateView):
     model = Card
     form_class = CardForm
     template_name = 'board/card_create.html'
@@ -28,7 +29,6 @@ class CardCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['main_color'] = 'bg-yellow-100'
         # messages.warning(self.request, "First Message")
         # messages.info(self.request, "Second Message")
         return context
@@ -40,14 +40,13 @@ class CardListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['main_color'] = 'bg-red-300'
         return context
 
     def get_queryset(self):
         return super().get_queryset().order_by('-date_created')
 
 
-class CardContentListView(ListView):
+class CardContentListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Post
     template_name = 'board/card_content.html'
     context_object_name = 'posts'   
@@ -56,10 +55,14 @@ class CardContentListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['card_id'] = self.kwargs.get('pk')
-        context['main_color'] = 'bg-yellow-100'
         return context
 
     def get_queryset(self):
         model_objects= super().get_queryset()
         queryset = model_objects.filter(author = self.request.user).filter(card__id = self.kwargs.get('card_id'))
         return queryset.order_by('-date_posted')
+
+    def test_func(self):
+        if self.request.user == get_object_or_404(Card, id=self.kwargs.get('card_id')).author:
+            return True
+        return False
