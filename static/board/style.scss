@@ -1,0 +1,249 @@
+@import "../../../etc/scss/functions";
+
+$grid-breakpoints: (
+xs: 0,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px,
+xxl: 2000px
+);
+
+@import "../../../etc/scss/variables";
+
+@each $key, $value in $blues {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $purples {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $indigos {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $pinks {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $reds {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $oranges {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $yellows {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $greens {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $teals {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $cyans {
+  .bg-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-#{$key}{
+    color: $value !important;
+  }
+}
+
+@each $key, $value in $grays {
+  .bg-gray-#{$key}{
+    background-color: $value !important;
+  }
+  
+  .text-gray-#{$key}{
+    color: $value !important;
+  }
+}
+
+.card {
+  position: relative;
+  animation: card_load 0.3s ease-out;
+}
+
+@keyframes card_load {
+  from {
+    top: -10px;
+    right: -10px;
+    opacity: 0;
+  }
+  to {
+    top: 0;
+    right: 0;
+    opacity: 1;
+  }
+}
+
+.card-body {
+  border-radius: 4px;
+}
+
+.card-create-container-style {
+  max-width: 600px;
+  background-color: $gray-200;
+}
+
+.card .card-img{
+  height: 270px;
+  width: auto;
+  object-fit: cover;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 4px;
+  background-color: $gray-100;
+}
+
+.card .card-img.addition{
+  position: absolute;
+  height: 70px;
+  width: 70px;
+  left: calc(50% - 35px);
+  top: 100px;
+  z-index: 1;
+  background-color: transparent;
+}
+
+.card-text-size{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1em;
+  line-height: 1.125;
+  height: 2.25em;
+}
+
+.modal .color-element{
+  height: 1.5em;
+  margin: 0.1em;
+}
+
+.article-title {
+  color: #444444;
+}
+
+a {
+  text-decoration: none;
+}
+
+a.article-title:hover {
+  color: #428bca;
+}
+
+.article-content {
+  white-space: pre-line;
+}
+
+.article-img {
+  height: 45px;
+  width: 45px;
+  margin-right: 10px;
+}
+
+.article-metadata {
+  padding-bottom: 2px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid $blue-200; 
+}
+
+.article-metadata a:hover {
+  color: #333;
+}
+
+.post-list-image {
+  object-fit: cover;
+  width: 100%;
+  height: 370px;
+  overflow: hidden;
+}
+
+.post-list-content-size{
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 1em;
+  line-height: 1.2;
+  height: 6em;
+}
+
+#divider-bar {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  width:100%;
+  height:4px;
+  background-color:$blue-200;
+}
+
+main::after {
+  display: block;
+  content: '';
+  height: 10px;
+}
