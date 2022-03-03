@@ -130,6 +130,6 @@ dmypy.json
 
 # Issuetracker specific files
 config.json
-post_imgs/
+uploaded_imgs/
 # settings.py
 # static/

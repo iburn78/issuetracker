@@ -1,0 +1,69 @@
+{% extends "board/base.html" %}
+{% block content %}
+{% load crispy_forms_tags %}
+<div id="card-create-container" class="container card-create-container-style">
+  <form method="POST" enctype="multipart/form-data" autocomplete="off">
+    {% csrf_token %}
+    <fieldset>
+      <legend class="border-bottom mb-4">Create a card</legend>
+      <div>
+        Title* {{ form.title }}
+        Desc {{ form.desc }}
+        {{ form.card_color.as_hidden }}
+        <div class="my-2">
+          Image {{ form.image }}
+        </div>
+        <div class="my-2">
+          <button type="button" class="btn btn-outline-light bg-blue-300 btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
+            Card color
+          </button>
+          <button class="btn btn-outline-light bg-blue-500 btn-sm mb-2 float-end" type="submit">Create card</button>
+          <div id="card-color"></div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="colorModal" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header">
+                choose a color:
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+              </div>
+              <div class="modal-body">
+                <div class="container">
+                  <div class="row">
+                    <div class="col color-element bg-blue-100"></div>
+                    <div class="col color-element bg-yellow-100"></div>
+                    <div class="col color-element bg-red-100"></div>
+                    <div class="col color-element bg-orange-100"></div>
+                    <div class="col color-element bg-green-100"></div>
+                    <div class="col color-element bg-gray-200"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col color-element bg-blue-300"></div>
+                    <div class="col color-element bg-yellow-300"></div>
+                    <div class="col color-element bg-red-300"></div>
+                    <div class="col color-element bg-orange-300"></div>
+                    <div class="col color-element bg-green-300"></div>
+                    <div class="col color-element bg-gray-400"></div>
+                  </div>
+                  <div class="row">
+                    <div class="col color-element bg-blue-500"></div>
+                    <div class="col color-element bg-yellow-500"></div>
+                    <div class="col color-element bg-red-500"></div>
+                    <div class="col color-element bg-orange-500"></div>
+                    <div class="col color-element bg-green-500"></div>
+                    <div class="col color-element bg-gray-600"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+    
+    
+  </form>
+</div>
+{% endblock content %}
+

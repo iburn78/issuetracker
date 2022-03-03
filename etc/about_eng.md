@@ -1,3 +1,4 @@
+(this is outdated)
 ### Goal of the IssueTracker 
 
 IssueTracker lets tracking of various issues that we face everyday. The focus is on "I" rather than "others".
