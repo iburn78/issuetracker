@@ -12,8 +12,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # from django.contrib import messages
 
 # Create your views here.
+
+
 def about(request):
     return render(request, 'board/about.html')
+
 
 class CardCreateView(LoginRequiredMixin, CreateView):
     model = Card
@@ -33,6 +36,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         # messages.info(self.request, "Second Message")
         return context
 
+
 class CardListView(ListView):
     model = Card
     template_name = 'board/index.html'
@@ -43,13 +47,16 @@ class CardListView(ListView):
         return context
 
     def get_queryset(self):
-        return super().get_queryset().order_by('-date_created')
+        if self.request.user.is_authenticated:
+            return super().get_queryset().filter(author=self.request.user).order_by('-date_created')
+        else:
+            return Card.objects.none()
 
 
 class CardContentListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
     model = Post
     template_name = 'board/card_content.html'
-    context_object_name = 'posts'   
+    context_object_name = 'posts'
     paginate_by = 12
 
     def get_context_data(self, **kwargs):
@@ -58,8 +65,9 @@ class CardContentListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
         return context
 
     def get_queryset(self):
-        model_objects= super().get_queryset()
-        queryset = model_objects.filter(author = self.request.user).filter(card__id = self.kwargs.get('card_id'))
+        model_objects = super().get_queryset()
+        queryset = model_objects.filter(author=self.request.user).filter(
+            card__id=self.kwargs.get('card_id'))
         return queryset.order_by('-date_posted')
 
     def test_func(self):
