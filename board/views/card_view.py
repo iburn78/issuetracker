@@ -12,8 +12,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 
 # Create your views here.
+
+
 def about(request):
     return render(request, 'board/about.html')
+
 
 class CardCreateView(LoginRequiredMixin, CreateView):
     model = Card
@@ -47,15 +50,21 @@ class CardListView(ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
+<<<<<<< HEAD
             return super().get_queryset().filter(author = self.request.user).order_by('-date_created')
         else:
             return None
+=======
+            return super().get_queryset().filter(author=self.request.user).order_by('-date_created')
+        else:
+            return Card.objects.none()
+>>>>>>> a87610dc9e3606de290e0c7bed6e1bda1fa2bb2b
 
 
 class CardContentListView(ListView):
     model = Post
     template_name = 'board/card_content.html'
-    context_object_name = 'posts'   
+    context_object_name = 'posts'
     paginate_by = 12
 
     def get_context_data(self, **kwargs):
@@ -64,6 +73,7 @@ class CardContentListView(ListView):
         return context
 
     def get_queryset(self):
+<<<<<<< HEAD
         model_objects= super().get_queryset()
         if self.request.user.is_authenticated:
             Not public:
@@ -83,3 +93,14 @@ if self.request.user == get_object_or_404(Card, id=self.kwargs.get('card_id')).a
         else: 
 
         return queryset.order_by('-date_posted')
+=======
+        model_objects = super().get_queryset()
+        queryset = model_objects.filter(author=self.request.user).filter(
+            card__id=self.kwargs.get('card_id'))
+        return queryset.order_by('-date_posted')
+
+    def test_func(self):
+        if self.request.user == get_object_or_404(Card, id=self.kwargs.get('card_id')).author:
+            return True
+        return False
+>>>>>>> a87610dc9e3606de290e0c7bed6e1bda1fa2bb2b
