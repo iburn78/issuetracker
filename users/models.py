@@ -4,7 +4,7 @@ from PIL import Image
 
 class User(AbstractUser):
     is_approved = models.BooleanField(default=False)
-    is_ok = models.BooleanField(default=False)
+    is_public_card_manager = models.BooleanField(default=False)
 
 class Profile(models.Model): 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

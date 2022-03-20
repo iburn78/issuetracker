@@ -9,7 +9,7 @@ from django.views.generic import (
 from board.models import Card, Post
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-# from django.contrib import messages
+from django.contrib import messages
 
 # Create your views here.
 def about(request):
@@ -22,6 +22,8 @@ class CardCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        if self.request.user.is_public_card_manager:
+            form.instance.is_public = True
         new_card = form.save(commit=False)
         new_card.save()
         form.save_m2m()
@@ -29,9 +31,8 @@ class CardCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # messages.warning(self.request, "First Message")
-        # messages.info(self.request, "Second Message")
         return context
+
 
 class CardListView(ListView):
     model = Card
@@ -40,13 +41,18 @@ class CardListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        public_cards = Card.objects.filter(is_public=True).order_by('-date_created')
+        context['public_cards'] = public_cards
         return context
 
     def get_queryset(self):
-        return super().get_queryset().order_by('-date_created')
+        if self.request.user.is_authenticated:
+            return super().get_queryset().filter(author = self.request.user).order_by('-date_created')
+        else:
+            return None
 
 
-class CardContentListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
+class CardContentListView(ListView):
     model = Post
     template_name = 'board/card_content.html'
     context_object_name = 'posts'   
@@ -59,10 +65,21 @@ class CardContentListView(LoginRequiredMixin, UserPassesTestMixin, ListView):
 
     def get_queryset(self):
         model_objects= super().get_queryset()
-        queryset = model_objects.filter(author = self.request.user).filter(card__id = self.kwargs.get('card_id'))
-        return queryset.order_by('-date_posted')
+        if self.request.user.is_authenticated:
+            Not public:
 
-    def test_func(self):
-        if self.request.user == get_object_or_404(Card, id=self.kwargs.get('card_id')).author:
-            return True
-        return False
+Logged in 
+-	My card: my post filter -> show
+-	Not my card: 404
+
+Not logged-in: redirect to login
+
+Public:
+	Filter the post under the card and show -> later, more authentication might be required
+if self.request.user == get_object_or_404(Card, id=self.kwargs.get('card_id')).author:
+
+        if self.request.user.is_authenticated:
+            queryset = model_objects.filter(author = self.request.user).filter(card__id = self.kwargs.get('card_id'))
+        else: 
+
+        return queryset.order_by('-date_posted')

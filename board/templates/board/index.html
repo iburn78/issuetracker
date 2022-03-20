@@ -4,26 +4,19 @@
 {% load static %}
 {% if user.is_authenticated %}
 <div class="container-fluid">
+  your own cards:
   <div class="row gy-3">
     {% for card in cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
       <div class="card border-0">
         {% if card.image %}
         <img src="{{ card.image.url }}" class="card-img">
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
         {% else %}
         <img src="" class="card-img">
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
-            <h5 class="card-title">{{ card.title }}</h5>
+            <h5 class="card-title card-title-size">{{ card.title }}</h5>
             <p class="card-text card-text-size">
               {{ card.desc }}
             </p>
@@ -38,7 +31,7 @@
         <a href="{% url 'card-create' %}" class="card-link">
           <img src="{% static 'board/plus-square-dotted.svg' %}" class="card-img addition">
           <div class="card-body bg-blue-300 text-white">
-            <h5 class="card-title">New Card</h5>
+            <h5 class="card-title card-title-size">New Card</h5>
             <p class="card-text card-text-size">
             </p>
           </div>
@@ -47,12 +40,20 @@
     </div>
   </div>
 </div>
+{% else %}
+<div class="container-fluid">
+  <div class="alert alert-primary" role="alert">
+    IssueTracker is best to use when you logged in.
+  </div>
+</div>
 {% endif %}
 
-{% if public_cards != None %}
+{% if user.is_authenticated %}
 <div id="divider-bar"></div>
 {% endif %}
+
 <div class="container-fluid">
+  pubilc cards:
   <div class="row gy-3">
     {% for card in public_cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
@@ -61,18 +62,10 @@
         <img src="{{ card.image.url }}" class="card-img">
         {% else %}
         <img src="" class="card-img">
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
-        <!--  -->
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
-          <div class="card-body">
-            <h5 class="card-title">{{ card.title }}</h5>
+          <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+            <h5 class="card-title card-title-size">{{ card.title }}</h5>
             <p class="card-text card-text-size">
               {{ card.desc }}
             </p>

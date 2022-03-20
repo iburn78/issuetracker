@@ -1,24 +1,26 @@
 {% extends "board/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="content-section">
-	<form method="POST" autocomplete='off'>
-		{% csrf_token %}
-		<fieldset class ="form-group">
-			<legend class="border-bottom mb-4">log in</legend>
-			{{ form | crispy }}
-		</fieldset>
-		<div class="from-group">
-			<button class="btn btn-outline-info mb-2" type="submit">login</button>
-			<small class="text-muted ms-2">
-				<a href="{% url 'password_reset' %}">forgot password?</a>
+<div class="container-fluid">
+	<div class="content-section">
+		<form method="POST" autocomplete='off'>
+			{% csrf_token %}
+			<fieldset class ="form-group">
+				<legend class="border-bottom mb-4">log in</legend>
+				{{ form | crispy }}
+			</fieldset>
+			<div class="from-group">
+				<button class="btn btn-outline-info mb-2" type="submit">login</button>
+				<small class="text-muted ms-2">
+					<a href="{% url 'password_reset' %}">forgot password?</a>
+				</small>
+			</div>
+		</form>
+		<div class="border-top pt-3">
+			<small class="text-muted">
+				need an account? <a class="ms-2" href="{% url 'register' %}">sign up now</a>
 			</small>
 		</div>
-	</form>
-	<div class="border-top pt-3">
-		<small class="text-muted">
-			need an account? <a class="ms-2" href="{% url 'register' %}">sign up now</a>
-		</small>
 	</div>
 </div>
 {% endblock content %}

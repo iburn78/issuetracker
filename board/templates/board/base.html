@@ -52,13 +52,15 @@
     </div>
   </nav>
   <main role="main" class="my-2">
-    {% if messages %}
-    {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
-      {{ message }}
+    <div class="container-fluid">
+      {% if messages %}
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags }}">
+        {{ message }}
+      </div>
+      {% endfor %}
+      {% endif %} 
     </div>
-    {% endfor %}
-    {% endif %} 
     {% block content %}{% endblock %}
   </main>
   <footer class="footer mt-auto py-2 bg-blue-800 text-light">

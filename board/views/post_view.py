@@ -8,6 +8,7 @@ from django.views.generic import (
 )
 from board.models import Card, Post
 from board.forms import PostForm
+from django.contrib import messages
 
 class PostCreateView(CreateView):
     model = Post
@@ -24,7 +25,6 @@ class PostCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['main_color'] = 'bg-red-100'
         return context
 
 class PostDetailView(DetailView):
@@ -33,5 +33,4 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['main_color'] = 'bg-red-100'
         return context

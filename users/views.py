@@ -14,8 +14,6 @@ def register(request):
             user.save()
             username = form.cleaned_data.get('username')
             messages.success(request, f'Account created for {username}!')
-            messages.success(request, f'Your account will be fully activated once the admin approves. Thank you.')
-
             send_mail(
                 f'New User ({username}) to issuetracker.info has been added.',
                 f'''{username} is registred at {datetime.datetime.now()}''',
@@ -23,7 +21,6 @@ def register(request):
                 ['issuetree.tracker@gmail.com'],
                 fail_silently=False,
             )
-
             return redirect('login')
     else:
         form = UserRegisterForm()
