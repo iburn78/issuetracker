@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import (
     ListView,
     CreateView,
@@ -10,6 +10,7 @@ from board.models import Card, Post
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
+from django.http import Http404
 
 # Create your views here.
 
@@ -68,21 +69,20 @@ class CardContentListView(ListView):
 
     def get_queryset(self):
         model_objects= super().get_queryset()
-        if self.request.user.is_authenticated:
-            Not public:
+        selected_card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
+        if selected_card.is_public:
+            return model_objects.filter(author = self.request.user).filter(card__id = selected_card.id)
+        else:
+            if self.request.user.is_authenticated:
+                if self.request.user == selected_card.author:
+                    return model_objects.filter(author = self.request.user).filter(card__id = selected_card.id)
+                else:
+                    raise Http404("Page not found")
+            else:
+                return redirect('login')
 
-Logged in 
--	My card: my post filter -> show
--	Not my card: 404
 
-Not logged-in: redirect to login
 
-Public:
-	Filter the post under the card and show -> later, more authentication might be required
-if self.request.user == get_object_or_404(Card, id=self.kwargs.get('card_id')).author:
 
-        if self.request.user.is_authenticated:
-            queryset = model_objects.filter(author = self.request.user).filter(card__id = self.kwargs.get('card_id'))
-        else: 
 
-        return queryset.order_by('-date_posted')
+
