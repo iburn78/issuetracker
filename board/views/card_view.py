@@ -45,15 +45,16 @@ class CardListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        public_cards = Card.objects.filter(is_public=True).order_by('-date_created')
+        public_cards = Card.objects.filter(
+            is_public=True).order_by('-date_created')
         context['public_cards'] = public_cards
         return context
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return super().get_queryset().filter(author = self.request.user).order_by('-date_created')
+            return super().get_queryset().filter(author=self.request.user).order_by('-date_created')
         else:
-            return None
+            return super().get_queryset().none()
 
 
 class CardContentListView(ListView):
@@ -62,27 +63,23 @@ class CardContentListView(ListView):
     context_object_name = 'posts'
     paginate_by = 12
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['card_id'] = self.kwargs.get('pk')
-        return context
+    def get(self, request, *args, **kwargs):
+        selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
+        if selected_card.is_public or self.request.user.is_authenticated:
+            return super().get(request, *args, **kwargs)
+        else:
+            return redirect('login')
 
     def get_queryset(self):
-        model_objects= super().get_queryset()
+        model_objects = super().get_queryset()
         selected_card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         if selected_card.is_public:
-            return model_objects.filter(author = self.request.user).filter(card__id = selected_card.id)
+            return model_objects.filter(card__id=selected_card.id).order_by('-date_posted')
         else:
             if self.request.user.is_authenticated:
                 if self.request.user == selected_card.author:
-                    return model_objects.filter(author = self.request.user).filter(card__id = selected_card.id)
+                    return model_objects.filter(author=self.request.user).filter(card__id=selected_card.id).order_by('-date_posted')
                 else:
                     raise Http404("Page not found")
             else:
-                return redirect('login')
-
-
-
-
-
-
+                return super().get_queryset().none()
