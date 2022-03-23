@@ -127,8 +127,14 @@ $grid-breakpoints: (
 }
 
 body {
-  font-family: "Bebas Neue", cursive;
+  font-family: "Open Sans", sans-serif;
   color: $gray-900;
+}
+
+.emphasis_font {
+  font-family: "Anton", sans-serif;
+  color: black;
+  margin: 0;
 }
 
 @keyframes card_load {
