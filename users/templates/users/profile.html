@@ -1,29 +1,29 @@
 {% extends "board/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
-<div class="container-fluid">
-	<div class="content-section">
-		<div class="media">
-			<img class="rounded account-img" src="{{user.profile.image.url}}">
+<div class="container-sm">
+	<div class="row">
+		<div class="col-4">
+			<img class="rounded" src="{{user.profile.image.url}}" width="100%">
+		</div>	
+		<div class="col-8">
 			<div class="media-body">
+				<legend class="border-bottom mb-4">Profile Info</legend>
 				<h4 class="account-heading">{{user.username}}</h4>
 				<p class="text-secondary">{{user.email}}</p>
-				active: {{user.is_active}} <br>
-				approved: {{user.is_approved}}
+				<form method="POST" enctype="multipart/form-data">
+					{% csrf_token %}
+					<fieldset class ="form-group">
+						{{ u_form | crispy }}
+						{{ p_form | crispy }}
+					</fieldset>
+				</form>
 			</div>
 		</div>
-		<form method="POST" enctype="multipart/form-data">
-			{% csrf_token %}
-			<fieldset class ="form-group">
-				<legend class="border-bottom mb-4">Profile Info</legend>
-				{{ u_form | crispy }}
-				{{ p_form | crispy }}
-			</fieldset>
-			<div class="from-group">
-				<button class="btn btn-outline-info" type="submit">Update</button>
-				<a class="btn btn-outline-secondary" href="{% url 'password_reset' %}">Reset Password</a>
-			</div>
-		</form>
+	</div>
+	<div class="from-group">
+		<button class="btn btn-outline-info" type="submit">Update</button>
+		<a class="btn btn-outline-secondary" href="{% url 'password_reset' %}">Reset Password</a>
 	</div>
 </div>
 {% endblock content %}

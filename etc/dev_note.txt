@@ -1,0 +1,2 @@
+in profile page, fix update button
+in profile page, implement email validation

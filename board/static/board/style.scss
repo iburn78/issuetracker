@@ -1,122 +1,122 @@
 @import "../../../etc/scss/functions";
 
 $grid-breakpoints: (
-xs: 0,
-sm: 576px,
-md: 768px,
-lg: 992px,
-xl: 1200px,
-xxl: 2000px
+  xs: 0,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px,
+  xxl: 2000px,
 );
 
 @import "../../../etc/scss/variables";
 
 @each $key, $value in $blues {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $purples {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $indigos {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $pinks {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $reds {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $oranges {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $yellows {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $greens {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $teals {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $cyans {
-  .bg-#{$key}{
+  .bg-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-#{$key}{
+
+  .text-#{$key} {
     color: $value !important;
   }
 }
 
 @each $key, $value in $grays {
-  .bg-gray-#{$key}{
+  .bg-gray-#{$key} {
     background-color: $value !important;
   }
-  
-  .text-gray-#{$key}{
+
+  .text-gray-#{$key} {
     color: $value !important;
   }
 }
@@ -124,6 +124,17 @@ xxl: 2000px
 .card {
   position: relative;
   animation: card_load 0.3s ease-out;
+}
+
+body {
+  font-family: "Open Sans", sans-serif;
+  color: $gray-900;
+}
+
+.emphasis_font {
+  font-family: "Anton", sans-serif;
+  color: black;
+  margin: 0;
 }
 
 @keyframes card_load {
@@ -148,7 +159,7 @@ xxl: 2000px
   background-color: $gray-200;
 }
 
-.card .card-img{
+.card .card-img {
   height: 270px;
   width: auto;
   object-fit: cover;
@@ -158,7 +169,7 @@ xxl: 2000px
   background-color: $gray-100;
 }
 
-.card .card-img.addition{
+.card .card-img.addition {
   position: absolute;
   height: 70px;
   width: 70px;
@@ -168,7 +179,7 @@ xxl: 2000px
   background-color: transparent;
 }
 
-.card-text-size{
+.card-text-size {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
@@ -179,7 +190,7 @@ xxl: 2000px
   height: 2.25em;
 }
 
-.card-title-size{
+.card-title-size {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
@@ -190,7 +201,7 @@ xxl: 2000px
   height: 1.3em;
 }
 
-.modal .color-element{
+.modal .color-element {
   height: 1.5em;
   margin: 0.1em;
 }
@@ -220,7 +231,7 @@ a.article-title:hover {
 .article-metadata {
   padding-bottom: 2px;
   margin-bottom: 4px;
-  border-bottom: 1px solid $blue-200; 
+  border-bottom: 1px solid $blue-200;
 }
 
 .article-metadata a:hover {
@@ -234,7 +245,7 @@ a.article-title:hover {
   overflow: hidden;
 }
 
-.post-list-content-size{
+.post-list-content-size {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 5;
@@ -248,13 +259,13 @@ a.article-title:hover {
 #divider-bar {
   margin-top: 5px;
   margin-bottom: 5px;
-  width:100%;
-  height:2.5px;
-  background-color:$blue-100;
+  width: 100%;
+  height: 2.5px;
+  background-color: $blue-100;
 }
 
 main::after {
   display: block;
-  content: '';
+  content: "";
   height: 10px;
 }

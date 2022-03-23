@@ -8,6 +8,9 @@
   <meta property="og:title" content="IssueTracker - organize your issues">
   <meta property="og:description" content="track and search issues effectively">
   <meta property="og:image" content="{% static 'board/thumbnail_issuetracker.jpg' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Open+Sans&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'bs5/bootstrap.css' %}">
   <link rel="stylesheet" href="{% static 'board/style.css' %}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
@@ -18,7 +21,7 @@
 <body class="d-flex flex-column h-100" onload="init()">
   <nav class="navbar navbar-expand-lg navbar-light bg-blue-200">
     <div class="container-fluid">
-      <a class="navbar-brand" href="/"><small>IssueTracker<i>(beta)</i></small></a>
+      <a class="navbar-brand" href="/"><small><b>IssueTracker</b><i>(beta)</i></small></a>
       <button id="navbar-toggle-button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
         <span class="navbar-toggler-icon"></span>
       </button>

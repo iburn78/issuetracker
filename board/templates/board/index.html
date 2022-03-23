@@ -4,7 +4,7 @@
 {% load static %}
 {% if user.is_authenticated %}
 <div class="container-fluid">
-  your own cards:
+  <p class="emphasis_font">YOUR CARDS</p>
   <div class="row gy-3">
     {% for card in cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
@@ -29,7 +29,7 @@
       <div class="card border-0">
         <img src="" class="card-img bg-blue-100">
         <a href="{% url 'card-create' %}" class="card-link">
-          <img src="{% static 'board/plus-square-dotted.svg' %}" class="card-img addition">
+          <img src="{% static 'board/plus-lg.svg' %}" class="card-img addition">
           <div class="card-body bg-blue-300 text-white">
             <h5 class="card-title card-title-size">New Card</h5>
             <p class="card-text card-text-size">
@@ -53,7 +53,7 @@
 {% endif %}
 
 <div class="container-fluid">
-  pubilc cards:
+  <p class="emphasis_font">PUBLIC CARDS</p>
   <div class="row gy-3">
     {% for card in public_cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">

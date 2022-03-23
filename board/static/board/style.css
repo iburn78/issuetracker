@@ -796,6 +796,17 @@
           animation: card_load 0.3s ease-out;
 }
 
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #212529;
+}
+
+.emphasis_font {
+  font-family: "Anton", sans-serif;
+  color: black;
+  margin: 0;
+}
+
 @-webkit-keyframes card_load {
   from {
     top: -10px;
@@ -940,7 +951,7 @@ a.article-title:hover {
 
 main::after {
   display: block;
-  content: '';
+  content: "";
   height: 10px;
 }
 /*# sourceMappingURL=style.css.map */
