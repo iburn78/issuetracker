@@ -9,7 +9,7 @@ from django.views.generic import (
 from board.models import Card, Post
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-from django.contrib import messages
+from django.contrib import messages # use info, success, warning to make it consistent with bootstrap5
 from django.http import Http404
 
 # Create your views here.
@@ -54,6 +54,9 @@ class CardListView(ListView):
         if self.request.user.is_authenticated:
             return super().get_queryset().filter(author=self.request.user).order_by('-date_created')
         else:
+            if self.request.session.get('login_recommend', True):
+                messages.info(self.request, "IssueTracker is best to use when logged in")
+                self.request.session['login_recommend'] = False
             return super().get_queryset().none()
 
 

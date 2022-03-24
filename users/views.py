@@ -1,9 +1,12 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.contrib import messages  # use info, success, warning to make it consistent with bootstrap5
 from django.contrib.auth.decorators import login_required
 from users.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.core.mail import send_mail
 import datetime
+from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import PermissionDenied
 
 
 def register(request):
@@ -31,7 +34,6 @@ def register(request):
 @login_required
 def profile(request):
     if request.method == 'POST':
-        print('update request received ***************')
         u_form = UserUpdateForm(request.POST, instance=request.user)
         p_form = ProfileUpdateForm(
             request.POST, request.FILES, instance=request.user.profile)
@@ -50,3 +52,21 @@ def profile(request):
     }
 
     return render(request, 'users/profile.html', context)
+
+class MyPasswordResetView(LoginRequiredMixin, PasswordResetView):
+    def form_valid(self, form):
+        if form.cleaned_data['email'] == self.request.user.email:
+            self.request.session['password_reset_requested'] = True
+            return super().form_valid(form)
+        else: 
+            messages.warning(self.request, f'email address does not match')
+            return redirect('password_reset')
+
+class MyPasswordResetDoneView(LoginRequiredMixin, PasswordResetDoneView): 
+    def get(self, request, *args, **kwargs):
+        if self.request.session.get('password_reset_requested', False) == True:
+            messages.success(self.request, "An email has been sent with instructions to reset your password")
+            self.request.session['password_reset_requested'] = False
+            return redirect('main')
+        else: 
+            raise PermissionDenied

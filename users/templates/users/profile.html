@@ -10,21 +10,32 @@
 			<div class="media-body">
 				<legend class="border-bottom mb-4">Profile Info</legend>
 				<h4 class="account-heading">{{user.username}}</h4>
-				<p class="text-secondary">{{user.email}}</p>
-				<form method="POST" enctype="multipart/form-data">
-					{% csrf_token %}
-					<fieldset class ="form-group">
-						{{ u_form | crispy }}
-						{{ p_form | crispy }}
-					</fieldset>
-				</form>
+				{% if user.is_public_card_manager %}
+				<p class="emphasis-font text-red-700">PUBLIC CARD MANAGER</p>
+				{% endif %}
+				{% if user.is_superuser %}
+				<p class="emphasis-font text-red-700">SUPERUSER</p>
+				{% endif %}
+				{% if user.is_staff %}
+				<p class="emphasis-font text-red-700">STAFF</p>
+				{% endif %}
+				<p class="text-secondary mt-1 mb-0">{{user.email}}</p>
+				<p class="text-secondary mt-1 mb-0">(date joined) {{user.date_joined}}</p>
+				<p class="text-secondary mt-1 mb-0">(last login) {{user.last_login}}</p>
 			</div>
 		</div>
 	</div>
-	<div class="from-group">
-		<button class="btn btn-outline-info" type="submit">Update</button>
-		<a class="btn btn-outline-secondary" href="{% url 'password_reset' %}">Reset Password</a>
+	<div id="divider-bar" class="bg-gray-400"></div>
+	<div class="row">
+		<form method="POST" enctype="multipart/form-data">
+			{% csrf_token %}
+			<fieldset class ="form-group">
+				{{ u_form | crispy }}
+				{{ p_form | crispy }}
+				<a class="btn btn-outline-secondary" href="{% url 'password_reset' %}">Reset Password</a>
+				<button class="btn btn-primary float-end" type="submit">Update</button>
+			</fieldset>
+		</form>
 	</div>
 </div>
 {% endblock content %}
-

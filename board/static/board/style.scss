@@ -123,7 +123,7 @@ $grid-breakpoints: (
 
 .card {
   position: relative;
-  animation: card_load 0.3s ease-out;
+  animation: card-load 0.3s ease-out;
 }
 
 body {
@@ -131,13 +131,13 @@ body {
   color: $gray-900;
 }
 
-.emphasis_font {
+.emphasis-font {
   font-family: "Anton", sans-serif;
   color: black;
   margin: 0;
 }
 
-@keyframes card_load {
+@keyframes card-load {
   from {
     top: -10px;
     right: -10px;

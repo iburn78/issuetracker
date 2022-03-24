@@ -1,2 +1,2 @@
-in profile page, fix update button
 in profile page, implement email validation
+work more on password reset done view -> with sessions
