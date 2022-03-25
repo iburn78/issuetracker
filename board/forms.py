@@ -8,7 +8,8 @@ class CardForm(forms.ModelForm):
         model = Card
         fields = ['title', 'image', 'card_color', 'desc', 'is_public', 'linked_card']
         widgets = {
-            'is_public': forms.HiddenInput,  
+            # 'is_public': forms.HiddenInput,  
+            'is_public': forms.CheckboxInput,  
             # 'card_color': forms.TextInput(attrs={'type': 'color'})
             'title': forms.TextInput(attrs={'class':'form-control',}), 
             'desc': forms.Textarea(attrs={'class':'form-control', 'rows':3}), 

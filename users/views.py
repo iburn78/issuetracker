@@ -61,7 +61,7 @@ class MyLogoutView(LogoutView):
         if request.user.is_authenticated:
             return super().setup(request, *args, **kwargs)
         else:
-            raise PermissionDenied
+            return redirect('mainr')
 
     def get(self, request, *args, **kwargs):
         messages.success(self.request, "you have been logged-out")

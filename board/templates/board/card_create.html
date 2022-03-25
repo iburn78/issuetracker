@@ -11,8 +11,12 @@
         Desc {{ form.desc }}
         {{ form.card_color.as_hidden }}
         <div class="my-2">
-          Image {{ form.image }}
+          Image <br>
+          {{ form.image }}
         </div>
+        {% if user.is_public_card_manager %}
+        {{ form.is_public }} <b class="small">make this public</b>
+        {% endif %}
         <div class="my-2">
           <button type="button" class="btn btn-outline-light bg-blue-300 btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
             Card color

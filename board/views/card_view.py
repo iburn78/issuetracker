@@ -6,6 +6,7 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from jmespath import search
 from board.models import Card, Post
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -13,35 +14,14 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.http import Http404
 
-# Create your views here.
-
 
 def about(request):
     return render(request, 'board/about.html')
 
 
-class CardCreateView(LoginRequiredMixin, CreateView):
-    model = Card
-    form_class = CardForm
-    template_name = 'board/card_create.html'
-
-    def form_valid(self, form):
-        form.instance.author = self.request.user
-        if self.request.user.is_public_card_manager:
-            form.instance.is_public = True
-        new_card = form.save(commit=False)
-        new_card.save()
-        form.save_m2m()
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        return context
-
-
 class CardListView(ListView):
     model = Card
-    template_name = 'board/index.html'
+    template_name = 'board/main.html'
     context_object_name = 'cards'
     revisit = False
 
@@ -54,7 +34,7 @@ class CardListView(ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return super().get_queryset().filter(author=self.request.user).order_by('-date_created')
+            return super().get_queryset().filter(author=self.request.user).filter(is_public=False).order_by('-date_created')
         else:
             if self.request.session.get('login_recommend', True) and not self.revisit:
                 messages.info(
@@ -62,6 +42,30 @@ class CardListView(ListView):
                 self.request.session['login_recommend'] = False
             return super().get_queryset().none()
 
+    def post(self, request, *args, **kwargs):
+        search_term = request.POST.get('search_term')
+        messages.info(self.request, f"Search Keyword {search_term} entered")
+        return redirect('/')
+
+
+class CardCreateView(LoginRequiredMixin, CreateView):
+    model = Card
+    form_class = CardForm
+    template_name = 'board/card_create.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        # if self.request.user.is_public_card_manager:
+        #     form.instance.is_public = True
+        new_card = form.save(commit=False)
+        new_card.save()
+        form.save_m2m()
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
 
 class CardContentListView(ListView):
     model = Post

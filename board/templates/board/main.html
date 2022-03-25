@@ -7,7 +7,7 @@
   <p class="emphasis-font">YOUR CARDS</p>
   <div class="row gy-3">
     {% for card in cards %}
-    <div class="col-sm-6 col-lg-4 col-xl-3">
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
       <div class="card border-0">
         {% if card.image %}
         <img src="{{ card.image.url }}" class="card-img">
@@ -25,7 +25,7 @@
       </div>
     </div>
     {% endfor %}
-    <div class="col-sm-6 col-lg-4 col-xl-3">
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
       <div class="card border-0">
         <img src="" class="card-img bg-blue-100">
         <a href="{% url 'card-create' %}" class="card-link">
@@ -50,7 +50,7 @@
   <p class="emphasis-font">PUBLIC CARDS</p>
   <div class="row gy-3">
     {% for card in public_cards %}
-    <div class="col-sm-6 col-lg-4 col-xl-3">
+    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
       <div class="card border-0">
         {% if card.image %}
         <img src="{{ card.image.url }}" class="card-img">
@@ -59,6 +59,7 @@
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+            <span class="float-end pub-style pub-head">PUB</span>
             <h5 class="card-title card-title-size">{{ card.title }}</h5>
             <p class="card-text card-text-size">
               {{ card.desc }}

@@ -1,3 +1,0 @@
-in profile page, implement email validation
-work more on password reset done view -> with sessions
-log-out page modify
