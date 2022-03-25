@@ -197,7 +197,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1.3em;
-  line-height: 1.5;
+  line-height: 1.4;
   height: 1.3em;
 }
 
@@ -268,4 +268,25 @@ main::after {
   display: block;
   content: "";
   height: 10px;
+}
+
+.pub-style {
+  font-family: "Anton", sans-serif;
+  margin-top:-10px;
+  margin-right:-10px;
+  color: $blue-700;
+  font-size: small;
+  text-decoration: underline;
+}
+
+.pub-head{
+  width: 19px;
+  height: 2px;
+  background-color: $red-400;
+}
+
+.user-id-font{
+  font-family: 'Secular One', sans-serif;
+  color: $blue-600;
+  font-size:medium;
 }
