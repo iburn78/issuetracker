@@ -290,3 +290,8 @@ main::after {
   color: $blue-600;
   font-size:medium;
 }
+
+.dropdown-menu > a:hover {
+    background-image: none;
+    background-color: $blue-100;
+}

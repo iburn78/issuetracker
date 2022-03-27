@@ -21,12 +21,10 @@
             </div>
           </a>
         </div>
+        <a class="btn btn-sm btn-outline-secondary mt-2 float-end" href="{% url 'card-content' card.id %}">Cancel</a>
+        <button class="btn btn-sm btn-danger mt-2 me-1 float-end" type="submit">Delete</button>
       </div>
     </fieldset>
-    <div class="from-group">
-      <button class="btn btn-outline-danger mt-2" type="submit">Yes, Delete</button>
-      <a class="btn btn-outline-secondary mt-2" href="{% url 'card-content' card.id %}">Cancel</a>
-    </div>
   </form>
 </div>
 {% endblock content %}

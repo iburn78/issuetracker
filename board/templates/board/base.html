@@ -36,29 +36,29 @@
           <div class="navbar-nav">
             {% if user.is_authenticated %}
             <a class="nav-item nav-link ms-2" href="{% url 'logout' %}">
-              <img src="{% static 'board/box-arrow-up.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">logout</span>
+              <img src="{% static 'icons/box-arrow-up.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">logout</span>
             </a>
             <a class="nav-item nav-link ms-2" href="{% url 'profile' %}">
-              <img src="{% static 'board/person-lines-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">profile</span>
+              <img src="{% static 'icons/person-lines-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">profile</span>
             </a>
-            {% else %}
-            <a class="nav-item nav-link ms-2" href="{% url 'login' %}?next={{request.path}}">
-              <img src="{% static 'board/box-arrow-in-down.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">login</span>
-            </a>
-            <a class="nav-item nav-link ms-2" href="{% url 'register' %}">
-              <img src="{% static 'board/person-plus-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">register</span>
-            </a>
-            {% endif %}
             <li class="dropdown">
               <a class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">
-                <img class="nav-item" src="{% static 'board/intersect.svg' %}" width="22" height="22"> 
+                <img class="nav-item" src="{% static 'icons/intersect.svg' %}" width="22" height="22"> 
                 <span class="nav-item small">more</span>
               </a>
-              <div class="dropdown-menu bg-blue-100">
-                <a class="dropdown-item nav-item nav-link ps-3" href="">...</a>
-                <a class="dropdown-item nav-item nav-link ps-3" href="">...</a>
+              <div class="dropdown-menu bg-blue-200">
+                <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'card-create' %}"><img class="nav-item" src="{% static 'icons/textarea-resize.svg' %}" width="22" height="22"> new card</a>
+                <a class="dropdown-item nav-item nav-link ps-3" href=""><img class="nav-item" src="{% static 'icons/text-left.svg' %}" width="22" height="22"> new post</a>
               </div>
             </li>
+            {% else %}
+            <a class="nav-item nav-link ms-2" href="{% url 'login' %}?next={{request.path}}">
+              <img src="{% static 'icons/box-arrow-in-down.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">login</span>
+            </a>
+            <a class="nav-item nav-link ms-2" href="{% url 'register' %}">
+              <img src="{% static 'icons/person-plus-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">register</span>
+            </a>
+            {% endif %}
             <li class="nav-link"></li>
             <form action='/' class="d-flex" method="POST" autocomplete="off">
               {% csrf_token %}
@@ -83,7 +83,7 @@
     </main>
     <footer class="footer mt-auto py-2 bg-blue-800 text-light">
       <div class="container-fluid">
-        <span class=""><a href="{% url 'about' %}" style="text-decoration: none; color: white;">about IssueTracker</a> issuetree.tracker@gmail.com </span>
+        <span class=""><a href="{% url 'about' %}" style="text-decoration: none; color: white;">about IssueTracker</a> | issuetree.tracker@gmail.com </span>
       </div>
     </footer>
     <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   

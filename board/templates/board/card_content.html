@@ -1,14 +1,20 @@
 {% extends "board/base.html" %}
 {% block content %}
+{% load static %}
 <div class="container-fluid">
-  {% if user.is_authenticated %}
   <div class="row">
-    <div class="col">
-      <a class="btn btn-secondary btn-sm mt-1 mb-1 float-end" href="{% url 'card-delete' card_id %}">delete</a>
-      <a class="btn btn-warning btn-sm mt-1 mb-1 me-1 float-end" href="{% url 'card-update' card_id %}">update</a>
+    <div class="col-9">
+      <b>{{card.title}}</b>
+    </div>
+    <div class="col-3">
+      {% if user.is_authenticated %}
+      <a class="float-end" href="{% url 'card-delete' card_id %}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
+      <a class="me-2 float-end" href="{% url 'card-update' card_id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
+      <a class="me-2 float-end" href=""><img src="{% static 'icons/text-left.svg' %}" width="24" height="24"></a>
+      {% endif %}
     </div>
   </div>
-  {% endif %}
+  <div id="divider-bar" class="bg-{{card.color}}"></div>
   <div class="row">
     {% for post in posts %}
     <div class="col-md-6 col-xl-3 mb-2">
