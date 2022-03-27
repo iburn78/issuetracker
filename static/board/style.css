@@ -975,4 +975,9 @@ main::after {
   color: #0a58ca;
   font-size: medium;
 }
+
+.dropdown-menu > a:hover {
+  background-image: none;
+  background-color: #cfe2ff;
+}
 /*# sourceMappingURL=style.css.map */
