@@ -34,7 +34,7 @@ class CardListView(ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return super().get_queryset().filter(author=self.request.user).filter(is_public=False).order_by('-date_created')
+            return super().get_queryset().filter(owner=self.request.user).filter(is_public=False).order_by('-date_created')
         else:
             if self.request.session.get('login_recommend', True) and not self.revisit:
                 messages.info(
@@ -54,7 +54,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
     template_name = 'board/card_create.html'
 
     def form_valid(self, form):
-        form.instance.author = self.request.user
+        form.instance.owner = self.request.user
         # if self.request.user.is_public_card_manager:
         #     form.instance.is_public = True
         new_card = form.save(commit=False)
@@ -64,6 +64,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['c_u'] = 'Create'
         return context
     
 
@@ -87,9 +88,51 @@ class CardContentListView(ListView):
             return model_objects.filter(card__id=selected_card.id).order_by('-date_posted')
         else:
             if self.request.user.is_authenticated:
-                if self.request.user == selected_card.author:
+                if self.request.user == selected_card.owner:
                     return model_objects.filter(author=self.request.user).filter(card__id=selected_card.id).order_by('-date_posted')
                 else:
                     raise Http404("Page not found")
             else:
                 return super().get_queryset().none()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['card_id'] = self.kwargs.get('card_id')
+        return context
+
+
+class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Card
+    form_class = CardForm
+    template_name = 'board/card_create.html'
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        newcard = form.save(commit=False)
+        newcard.save()
+        form.save_m2m()
+        return super().form_valid(form)
+
+    def test_func(self):
+        card = self.get_object()
+        if self.request.user == card.owner:
+            return True
+        return False
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['c_u'] = 'Update'
+        return context
+
+class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Card
+    success_url = '/'
+    template_name = 'board/card_delete.html'
+
+    def test_func(self):
+        ################################
+        # ADD LOGIC ON POSTS IN THE CARD
+        ################################
+        if self.request.user == self.get_object().owner:
+            return True
+        return False

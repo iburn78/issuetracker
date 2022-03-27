@@ -28,7 +28,7 @@ class PostCreateView(CreateView):
             else:
                 raise PermissionDenied
         else:
-            if self.request.user == selected_card.author:
+            if self.request.user == selected_card.owner:
                 return super().get(request, *args, **kwargs)
             else:
                 raise PermissionDenied
@@ -59,7 +59,7 @@ class PostDetailView(DetailView):
             if not self.request.user.is_authenticated:
                 return redirect('login')
             else:
-                if self.request.user == post.card.author:
+                if self.request.user == post.card.owner:
                     return super().get(request, *args, **kwargs)
                 else:
                     raise PermissionDenied

@@ -1,6 +1,7 @@
 {% extends "board/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+
 <div class="container-fluid">
 	<div class="content-section">
 		<form method="POST" autocomplete='off'>
@@ -18,9 +19,10 @@
 		</form>
 		<div class="border-top pt-3">
 			<small class="text-muted">
-				need an account? <a class="ms-2" href="{% url 'register' %}">sign up now</a>
+				need an account? <a class="ms-2" href="{% url 'register' %}">register</a>
 			</small>
 		</div>
 	</div>
 </div>
+
 {% endblock content %}

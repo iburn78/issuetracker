@@ -1,6 +1,14 @@
 {% extends "board/base.html" %}
 {% block content %}
 <div class="container-fluid">
+  {% if user.is_authenticated %}
+  <div class="row">
+    <div class="col">
+      <a class="btn btn-secondary btn-sm mt-1 mb-1 float-end" href="{% url 'card-delete' card_id %}">delete</a>
+      <a class="btn btn-warning btn-sm mt-1 mb-1 me-1 float-end" href="{% url 'card-update' card_id %}">update</a>
+    </div>
+  </div>
+  {% endif %}
   <div class="row">
     {% for post in posts %}
     <div class="col-md-6 col-xl-3 mb-2">
@@ -18,7 +26,7 @@
       <a href="" class="ms-1 badge bg-primary mt-1">#{{ tag }}</a>
       {% endfor %}
       <a href="{% url 'post-detail' post.id %}">
-      <p class="article-content mt-2 mb-1 post-list-content-size">{{ post.content }}</p>
+        <p class="article-content mt-2 mb-1 post-list-content-size">{{ post.content }}</p>
       </a>
     </div>
     {% endfor %}

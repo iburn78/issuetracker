@@ -5,7 +5,7 @@
   <form method="POST" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     <fieldset>
-      <legend class="border-bottom mb-4">Create a card</legend>
+      <legend class="border-bottom mb-4">{{c_u}} a card</legend>
       <div>
         Title* {{ form.title }}
         Desc {{ form.desc }}
@@ -21,10 +21,10 @@
           <button type="button" class="btn btn-outline-light bg-blue-300 btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
             Card color
           </button>
-          <button class="btn btn-outline-light bg-blue-500 btn-sm mb-2 float-end" type="submit">Create card</button>
-          <div id="card-color"></div>
+          <button class="btn btn-outline-light bg-blue-500 btn-sm mb-2 float-end" type="submit">{{c_u}} card</button>
         </div>
         <!-- Modal -->
+        <!-- actual mechanism is implemented with javascript -->
         <div class="modal fade" id="colorModal" tabindex="-1">
           <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">

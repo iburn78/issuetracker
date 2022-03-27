@@ -15,7 +15,7 @@ from users.models import User
 
 
 class Card(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=70)
     desc = models.TextField(blank=True)
@@ -47,7 +47,6 @@ class Post(models.Model):
     image3 = models.ImageField(upload_to='uploaded_imgs', blank=True)
     tags = TaggableManager(blank=True)
     is_published = models.BooleanField(default=False)
-    imported_authors = []  # to include objects of User
 
     # Rules
     # publishing posts: posts can be published (only) to public cards, and posts in public cards must be (all) publised

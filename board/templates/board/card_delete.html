@@ -1,0 +1,34 @@
+{% extends "board/base.html" %}
+{% block content %}
+<div class="container-fluid">
+  <form method="POST">
+    {% csrf_token %}
+    <fieldset class ="form-group">
+      <legend class="border-bottom mb-4">Delete Card?</legend>
+      <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+        <div class="card border-0">
+          {% if card.image %}
+          <img src="{{ card.image.url }}" class="card-img">
+          {% else %}
+          <img src="" class="card-img">
+          {% endif %}
+          <a href="{% url 'card-content' card.id %}">
+            <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+              <h5 class="card-title card-title-size">{{ card.title }}</h5>
+              <p class="card-text card-text-size">
+                {{ card.desc }}
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </fieldset>
+    <div class="from-group">
+      <button class="btn btn-outline-danger mt-2" type="submit">Yes, Delete</button>
+      <a class="btn btn-outline-secondary mt-2" href="{% url 'card-content' card.id %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock content %}
+
+

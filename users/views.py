@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from users.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.core.mail import send_mail
 import datetime
-from django.contrib.auth.views import PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, LogoutView
+from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from users.models import User
@@ -54,6 +54,23 @@ def profile(request):
     }
 
     return render(request, 'users/profile.html', context)
+
+
+class MyLoginView(LoginView):
+    template_name='users/login.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+    
+    def get_redirect_url(self):
+        next = self.request.GET.get('next', 'none')
+        if 'login' in next or 'register' in next:
+            return '/'
+        return super().get_redirect_url()
+
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
 
 class MyLogoutView(LogoutView):
