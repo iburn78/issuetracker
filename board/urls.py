@@ -5,12 +5,13 @@ from board.views.post_view import *
 urlpatterns = [
     path('', CardListView.as_view(revisit=False), name='main'),
     path('main/', CardListView.as_view(revisit=True), name='mainr'),
+    path('card_list/', CardListView.as_view(template_name="board/card_list.html"), name='card-list'),
+    path('card_select/', CardSelectView.as_view(), name='card-select'),
     path('about/', about, name='about'),
-    path('card/new/', CardCreateView.as_view(), name='card-create'),
+    path('new_card/', CardCreateView.as_view(), name='card-create'),
     path('card/<int:card_id>/', CardContentListView.as_view(), name='card-content'),
     path('card/<int:pk>/update/', CardUpdateView.as_view(), name='card-update'),
     path('card/<int:pk>/delete/', CardDeleteView.as_view(), name='card-delete'),
-    path('card/<int:card_id>/post/new/',
-         PostCreateView.as_view(), name='post-create'),
+    path('card/<int:card_id>/new_post/', PostCreateView.as_view(), name='post-create'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
 ]

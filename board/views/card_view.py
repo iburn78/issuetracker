@@ -47,6 +47,14 @@ class CardListView(ListView):
         messages.info(self.request, f"Search Keyword {search_term} entered")
         return redirect('/')
 
+class CardSelectView(LoginRequiredMixin, CardListView): # a view for creating a new post 
+    template_name = "board/card_list.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['card_select_for_new_post'] = True
+        return context
+
 
 class CardCreateView(LoginRequiredMixin, CreateView):
     model = Card

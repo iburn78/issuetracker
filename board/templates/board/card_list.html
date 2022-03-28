@@ -1,0 +1,96 @@
+{% extends "board/base.html" %}
+{% block content %}
+{% load static %}
+{% if user.is_authenticated %}
+<div class="container-fluid">
+  {% if card_select_for_new_post %}
+  <p><b class="text-red-600">Choose a card for your new post</b></p>
+  {% endif %}
+  <p class="emphasis-font"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
+  <div class="row gy-1">
+    {% for card in cards %}
+    <div class="col-sm-12 col-md-6 col-xxl-4">
+      <div class="card border-0">
+        <div class="row">
+          <div class="col-2 pe-1">
+            {% if card.image %}
+            <img src="{{ card.image.url }}" class="card-img-select">
+            {% else %}
+            <div class="card-img-select"></div>
+            {% endif %}
+          </div>
+          <div class="col-10 ps-0">
+            <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark">{{ card.title }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% if not card_select_for_new_post %}
+    <div class="col-sm-12 col-md-6 col-xxl-4">
+      <div class="card border-0">
+        <div class="row">
+          <div class="col-2 pe-1">
+            <div class="card-img-select"><a href="{% url 'card-create' %}"><img src="{% static 'icons/plus-lg.svg' %}" height="24px" width="24px" 
+              style="position: absolute; top: 50%; left: 7.5%; transform: translate(-50%, -50%);" ></a>
+            </div>
+          </div>
+          <div class="col-10 ps-0">
+            <div class="card-body bg-blue-200 text-dark">
+              <a href="{% url 'card-create' %}" class="card-title-select text-dark"><img src="{% static 'icons/textarea-resize.svg' %}" width="20" height="20"> New Card</a>           </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if user.is_authenticated %}
+<div id="divider-bar"></div>
+{% endif %}
+
+<div class="container-fluid">
+  <p class="emphasis-font"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
+  <div class="row gy-1">
+    {% for card in public_cards %}
+    <div class="col-sm-12 col-md-6 col-xxl-4">
+      <div class="card border-0">
+        <div class="row">
+          <div class="col-2 pe-1">
+            {% if card.image %}
+            <img src="{{ card.image.url }}" class="card-img-select">
+            {% else %}
+            <div class="card-img-select"></div>
+            {% endif %}
+          </div>
+          <div class="col-10 ps-0">
+            <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+              <span class="float-end" style="margin-right: -10px;">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
+              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark">{{ card.title }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+{% if card_select_for_new_post %}
+<script>
+  document.addEventListener('click', e => {
+    const origin = e.target.closest('a');
+    if (origin.id === "card_for_new_post") {
+      e.preventDefault();
+      window.location.href = origin.href+'new_post/';
+    };
+  });
+</script>
+{% endif %}
+{% endblock content %}
+

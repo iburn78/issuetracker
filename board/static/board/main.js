@@ -10,6 +10,7 @@ function menu_close(event) {
   }
 };
 
+
 document.querySelectorAll('.color-element').forEach(element => {
   let bg_color = 'null';
   element.addEventListener('click', function(){

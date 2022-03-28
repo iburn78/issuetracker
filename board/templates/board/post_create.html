@@ -5,12 +5,10 @@
   <form method="POST" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     <fieldset>
-      <legend class="border-bottom mb-4">New post</legend>
+      <legend class="border-bottom mb-4">New post for card <b>{{ card.title }}</b></legend>
       {{ form | crispy }}
       <button class="btn btn-primary mb-2" type="submit">Create</button>
     </fieldset>
   </form>
 </div>
 {% endblock content %}
-
-

@@ -1,5 +1,4 @@
 {% extends "board/base.html" %}
-
 {% block content %}
 {% load static %}
 {% if user.is_authenticated %}
@@ -12,7 +11,7 @@
         {% if card.image %}
         <img src="{{ card.image.url }}" class="card-img">
         {% else %}
-        <img src="" class="card-img">
+        <div class="card-img"></div>
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
@@ -30,7 +29,7 @@
         <img src="" class="card-img bg-blue-100">
         <a href="{% url 'card-create' %}" class="card-link">
           <img src="{% static 'icons/plus-lg.svg' %}" class="card-img addition">
-          <div class="card-body bg-blue-300 text-dark">
+          <div class="card-body bg-blue-200 text-dark">
             <h5 class="card-title card-title-size"><img src="{% static 'icons/textarea-resize.svg' %}" width="28" height="28"> New Card</h5>
             <p class="card-text card-text-size">
             </p>
@@ -55,7 +54,7 @@
         {% if card.image %}
         <img src="{{ card.image.url }}" class="card-img">
         {% else %}
-        <img src="" class="card-img">
+        <div class="card-img"></div>
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark" style="background-color: {{ card.card_color }};">

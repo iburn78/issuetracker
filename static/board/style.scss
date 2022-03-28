@@ -159,7 +159,7 @@ body {
   background-color: $gray-200;
 }
 
-.card .card-img {
+.card-img {
   height: 270px;
   width: auto;
   object-fit: cover;
@@ -169,7 +169,25 @@ body {
   background-color: $gray-100;
 }
 
-.card .card-img.addition {
+.card-img-select {
+  height: 3.5em;
+  width: 100%;
+  object-fit: cover;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 4px;
+  background-color: $blue-100;
+}
+
+.card-title-select {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-img.addition {
   position: absolute;
   height: 70px;
   width: 70px;
@@ -197,7 +215,7 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1.3em;
-  line-height: 1.4;
+  line-height: 1.4em;
   height: 1.3em;
 }
 
