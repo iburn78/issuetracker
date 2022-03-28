@@ -3,18 +3,24 @@
 {% load static %}
 <div class="container-fluid">
   <div class="row">
-    <div class="col-8">
-      <b>{{card.title}}</b>
-    </div>
-    <div class="col-4">
+    <div class="col">
+      <b>{{ card.title }}</b>
       {% if user.is_authenticated %}
       <a class="float-end" href="{% url 'card-delete' card_id %}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
       <a class="me-2 float-end" href="{% url 'card-update' card_id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
       <a class="me-2 float-end" href=""><img src="{% static 'icons/text-left.svg' %}" width="24" height="24"></a>
       {% endif %}
+      <button class="me-2 float-end btn btn-sm btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc">desc</button>
+      <div class="collapse" id="collapseDesc">
+        {% if card.desc %}
+        {{ card.desc }}
+        {% else %}
+        <span class="text-muted">No description</span>
+        {% endif %}
+      </div>
     </div>
   </div>
-  <div id="divider-bar" class="bg-{{card.color}}"></div>
+  <div id="divider-bar" style="background-color:{{card.card_color}}"></div>
   <div class="row">
     {% for post in posts %}
     <div class="col-md-6 col-xl-3 mb-2">

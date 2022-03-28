@@ -18,8 +18,8 @@
         {{ form.is_public }} <b class="small">make this public</b>
         {% endif %}
         <div class="my-2">
-          <button type="button" class="btn btn-outline-light bg-blue-300 btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
-            Card color
+          <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
+            <b>Card color</b>
           </button>
           <a class="btn btn-outline-secondary btn-sm float-end" href="{% url 'main' %}"">cancel</a>
           <button class="btn btn-outline-light bg-blue-500 btn-sm mb-2 me-1 float-end" type="submit">{{c_u}}</button>
@@ -44,20 +44,20 @@
                     <div class="col color-element bg-gray-200"></div>
                   </div>
                   <div class="row">
+                    <div class="col color-element bg-blue-200"></div>
+                    <div class="col color-element bg-yellow-200"></div>
+                    <div class="col color-element bg-red-200"></div>
+                    <div class="col color-element bg-orange-200"></div>
+                    <div class="col color-element bg-green-200"></div>
+                    <div class="col color-element bg-gray-300"></div>
+                  </div>
+                  <div class="row">
                     <div class="col color-element bg-blue-300"></div>
                     <div class="col color-element bg-yellow-300"></div>
                     <div class="col color-element bg-red-300"></div>
                     <div class="col color-element bg-orange-300"></div>
                     <div class="col color-element bg-green-300"></div>
                     <div class="col color-element bg-gray-400"></div>
-                  </div>
-                  <div class="row">
-                    <div class="col color-element bg-blue-500"></div>
-                    <div class="col color-element bg-yellow-500"></div>
-                    <div class="col color-element bg-red-500"></div>
-                    <div class="col color-element bg-orange-500"></div>
-                    <div class="col color-element bg-green-500"></div>
-                    <div class="col color-element bg-gray-600"></div>
                   </div>
                 </div>
               </div>
