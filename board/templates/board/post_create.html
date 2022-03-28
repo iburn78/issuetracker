@@ -1,11 +1,16 @@
 {% extends "board/base.html" %}
 {% block content %}
 {% load crispy_forms_tags %}
+{% load static %}
 <div class="container">
   <form method="POST" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     <fieldset>
-      <legend class="border-bottom mb-4">New post for card <b>{{ card.title }}</b></legend>
+      <legend class="border-bottom mb-4">New post for card <b>{{ card.title }}</b>
+      {% if card.is_public %}
+      <span class="float-end">(<img src="{% static 'icons/people-fill.svg' %}" width="20" height="20">)</span>
+      {% endif %}
+      </legend>
       {{ form | crispy }}
       <button class="btn btn-primary mb-2" type="submit">Create</button>
     </fieldset>

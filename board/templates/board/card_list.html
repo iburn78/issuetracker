@@ -5,6 +5,11 @@
 <div class="container-fluid">
   {% if card_select_for_new_post %}
   <p><b class="text-red-600">Choose a card for your new post</b></p>
+  {% if not cards %}
+  <div class="alert alert-danger" role="alert">
+    Create your card first <a href="{% url 'card-create' %}" class="text-dark">here</a>
+  </div>
+  {% endif %}
   {% endif %}
   <p class="emphasis-font"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
   <div class="row gy-1">
@@ -51,9 +56,13 @@
 {% endif %}
 
 {% if user.is_authenticated %}
+{% if not card_select_for_new_post or user.is_public_card_manager %}
 <div id="divider-bar"></div>
 {% endif %}
+{% endif %}
 
+
+{% if not card_select_for_new_post or user.is_public_card_manager %}
 <div class="container-fluid">
   <p class="emphasis-font"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
   <div class="row gy-1">
@@ -80,6 +89,7 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}
 
 {% if card_select_for_new_post %}
 <script>
