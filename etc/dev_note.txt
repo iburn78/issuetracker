@@ -1,2 +1,5 @@
-on card create or update, make image preview
+on card create or update, make image preview -> need javascript?
 image selection for cards
+image selection for user
+
+remove auto rename tag

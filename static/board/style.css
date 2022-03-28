@@ -853,6 +853,17 @@ body {
   background-color: #f8f9fa;
 }
 
+.card-img-preview {
+  height: auto;
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 4px;
+  background-color: #cfe2ff;
+}
+
 .card-img-select {
   height: 3.5em;
   width: 100%;
