@@ -20,8 +20,8 @@
 				<p class="emphasis-font text-red-700">STAFF</p>
 				{% endif %}
 				<p class="text-secondary mt-1 mb-0">{{user.email}}</p>
-				<p class="text-secondary mt-1 mb-0"><small><b>date join:</b></small> {{user.date_joined}}</p>
-				<p class="text-secondary mt-1 mb-0"><small><b>last login:</b></small> {{user.last_login}}</p>
+				<p class="text-secondary mt-1 mb-0"><small><b>date join:</b></small> {{user.date_joined|date:"M d, Y H:m" }}</p>
+				<p class="text-secondary mt-1 mb-0"><small><b>last login:</b></small> {{user.last_login|date:"M d, Y H:m" }}</p>
 			</div>
 		</div>
 	</div>

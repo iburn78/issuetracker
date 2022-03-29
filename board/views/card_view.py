@@ -22,7 +22,7 @@ def about(request):
 class CardListView(ListView):
     model = Card
     template_name = 'board/main.html'
-    context_object_name = 'cards'
+    context_object_name = 'cards' # get_queryset result
     revisit = False
 
     def get_context_data(self, **kwargs):

@@ -6,9 +6,11 @@
   {% if card_select_for_new_post %}
   <p><b class="text-red-600">Choose a card for your new post</b></p>
   {% if not cards %}
+  {% if not public_cards and user.is_public_card_manager or not user_is_public_card_manager %}
   <div class="alert alert-danger" role="alert">
-    Create your card first <a href="{% url 'card-create' %}" class="text-dark">here</a>
+    Create your card first <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}"></a>
   </div>
+  {% endif %}
   {% endif %}
   {% endif %}
   <p class="emphasis-font"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
