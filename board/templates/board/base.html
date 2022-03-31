@@ -35,34 +35,28 @@
         </div>
         <!-- Navbar Right Side -->
         <div class="navbar-nav">
-          <a class="nav-item nav-link ms-2" href="{% url 'card-list' %}">
-            <img src="{% static 'icons/list-ul.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">list</span>
-          </a>
-          {% if user.is_authenticated %}
-          <a class="nav-item nav-link ms-2" href="{% url 'logout' %}">
-            <img src="{% static 'icons/box-arrow-up.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">logout</span>
-          </a>
-          <a class="nav-item nav-link ms-2" href="{% url 'profile' %}">
-            <img src="{% static 'icons/person-lines-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">profile</span>
-          </a>
+          {% if card_list %}
+          <a class="nav-item nav-link ms-2" href="{% url 'card-list' %}"><img src="{% static 'icons/list-ul.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">list</span></a>
+          {% else %}
+          <a class="nav-item nav-link ms-2" href="{% url 'mainr' %}"><img src="{% static 'icons/grid.svg' %}" class="nav-item" width="22" height="22"> <span class="nav-item small">cards</span></a>
+          {% endif %}
+          <a class="nav-item nav-link ms-2" href="{% url 'card-create' %}"><img class="nav-item" src="{% static 'icons/textarea-resize.svg' %}" width="22" height="22"> <span class="nav-item small">new card</span></a>
+          <a class="nav-item nav-link ms-2" href="{% url 'card-select' %}"><img class="nav-item" src="{% static 'icons/pencil-square.svg' %}" width="22" height="22"> <span class="nav-item small">new post</span></a>
           <li class="dropdown">
             <a class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">
               <img class="nav-item" src="{% static 'icons/intersect.svg' %}" width="22" height="22"> 
               <span class="nav-item small">more</span>
             </a>
             <div class="dropdown-menu bg-blue-200">
-              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'card-create' %}"><img class="nav-item" src="{% static 'icons/textarea-resize.svg' %}" width="22" height="22"> <span class="nav-item small">new card</span></a>
-              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'card-select' %}"><img class="nav-item" src="{% static 'icons/pencil-square.svg' %}" width="22" height="22"> <span class="nav-item small">new post</span></a>
+              {% if user.is_authenticated %}
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'logout' %}"><img src="{% static 'icons/box-arrow-up.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">logout</span></a>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'profile' %}"><img src="{% static 'icons/person-lines-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">profile</span></a>
+              {% else %}
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'login' %}?next={{request.path}}"><img src="{% static 'icons/box-arrow-in-down.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">login</span></a>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'register' %}"><img src="{% static 'icons/person-plus-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">register</span></a>
+              {% endif %}
             </div>
           </li>
-          {% else %}
-          <a class="nav-item nav-link ms-2" href="{% url 'login' %}?next={{request.path}}">
-            <img src="{% static 'icons/box-arrow-in-down.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">login</span>
-          </a>
-          <a class="nav-item nav-link ms-2" href="{% url 'register' %}">
-            <img src="{% static 'icons/person-plus-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">register</span>
-          </a>
-          {% endif %}
           <li class="nav-link"></li>
           <form action='/' class="d-flex" method="POST" autocomplete="off">
             {% csrf_token %}

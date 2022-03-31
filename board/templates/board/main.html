@@ -4,7 +4,7 @@
 {% if user.is_authenticated %}
 <div class="container-fluid">
   <p class="emphasis-font"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
-  <div class="row gy-3">
+  <div class="row gy-2">
     {% for card in cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
       <div class="card border-0">
@@ -24,19 +24,19 @@
       </div>
     </div>
     {% endfor %}
-    <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+    <!-- <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
       <div class="card border-0">
         <img src="" class="card-img bg-blue-100">
         <a href="{% url 'card-create' %}" class="card-link">
           <img src="{% static 'icons/plus-lg.svg' %}" class="card-img addition">
           <div class="card-body bg-blue-200 text-dark">
-            <h5 class="card-title card-title-size"><img src="{% static 'icons/textarea-resize.svg' %}" width="28" height="28"> New Card</h5>
+            <h5 class="card-title card-title-size"><img src="{% static 'icons/textarea-resize.svg' %}" width="25" height="25"> New Card</h5>
             <p class="card-text card-text-size">
             </p>
           </div>
         </a>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>
 {% endif %}
@@ -47,7 +47,7 @@
 
 <div class="container-fluid">
   <p class="emphasis-font"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
-  <div class="row gy-3">
+  <div class="row gy-2">
     {% for card in public_cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
       <div class="card border-0">

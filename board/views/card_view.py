@@ -24,12 +24,14 @@ class CardListView(ListView):
     template_name = 'board/main.html'
     context_object_name = 'cards' # get_queryset result
     revisit = False
+    card_list = False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         public_cards = Card.objects.filter(
             is_public=True).order_by('-date_created')
         context['public_cards'] = public_cards
+        context['card_list'] = self.card_list
         return context
 
     def get_queryset(self):

@@ -151,7 +151,7 @@ body {
 }
 
 .card-body {
-  border-radius: 4px;
+  border-radius: 8px;
 }
 
 .card-create-container-style {
@@ -165,7 +165,7 @@ body {
   object-fit: cover;
   overflow: hidden;
   z-index: 0;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: $gray-100;
 }
 
@@ -175,7 +175,7 @@ body {
   object-fit: cover;
   overflow: hidden;
   z-index: 0;
-  border-radius: 4px;
+  border-radius: 8px;
   background-color: $blue-100;
 }
 
@@ -185,7 +185,17 @@ body {
   object-fit: cover;
   overflow: hidden;
   z-index: 0;
-  border-radius: 4px;
+  border-radius: 8px;
+  background-color: $blue-100;
+}
+
+.user-image-small {
+  object-fit: cover;
+  height: 20px;
+  width: 20px;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 5px;
   background-color: $blue-100;
 }
 
@@ -250,12 +260,6 @@ a.article-title:hover {
   white-space: pre-line;
 }
 
-.article-img {
-  height: 45px;
-  width: 45px;
-  margin-right: 10px;
-}
-
 .article-metadata {
   padding-bottom: 2px;
   margin-bottom: 4px;
@@ -269,20 +273,9 @@ a.article-title:hover {
 .post-list-image {
   object-fit: cover;
   width: 100%;
-  height: 140px;
+  height: 125px;
   overflow: hidden;
-  border-radius: 4px;
-}
-
-.post-list-content-size {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 1em;
-  line-height: 1.2em;
-  height: 4.8em;
+  border-radius: 8px;
 }
 
 #divider-bar {
@@ -290,6 +283,14 @@ a.article-title:hover {
   margin-bottom: 5px;
   width: 100%;
   height: 3px;
+  background-color: $blue-100;
+}
+
+#divider-bar-narrower {
+  margin-top: 5px;
+  margin-bottom: 2px;
+  width: 100%;
+  height: 0.5px;
   background-color: $blue-100;
 }
 

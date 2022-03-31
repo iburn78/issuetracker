@@ -42,49 +42,158 @@
   
   <div class="row">
     {% for post in posts %}
-    <div class="col-md-6 col-xl-3 mb-2">
+    <div class="col-md-6 col-xl-4">
       <div class="row">
         {% if post.image1 %}
-        <div class="col-4 pe-0">
-          <a href="{% url 'post-detail' post.id %}">
-            <img class="img-fluid post-list-image" src="{{ post.image1.url }}">
-          </a>
+        <div class="col-4 pe-0 mt-1">
+          <img class="img-fluid post-list-image" src="{{ post.image1.url }}">
         </div>
         <div class="col-8">
+          {% if card.is_public %}
+          <img class="user-image-small" src="{{ post.author.profile.image.url }}">
+          <a class="me-2 text-dark" href="">{{ post.author }}</a> 
+          {% else %}
+          <img src="{% static 'icons/pencil-square.svg' %}" width="12">
           {% endif %}
-          <small class="text-muted">{{ post.date_posted|date:"M d, Y H:m" }}</small>
-          <a href="{% url 'post-detail' post.id %}">
-            <p class="article-content mt-2 mb-1 post-list-content-size text-dark">{{ post.content }}</p>
+          <small class="text-gray-500"> {{ post.date_posted|date:"M d, Y H:m" }}</small>
+          <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+            <p class="article-content text-dark mb-1">{{ post.get_preview_text }}</p>
           </a>
-          {% for tag in post.tags.all %}
-          <a href="" class="ms-1 badge bg-primary mt-1">#{{ tag }}</a>
-          {% endfor %}
-          {% if post.image1 %}
+          <button class="me-2 pb-0 float-end btn btn-sm btn-outline-dark" type="button" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">post</button>
+          <div class="col float-end me-0 my-0 p-0">
+            {% for tag in post.tags.all %}
+            <a href="" class="badge bg-blue-200 text-gray-700">#{{ tag }}</a>
+            {% endfor %}
+          </div>
+        </div>
+        {% else %}
+        <div class="col m-0 pb-0">
+          {% if card.is_public %}
+          <img class="user-image-small" src="{{ post.author.profile.image.url }}">
+          <a class="me-2 text-dark" href="">{{ post.author }}</a> 
+          {% else %}
+          <img src="{% static 'icons/pencil-square.svg' %}" width="12">
+          {% endif %}
+          <small class="text-gray-500"> {{ post.date_posted|date:"M d, Y H:m" }}</small>
+          <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+            <p class="article-content text-dark mb-1">{{ post.get_preview_text }}</p>
+          </a>
+          <div class="col float-end me-0 my-0 p-0">
+            {% for tag in post.tags.all %}
+            <a href="" class="badge bg-blue-200 text-gray-700">#{{ tag }}</a>
+            {% endfor %}
+          </div>
         </div>
         {% endif %}
       </div>
+      <div class="modal fade" id="collapsePost{{post.id}}" tabindex="-1">
+        <div class="modal-dialog modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <img class="user-image-small me-2" src="{{ post.author.profile.image.url }}">
+              <a class="me-2" href="">{{ post.author }}</a>
+              <small class="text-muted">{{ post.date_posted|date:"M d, Y H:m" }}</small>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col">
+                  {% for tag in post.tags.all %}
+                  <a href="" class="float-end ms-1 badge bg-blue-200 text-gray-700">#{{ tag }}</a>
+                  {% endfor %}
+                </div>
+              </div>
+              <div class="row">
+                {% if post.image1 %}
+                <div class="col-sm-6">
+                  <div id="carousel_indicators" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                      <button type="button" data-bs-target="#carousel_indicators" data-bs-slide-to="0" class="active"></button>
+                      {% if post.image2 %}
+                      <button type="button" data-bs-target="#carousel_indicators" data-bs-slide-to="1"></button>
+                      {% endif %}
+                      {% if post.image3 %}
+                      <button type="button" data-bs-target="#carousel_indicators" data-bs-slide-to="2"></button>
+                      {% endif %}
+                    </div>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="{{ post.image1.url }}" class="d-block w-100 rounded">
+                      </div>
+                      {% if post.image2 %}
+                      <div class="carousel-item">
+                        <img src="{{ post.image2.url }}" class="d-block w-100 rounded">
+                      </div>
+                      {% endif %}
+                      {% if post.image3 %}
+                      <div class="carousel-item">
+                        <img src="{{ post.image3.url }}" class="d-block w-100 rounded">
+                      </div>
+                      {% endif %}
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel_indicators" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel_indicators" data-bs-slide="next">
+                      <span class="carousel-control-next-icon"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                </div>
+                <div class="col-sm-6">
+                  <p class="article-content mt-2 mb-1">{{ post.content }}</p>
+                </div>
+                {% else %}
+                <div class="col">
+                  <p class="article-content mt-2 mb-1">{{ post.content }}</p>
+                </div>
+                {% endif %}
+              </div>
+              <!-- <div class="row">
+                <div class="col-4">
+                  {% if post.image1 %}
+                  <img class="card-img-preview" src="{{ post.image1.url }}">
+                  {% else %}
+                  <span class="text-muted">no image</span>
+                  {% endif %}
+                </div>
+                <div class="col-8">
+                  {{ post.content }}
+                </div>
+              </div> -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="divider-bar-narrower" class="mb-1 mt-3" style="background-color:{{card.card_color}}"></div>
     </div>
     {% endfor %}
   </div>
   
-  <div class="container-fluid">
-    {% if is_paginated %}
-    {% if page_obj.has_previous %}
-    <a class="btn btn-outline-info mb-4" href="?page=1">first</a>
-    {% endif %}
-    
-    {% for num in page_obj.paginator.page_range %}
-    {% if page_obj.number == num %}
-    <a class="btn btn-info mb-4" href="?page={{ num }}">{{ num }}</a>
-    {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-    <a class="btn btn-outline-info mb-4" href="?page={{ num }}">{{ num }}</a>
-    {% endif %}
-    {% endfor %}
-    
-    {% if page_obj.has_next %}
-    <a class="btn btn-outline-info mb-4" href="?page={{ page_obj.paginator.num_pages }}">last</a>
-    {% endif %}
-    {% endif %}
-  </div>
-  {% endblock content %}
   
+  <div class="row mt-3">
+    <div class="col d-flex justify-content-center align-items-center">
+      {% if is_paginated %}
+      {% if page_obj.has_previous %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page=1"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+      {% endif %}
+      
+      {% for num in page_obj.paginator.page_range %}
+      {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+      {% elif page_obj.number == num %}
+      <a class="btn btn-outline-light text-dark mb-4 me-1" href="?page={{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+      {% endif %}
+      {% endfor %}
+      
+      {% if page_obj.has_next %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ page_obj.paginator.num_pages }}"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

@@ -53,7 +53,8 @@ class Post(models.Model):
     # importing posts: a user can import published posts to his/her own linked card
 
     def get_preview_text(self):
-        return self.content[:70]
+        res = ' '.join(self.content[:150].split('\n')[:3])
+        return res
 
     def __str__(self):
         return self.get_preview_text()
