@@ -13,5 +13,7 @@ urlpatterns = [
     path('card/<int:pk>/update/', CardUpdateView.as_view(), name='card-update'),
     path('card/<int:pk>/delete/', CardDeleteView.as_view(), name='card-delete'),
     path('card/<int:card_id>/new_post/', PostCreateView.as_view(), name='post-create'),
-    path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('post_delete/<int:card_id>/<int:pk>/', PostDeleteView.as_view(), name='post-delete'),
+    path('post_update/<int:card_id>/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
+    # path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
 ]

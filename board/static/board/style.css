@@ -878,11 +878,11 @@ body {
 .user-image-small {
   -o-object-fit: cover;
      object-fit: cover;
-  height: 20px;
-  width: 20px;
+  height: 40px;
+  width: 40px;
   overflow: hidden;
   z-index: 0;
-  border-radius: 5px;
+  border-radius: 7px;
   background-color: #cfe2ff;
 }
 
@@ -975,8 +975,8 @@ a.article-title:hover {
 }
 
 #divider-bar-narrower {
-  margin-top: 5px;
-  margin-bottom: 2px;
+  margin-top: 0px;
+  margin-bottom: 0px;
   width: 100%;
   height: 0.5px;
   background-color: #cfe2ff;

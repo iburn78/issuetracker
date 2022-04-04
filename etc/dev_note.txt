@@ -5,9 +5,6 @@ form post create: make image input responsive / let user to choose the main imag
 in post, click will show image larger
 
 
-
-add delete / edit to post modal 
-
 remove linked editing from vscode 
 
 

@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
     ListView,
     CreateView,
@@ -48,23 +49,63 @@ class PostCreateView(CreateView):
         return context
 
 
-class PostDetailView(DetailView):
-    model = Post
-    template_name = 'board/post_detail.html'
+# class PostDetailView(DetailView): # DO I NEED THIS?
+#     model = Post
+#     template_name = 'board/post_detail.html'
 
-    def get(self, request, *args, **kwargs):
-        post = get_object_or_404(Post, id=kwargs.get('pk'))
-        if post.card.is_public:
-            return super().get(request, *args, **kwargs)
-        else:
-            if not self.request.user.is_authenticated:
-                return redirect('login')
-            else:
-                if self.request.user == post.card.owner:
-                    return super().get(request, *args, **kwargs)
-                else:
-                    raise PermissionDenied
+#     def get(self, request, *args, **kwargs):
+#         post = get_object_or_404(Post, id=kwargs.get('pk'))
+#         if post.card.is_public:
+#             return super().get(request, *args, **kwargs)
+#         else:
+#             if not self.request.user.is_authenticated:
+#                 return redirect('login')
+#             else:
+#                 if self.request.user == post.card.owner:
+#                     return super().get(request, *args, **kwargs)
+#                 else:
+#                     raise PermissionDenied
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         return context
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    success_url = '/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
+
+    def post(self, request, *args, **kwargs):
+        card_id = self.kwargs.get('card_id')
+        self.success_url = f'/card/{card_id}'
+        return super().post(request, *args, **kwargs)
+
+
+class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = Post
+    form_class = PostForm
+    template_name = 'board/post_create.html'
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        newpost = form.save(commit=False)
+        newpost.save()
+        form.save_m2m()
+        return super().form_valid(form)
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.author:
+            return True
+        return False
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['update'] = True
         return context
