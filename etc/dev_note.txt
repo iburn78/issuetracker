@@ -1,7 +1,16 @@
-on card create or update, make image preview -> need javascript?
-image selection for cards
-image selection for user
-form post create: make image input responsive / let user to choose the main image
-in post, click will show image larger
+image selection for cards: multiful basic images
+image selection for user photo: multiful basic images 
 
+form post create: make image input responsive 
+https://stackoverflow.com/questions/14853779/adding-input-elements-dynamically-to-form
+https://stackoverflow.com/questions/57234294/preview-the-photo-after-selecting-the-file-in-django
 
+image resizing / without rotation
+url reassigning / success_url etc modify accordingly
+in post, click should show image larger
+make carousel element full width
+
+for below items click will lead to post_detail.html so I need it (with goback to prev page)
+ - search function -> post search  
+ - author post list  
+ - tag post list

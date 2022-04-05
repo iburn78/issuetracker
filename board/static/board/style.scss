@@ -226,12 +226,12 @@ body {
 .card-text-size {
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   font-size: 1em;
   line-height: 1.125em;
-  height: 2.25em;
+  height: 1.13em;
 }
 
 .card-title-size {
@@ -307,8 +307,8 @@ main::after {
 }
 
 .pub-icon-style {
-  margin-top:-10px;
-  margin-right:-10px;
+  margin-top:-4px;
+  margin-right:-4px;
 }
 
 .user-id-font{
