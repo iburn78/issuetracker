@@ -9,13 +9,11 @@
       {% else %}
       <img src="{% static 'icons/person-circle.svg' %}" width="24" height="24">
       {% endif %}
-      <b>{{ card.title }}</b>
+      <b class="KR-font">{{ card.title }}</b>
       {% if user.is_authenticated %}
-      <a class="float-end" href="{% url 'card-delete' card_id %}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
-      <a class="me-2 float-end" href="{% url 'card-update' card_id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
-      <a class="me-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
+      <a class="float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% endif %}
-      <button class="me-2 p-1 float-end btn btn-sm btn-outline-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDesc" style="font-size:11px;">desc</button>
+      <a class="me-2 float-end" data-bs-toggle="collapse" data-bs-target="#collapseDesc"><img src="{% static 'icons/textarea-resize.svg' %}" width="27" height="27"></a>
     </div>
   </div>
   <div class="collapse" id="collapseDesc">
@@ -29,6 +27,10 @@
         {% endif %}
       </div>
       <div class="col-8">
+        {% if user.is_authenticated %}
+        <a class="float-end" href="{% url 'card-delete' card_id %}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
+        <a class="me-2 float-end" href="{% url 'card-update' card_id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
+        {% endif %}
         {% if card.desc %}
         {{ card.desc }}
         {% else %}
@@ -92,12 +94,16 @@
       <div class="modal fade" id="collapsePost{{post.id}}" tabindex="-1">
         <div class="modal-dialog modal-fullscreen">
           <div class="modal-content">
-            <div class="modal-body">
-              <div class="row">
-                <div class="col">
-                  <img class="user-image-small me-2" src="{{ post.author.profile.image.url }}">
-                  <a class="me-2" href="">{{ post.author }}</a>
-                  <small class="text-muted">{{ post.date_posted|date:"M d, Y H:m" }}</small>
+            <div class="modal-body pt-0">
+              <div class="row align-items-center">
+                <div class="col-7 my-0 py-0">
+                  <div class="clearfix">
+                    <img class="mt-1 float-start user-image-small me-2" src="{{ post.author.profile.image.url }}">
+                    <a class="m-0 p-0" href="">{{ post.author }}</a><br>
+                    <small class="m-0 p-0 text-muted">{{ post.date_posted|date:"M d, Y H:m" }}</small>
+                  </div>
+                </div>
+                <div class="col-5 my-0 py-0">
                   <button type="button" class="float-end btn-close" data-bs-dismiss="modal"></button>
                   {% if post.author == user %}
                   <a class="me-2 float-end" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
@@ -118,7 +124,7 @@
                   </div>
                 </div>
                 <!-- delete collapse part end -->
-                <div id="divider-bar" class="m-0 p-0 mt-2" style="background-color:{{card.card_color}}"></div>
+                <div id="divider-bar" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
               </div>
               <div class="row">
                 <div class="col mt-1">
@@ -130,14 +136,14 @@
               <div class="row">
                 {% if post.image1 %}
                 <div class="col-sm-6 mt-1">
-                  <div id="carousel_indicators" class="carousel slide" data-bs-ride="carousel">
+                  <div id="carousel_indicators{{post.id}}" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
-                      <button type="button" data-bs-target="#carousel_indicators" data-bs-slide-to="0" class="active"></button>
+                      <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="0" class="active"></button>
                       {% if post.image2 %}
-                      <button type="button" data-bs-target="#carousel_indicators" data-bs-slide-to="1"></button>
+                      <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="1"></button>
                       {% endif %}
                       {% if post.image3 %}
-                      <button type="button" data-bs-target="#carousel_indicators" data-bs-slide-to="2"></button>
+                      <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="2"></button>
                       {% endif %}
                     </div>
                     <div class="carousel-inner">
@@ -155,11 +161,11 @@
                       </div>
                       {% endif %}
                     </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel_indicators" data-bs-slide="prev">
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide="prev">
                       <span class="carousel-control-prev-icon"></span>
                       <span class="visually-hidden">Previous</span>
                     </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carousel_indicators" data-bs-slide="next">
+                    <button class="carousel-control-next" type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide="next">
                       <span class="carousel-control-next-icon"></span>
                       <span class="visually-hidden">Next</span>
                     </button>

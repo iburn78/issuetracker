@@ -1,4 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
 from django.views.generic import (
     ListView,
     CreateView,
@@ -123,6 +124,10 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         newcard.save()
         form.save_m2m()
         return super().form_valid(form)
+
+    def get_success_url(self):
+        card = self.get_object()
+        return reverse('card-content', args={card.id})
 
     def test_func(self):
         card = self.get_object()

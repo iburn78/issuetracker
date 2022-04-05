@@ -3,7 +3,7 @@
 {% load static %}
 {% if user.is_authenticated %}
 <div class="container-fluid">
-  <p class="emphasis-font"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
+  <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
   <div class="row gy-2">
     {% for card in cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
@@ -15,7 +15,7 @@
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
-            <h5 class="card-title card-title-size">{{ card.title }}</h5>
+            <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
             <p class="card-text card-text-size">
               {{ card.desc }}
             </p>
@@ -42,11 +42,11 @@
 {% endif %}
 
 {% if user.is_authenticated %}
-<div id="divider-bar"></div>
+<div id="divider-bar" class="my-3"></div>
 {% endif %}
 
 <div class="container-fluid">
-  <p class="emphasis-font"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
+  <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
   <div class="row gy-2">
     {% for card in public_cards %}
     <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
@@ -59,7 +59,7 @@
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
             <span class="float-end pub-icon-style">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
-            <h5 class="card-title card-title-size">{{ card.title }}</h5>
+            <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
             <p class="card-text card-text-size">
               {{ card.desc }}
             </p>

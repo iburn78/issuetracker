@@ -13,7 +13,7 @@
   {% endif %}
   {% endif %}
   {% endif %}
-  <p class="emphasis-font"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
+  <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
   <div class="row gy-1">
     {% for card in cards %}
     <div class="col-sm-12 col-md-6 col-xxl-4">
@@ -28,7 +28,7 @@
           </div>
           <div class="col-10 ps-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
-              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark">{{ card.title }}</a>
+              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>
         </div>
@@ -59,14 +59,14 @@
 
 {% if user.is_authenticated %}
 {% if not card_select_for_new_post or user.is_public_card_manager %}
-<div id="divider-bar"></div>
+<div id="divider-bar" class="my-2"></div>
 {% endif %}
 {% endif %}
 
 
 {% if not card_select_for_new_post or user.is_public_card_manager %}
 <div class="container-fluid">
-  <p class="emphasis-font"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
+  <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
   <div class="row gy-1">
     {% for card in public_cards %}
     <div class="col-sm-12 col-md-6 col-xxl-4">
@@ -82,7 +82,7 @@
           <div class="col-10 ps-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
               <span class="float-end" style="margin-right: -10px;">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
-              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark">{{ card.title }}</a>
+              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>
         </div>

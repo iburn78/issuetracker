@@ -21,7 +21,7 @@
           <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
             <b>Card color</b>
           </button>
-          <a class="btn btn-outline-secondary btn-sm float-end" href="{% url 'main' %}"">cancel</a>
+          <input type="button" class="btn btn-outline-secondary btn-sm float-end" value="cancel" onClick="javascript:history.go(-1);">
           <button class="btn btn-outline-light bg-blue-500 btn-sm mb-2 me-1 float-end" type="submit">{{c_u}}</button>
         </div>
         <!-- Modal -->
