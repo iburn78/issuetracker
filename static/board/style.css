@@ -801,6 +801,11 @@ body {
   color: #212529;
 }
 
+.KR-font {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: black;
+}
+
 .emphasis-font {
   font-family: "Anton", sans-serif;
   color: black;
@@ -967,8 +972,8 @@ a.article-title:hover {
 }
 
 #divider-bar {
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   width: 100%;
   height: 3px;
   background-color: #cfe2ff;

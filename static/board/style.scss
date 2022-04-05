@@ -127,8 +127,14 @@ $grid-breakpoints: (
 }
 
 body {
+  // font-family: 'Noto Sans KR', sans-serif;
   font-family: "Open Sans", sans-serif;
   color: $gray-900;
+}
+
+.KR-font {
+  font-family: 'Noto Sans KR', sans-serif;
+  color: black;
 }
 
 .emphasis-font {
@@ -279,8 +285,8 @@ a.article-title:hover {
 }
 
 #divider-bar {
-  margin-top: 5px;
-  margin-bottom: 5px;
+  margin-top: 2px;
+  margin-bottom: 2px;
   width: 100%;
   height: 3px;
   background-color: $blue-100;
