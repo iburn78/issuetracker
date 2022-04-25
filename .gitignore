@@ -131,7 +131,6 @@ dmypy.json
 # Issuetracker specific files
 config.json
 db.sqlite3
-media/
 migrations/
 # settings.py
 # static/
