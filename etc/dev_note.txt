@@ -28,6 +28,8 @@ Steps
 - gacp / gpr / git pull 
 
 
+figure out where to put default.jpg for profile_pics.... (in static?)
+change default.jpg itself as well 
 
 
 
