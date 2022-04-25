@@ -24,8 +24,9 @@ you can customize other image upload fields..... as you did with ClearableFileFi
 Steps 
 - makemigrations/migrate/collectstatic in local
 - remove Post, User, Card in remote
-- clean media content in remote
+- clean media content (uploaded_imgs, profile_pics) in remote
 - gacp / gpr / git pull 
+- makemigrations/migrate in remote
 
 
 change media/default.jpg itself as well 
