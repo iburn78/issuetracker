@@ -1,10 +1,6 @@
 image selection for cards: multiful basic images
 image selection for user photo: multiful basic images 
 
-form post create: make image input responsive 
-https://stackoverflow.com/questions/14853779/adding-input-elements-dynamically-to-form
-https://stackoverflow.com/questions/57234294/preview-the-photo-after-selecting-the-file-in-django
-
 image resizing / without rotation
 url reassigning / success_url etc modify accordingly
 in post, click should show image larger
@@ -14,3 +10,19 @@ for below items click will lead to post_detail.html so I need it (with goback to
  - search function -> post search  
  - author post list  
  - tag post list
+
+in card model or view, reallocate images from image1, 2, etc.... 
+
+one image show page with full resolution
+- post page -> image click will lead to full resolution image viewer
+- update post page -> show previous => implement one image show page
+- profile_pics
+
+you can customize other image upload fields..... as you did with ClearableFileField
+- profile_pics
+
+Steps 
+- makemigrations/migrate/collectstatic in local
+- remove Post, User, Card in remote
+- clean uploaded_img folder, etc media content in remote
+- gacp / gpr / git pull 

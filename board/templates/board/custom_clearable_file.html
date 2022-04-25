@@ -1,0 +1,4 @@
+{% if widget.is_initial %}: <a href="{{ widget.value.url }}">show previous</a>{% if not widget.required %}
+<span class="mx-2"> - </span> remove <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}>
+{% endif %}{% endif %}
+<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
