@@ -30,6 +30,17 @@ Steps
 
 
 change media/default.jpg itself as well 
+post edit -> previous image number not working (just showing 1 where two images in a post)
+edit style clear (remove) checkbox for clear image 
+
+
+
+
+
+
+
+
+
 
 
 
