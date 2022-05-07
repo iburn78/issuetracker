@@ -68,15 +68,12 @@ class Post(models.Model):
     # publishing posts: posts can be published (only) to public cards, and posts in public cards must be (all) publised
     # importing posts: a user can import published posts to his/her own linked card
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
         # images = [self.image1, self.image2, self.image3, self.image4, self.image5, self.image6, self.image7]
-        th_images = [self.image1s, self.image2s, self.image3s, self.image4s, self.image5s, self.image6s, self.image7s]
-        for i in range(0, self.num_images):
-            # if i < self.num_images:
-            post_image_resize(th_images[i])
-            # else: 
-            #     th_images[i].delete()
+        # th_images = [self.image1s, self.image2s, self.image3s, self.image4s, self.image5s, self.image6s, self.image7s]
+        # for i in range(0, self.num_images):
+        #     post_image_resize(th_images[i])
 
     def get_preview_text(self):
         res = ' '.join(self.content[:150].split('\n')[:3])
