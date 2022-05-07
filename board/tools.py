@@ -27,3 +27,4 @@ def post_image_resize(imagefield) -> None:
     img = ImageOps.exif_transpose(img)
     img = image_resize(POST_IMG_MAXSIZE, img)
     img.save(os.path.join(settings.MEDIA_ROOT, imagefield.file.name), imgformat)
+    

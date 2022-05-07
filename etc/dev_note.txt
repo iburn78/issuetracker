@@ -44,6 +44,12 @@ Procedure
 store uploaded images twice
 resize one with the same filename
 
+**************
+How to make django created directory with permisson with www-data -> automatic: beware if this is copied from GIT
+How to make uploading a file larger than 2.5MB 
+Deleting first image will delete everything
+**************
+
 
 
 ### To develop and implement (old items - to review)
