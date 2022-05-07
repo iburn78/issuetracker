@@ -1,6 +1,8 @@
 from django.urls import path
 from board.views.card_view import *
 from board.views.post_view import *
+from django.conf import settings
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('', CardListView.as_view(revisit=False, card_list=True), name='main'),
@@ -16,4 +18,5 @@ urlpatterns = [
     path('post_delete/<int:card_id>/<int:pk>/', PostDeleteView.as_view(), name='post-delete'),
     path('post_update/<int:card_id>/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
     # path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+    path('favicon.ico', RedirectView.as_view(url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
 ]

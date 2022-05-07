@@ -18,6 +18,7 @@ class PostCreateView(CreateView):
     template_name = 'board/post_create.html'
 
     def get(self, request, *args, **kwargs):
+
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
         if not self.request.user.is_authenticated:
             return redirect('login')
@@ -42,13 +43,19 @@ class PostCreateView(CreateView):
         for i in range(len(images), 7):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7] = images
+        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
         form.instance.author = self.request.user
         form.instance.card = get_object_or_404(
             Card, id=self.kwargs.get('card_id'))
         new_post = form.save(commit=False)
         new_post.save()
         form.save_m2m()
-        return super().form_valid(form)
+        return redirect(self.get_success_url())
+        # return super().form_valid(form) # this saves the form again
+    
+    def get_success_url(self) -> str:
+        card_id = self.kwargs.get('card_id')
+        return f'/card/{card_id}'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -109,11 +116,17 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for i in range(len(images), 7):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7] = images
+        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
         form.instance.author = self.request.user
         newpost = form.save(commit=False)
         newpost.save()
         form.save_m2m()
-        return super().form_valid(form)
+        return redirect(self.get_success_url())
+        # return super().form_valid(form) # this saves the form again
+
+    def get_success_url(self) -> str:
+        card_id = self.kwargs.get('card_id')
+        return f'/card/{card_id}'
 
     def test_func(self):
         post = self.get_object()
