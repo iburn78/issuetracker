@@ -1,3 +1,4 @@
+from re import A
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -11,6 +12,7 @@ from django.views.generic import (
 from board.models import Card, Post
 from board.forms import PostForm
 from django.contrib import messages
+from board.tools import post_image_resize
 
 class PostCreateView(CreateView):
     model = Post
@@ -43,13 +45,17 @@ class PostCreateView(CreateView):
         for i in range(len(images), 7):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7] = images
-        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
+        # [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
         form.instance.author = self.request.user
         form.instance.card = get_object_or_404(
             Card, id=self.kwargs.get('card_id'))
         new_post = form.save(commit=False)
         new_post.save()
         form.save_m2m()
+        # th_images = [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s]
+        # for i in range(0, form.instance.num_images):
+        #     post_image_resize(th_images[i])
+        post_image_resize(new_post)
         return redirect(self.get_success_url())
         # return super().form_valid(form) # this saves the form again
     
@@ -109,18 +115,41 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         images = []
+        # timages = []
+        # new_timages_index = []
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'], form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
-        for img in img_field_input:
-            if img != None and img != False: images.append(img)
+        original_images = [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7]
+        # th_images = [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s]
+        for i, img in enumerate(img_field_input):
+            if img_field_input[i] != original_images[i]:
+                try:
+                    original_images[i].delete()
+                    # th_images[i].delete()
+                except:
+                    print("Exception in delete images - class PostUpdateView: ", i)
+
+            if img != False and img != None: 
+                images.append(img)
+                # if img_field_input[i] != original_images[i]:
+                #     timages.append(img)
+                #     new_timages_index.append(len(timages)-1)
+                # else:
+                #     timages.append(th_images[i])
         form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
+            # timages.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7] = images
-        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
+        # [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s] = timages
+        
         form.instance.author = self.request.user
-        newpost = form.save(commit=False)
-        newpost.save()
+        rev_post = form.save(commit=False)
+        rev_post.save()
         form.save_m2m()
+        # th_images = [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s]
+        # for i in new_timages_index: 
+        #     post_image_resize(th_images[i])
+        post_image_resize(rev_post)
         return redirect(self.get_success_url())
         # return super().form_valid(form) # this saves the form again
 
