@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.urls import reverse
 from taggit.managers import TaggableManager
 from users.models import User
-
+from board.tools import exception_log
 # Important concepts:
 # - public card / public posts (vs private, by default)
 # - approved user to use key features
@@ -75,10 +75,21 @@ class Post(models.Model):
         th_images = [self.image1s, self.image2s, self.image3s, self.image4s, self.image5s, self.image6s, self.image7s]
         for i in range(0, 7):
             try:
-                images[i].delete()
-                th_images[i].delete()
+                if images[i].name != "":
+                    images[i].delete()
             except:
-                print("Exception in delete images - class Post: ", i)
+                text = "Exception in delete images - class Post delete(): " + images[i].name
+                print(text)
+                exception_log(text)
+
+            try:
+                if th_images[i].name != "":
+                    th_images[i].delete()
+            except:
+                text = "Exception in delete th_images - class Post delete(): "+ th_images[i].name  
+                print(text)
+                exception_log(text)
+
         return super().delete(*args, **kwargs)
 
     def get_preview_text(self):

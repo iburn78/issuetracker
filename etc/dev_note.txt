@@ -33,22 +33,12 @@ post edit -> previous image number not working (just showing 1 where two images 
 edit style clear (remove) checkbox for clear image -> FIXED?
 
 
-
-**************
-pip install django-cleanup (for both windows and wsl)
-###### DO NOT USE THIS #######
-**************
 can access Media files.... from external... (is this fine?) -> not because if that image is private.... 
 (how to control?)
 
-Procedure
-store uploaded images twice
-resize one with the same filename
-
-**************
-How to make django created directory with permisson with www-data
+************** aws ****************
 How to make uploading a file larger than 2.5MB 
-**************
+***********************************
 
 
 
@@ -82,24 +72,3 @@ Card movements
 
 
 
-
-import os 
-from django.core.files import File
-from board.tools import post_image_resize
-
-
-
-        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7] = images
-
-
-        th_images = [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s]
-        for i in range(0, 7):
-            if i < form.instance.num_images:
-                th_images[i] = File(original_images[i], os.path.basename(original_images[i].file.name))
-            else: 
-                th_images[i] = ""
-        # [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s, form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
-        
-        th_images = [new_post.image1s, new_post.image2s, new_post.image3s, new_post.image4s, new_post.image5s, new_post.image6s, new_post.image7s]
-        for i in range(0, new_post.num_images):
-            post_image_resize(th_images[i])

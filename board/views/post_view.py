@@ -12,7 +12,7 @@ from django.views.generic import (
 from board.models import Card, Post
 from board.forms import PostForm
 from django.contrib import messages
-from board.tools import post_image_resize
+from board.tools import post_image_resize, exception_log
 
 class PostCreateView(CreateView):
     model = Post
@@ -123,10 +123,13 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for i, img in enumerate(img_field_input):
             if img_field_input[i] != original_images[i]:
                 try:
-                    original_images[i].delete()
+                    if original_images[i].name != "":
+                        original_images[i].delete()
                     # th_images[i].delete()
                 except:
-                    print("Exception in delete images - class PostUpdateView: ", i)
+                    text = "Exception in delete th_images - class PostUpdateView delete(): "+ original_images[i].name  
+                    print(text)
+                    exception_log(text)
 
             if img != False and img != None: 
                 images.append(img)
