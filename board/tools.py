@@ -36,7 +36,6 @@ def post_image_resize(post) -> None:
       text = "Exception in delete images - def post_image_resize: "+ th_images[i].name  
       print(text)
       exception_log(text)
-    th_images[i] = ""
 
   if post.num_images == 0: 
     return None
