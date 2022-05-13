@@ -118,7 +118,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                         original_images[i].delete()
                 except:
                     text = "Exception in delete th_images - class PostUpdateView delete(): "+ original_images[i].name  
-                    print(text)
                     exception_log(text)
 
             if img != False and img != None: 

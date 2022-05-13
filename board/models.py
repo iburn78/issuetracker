@@ -98,7 +98,6 @@ class Post(models.Model):
                     images[i].delete()
             except:
                 text = "Exception in delete images - class Post delete(): " + images[i].name
-                print(text)
                 exception_log(text)
 
             try:
@@ -106,7 +105,6 @@ class Post(models.Model):
                     th_images[i].delete()
             except:
                 text = "Exception in delete th_images - class Post delete(): "+ th_images[i].name  
-                print(text)
                 exception_log(text)
 
         return super().delete(*args, **kwargs)

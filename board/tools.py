@@ -34,7 +34,6 @@ def post_image_resize(post) -> None:
         th_images[i].delete()
     except:
       text = "Exception in delete images - def post_image_resize: "+ th_images[i].name  
-      print(text)
       exception_log(text)
 
   if post.num_images == 0: 
@@ -52,12 +51,12 @@ def post_image_resize(post) -> None:
       ha.append(h)
       hh.append(h*h)
       wh.append(w*h)
+    
 
   try:
     ar = float(sum(hh)/sum(wh))
   except: 
     text = "Exception in ar calc. - def post_image_resize: "+ th_images[i].name  
-    print(text)
     exception_log(text)
     ar = 1
 
@@ -70,17 +69,27 @@ def post_image_resize(post) -> None:
     else: 
       croparea.append((0, (h-w*ar)/2, w, (h+w*ar)/2))
 
+
   for i in range(0, post.num_images): 
     img_io = BytesIO()
+    exception_log('step 1')
     img = Image.open(images[i].file)
+    exception_log('step 2')
     img_exif = ImageOps.exif_transpose(img)
+    exception_log('step 3')
     res = img_exif.crop(croparea[i])
+    exception_log('step 4')
     res = image_resize(POST_IMG_MAXSIZE, res)
+    exception_log('step 5')
     res.save(img_io, format=img.format)
+    exception_log('step 6')
     th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
+    exception_log('step 7')
   
 
 def exception_log(text): 
+  print("--------------->>>>>>")
+  print(text)
   logfilepath = os.path.join(settings.BASE_DIR, 'etc') 
   with open(os.path.join(logfilepath, 'exception_log.txt'), 'a') as logfile: 
     now = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
