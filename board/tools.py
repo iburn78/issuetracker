@@ -75,16 +75,22 @@ def post_image_resize(post) -> None:
     img = Image.open(images[i].file)
     img_exif = ImageOps.exif_transpose(img)
 
+    exception_log("***********")
+
     res = img_exif.crop(croparea[i])
+
+    exception_log("1st step")
+
     res = image_resize(POST_IMG_MAXSIZE, res)
+
+    exception_log("SUCCESS")
 
     res.save(img_io, format=img.format)
     th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
   
 
 def exception_log(text): 
-  print("--------------->>>>>>")
-  print(text)
+  print("----->>>>>> ", text)
   logfilepath = os.path.join(settings.BASE_DIR, 'etc') 
   with open(os.path.join(logfilepath, 'exception_log.txt'), 'a') as logfile: 
     now = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
