@@ -77,9 +77,12 @@ def post_image_resize(post) -> None:
     exception_log('step 2')
     img_exif = ImageOps.exif_transpose(img)
     exception_log('step 3')
-    res = img_exif.crop(croparea[i])
-    exception_log('step 4')
-    res = image_resize(POST_IMG_MAXSIZE, res)
+    try:
+      res = img_exif.crop(croparea[i])
+      exception_log('step 4')
+      res = image_resize(POST_IMG_MAXSIZE, res)
+    except:
+      pass
     exception_log('step 5')
     res.save(img_io, format=img.format)
     exception_log('step 6')

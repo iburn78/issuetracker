@@ -21,6 +21,9 @@ one image show page with full resolution
 - update post page -> show previous => implement one image show page
 - profile_pics
 
+Study how to give www-data permission to exception_log in aws.....
+
+
 you can customize other image upload fields..... as you did with ClearableFileField
 - profile_pics
 - card pics 
