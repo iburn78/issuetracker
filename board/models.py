@@ -5,6 +5,7 @@ from django.urls import reverse
 from taggit.managers import TaggableManager
 from users.models import User
 from board.tools import exception_log
+import os
 # Important concepts:
 # - public card / public posts (vs private, by default)
 # - approved user to use key features
@@ -13,6 +14,24 @@ from board.tools import exception_log
 # - importing posts
 # - comments in published posts
 # - tags
+
+def filename_gen(userid, filename):
+    userid = str(userid)
+    res = ""
+    for ch in userid:
+        res += str(ord(ch))
+    res = res[:7]+"_"+filename
+    return res
+
+def path_to_imgs(instance, filename):
+    path = "uploaded_imgs/"
+    newname = filename_gen(instance.author, filename)
+    return os.path.join(path, newname)
+
+def path_to_imgs_th(instance, filename):
+    path = "uploaded_imgs_th/"
+    # newname = filename_gen(instance.author, filename)  # as this add author code twice
+    return os.path.join(path, filename)
 
 
 class Card(models.Model):
@@ -44,21 +63,21 @@ class Post(models.Model):
     date_posted = models.DateTimeField(default=timezone.now)
     content = models.TextField()
     num_images = models.IntegerField(default=0)
-    image1 = models.ImageField(upload_to='uploaded_imgs', blank=True)
-    image2 = models.ImageField(upload_to='uploaded_imgs', blank=True)
-    image3 = models.ImageField(upload_to='uploaded_imgs', blank=True)
-    image4 = models.ImageField(upload_to='uploaded_imgs', blank=True)
-    image5 = models.ImageField(upload_to='uploaded_imgs', blank=True)
-    image6 = models.ImageField(upload_to='uploaded_imgs', blank=True)
-    image7 = models.ImageField(upload_to='uploaded_imgs', blank=True)
+    image1 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image2 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image3 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image4 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image5 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image6 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image7 = models.ImageField(upload_to=path_to_imgs, blank=True)
 
-    image1s = models.ImageField(upload_to='uploaded_imgs_tn', blank=True)
-    image2s = models.ImageField(upload_to='uploaded_imgs_tn', blank=True)
-    image3s = models.ImageField(upload_to='uploaded_imgs_tn', blank=True)
-    image4s = models.ImageField(upload_to='uploaded_imgs_tn', blank=True)
-    image5s = models.ImageField(upload_to='uploaded_imgs_tn', blank=True)
-    image6s = models.ImageField(upload_to='uploaded_imgs_tn', blank=True)
-    image7s = models.ImageField(upload_to='uploaded_imgs_tn', blank=True)
+    image1s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image2s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image3s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image4s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image5s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image6s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image7s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
 
     tags = TaggableManager(blank=True)
     is_published = models.BooleanField(default=False)

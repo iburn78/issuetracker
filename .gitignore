@@ -133,7 +133,7 @@ config.json
 db.sqlite3
 profile_pics/
 uploaded_imgs/
-uploaded_imgs_tn/
+uploaded_imgs_th/
 migrations/
 temp/
 exception_log.txt

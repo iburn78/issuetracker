@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
+from django.urls import reverse, resolve
 from django.views.generic import (
     ListView,
     CreateView,
@@ -7,18 +7,21 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from django.views import View
 from jmespath import search
 from board.models import Card, Post
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
 from django.http import Http404
+from django.views.static import serve
+import os
 
 
 def about(request):
     return render(request, 'board/about.html')
-
 
 class CardListView(ListView):
     model = Card
@@ -140,6 +143,7 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['c_u'] = 'Update'
         return context
 
+
 class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Card
     success_url = '/'
@@ -152,3 +156,22 @@ class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         if self.request.user == self.get_object().owner:
             return True
         return False
+
+
+class MediaView(LoginRequiredMixin, UserPassesTestMixin, View): #Inheritance sequence is important
+
+    def get(self, *args, **kwargs):
+        target_file = self.kwargs.get('file')
+        target_dir = os.path.dirname(resolve(self.request.path_info).route)
+        return serve(self.request, target_file, target_dir)
+
+    def test_func(self):
+        userid = str(self.request.user)
+        res = ""
+        for ch in userid:
+            res += str(ord(ch))
+        res = res[:7]
+        if str(self.kwargs.get('file')).startswith(res):
+            return True
+        return False
+    

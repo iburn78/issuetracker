@@ -13,6 +13,9 @@ for below items click will lead to post_detail.html so I need it (with goback to
 
 in card model or view, reallocate images from image1, 2, etc.... 
 
+when deleting a card, add logic to handle posts (e.g., put max limit on the number of posts to perform delete the current card...)
+deleting from django shell do not delete post images.... -> be careful... 
+
 one image show page with full resolution
 - post page -> image click will lead to full resolution image viewer
 - update post page -> show previous => implement one image show page
@@ -20,29 +23,30 @@ one image show page with full resolution
 
 you can customize other image upload fields..... as you did with ClearableFileField
 - profile_pics
+- card pics 
 
 Steps 
 - makemigrations/migrate/collectstatic in local
 - remove Post, User, Card in remote
-- clean media content (uploaded_imgs, profile_pics) in remote
+- clean media content (uploaded_imgs, profile_pics, etc) in remote
 - gacp / gpr / git pull 
 - makemigrations/migrate in remote
 
+Steps for initiating DB
+- delete db
+- create a new dbfile (sqlite)
+- remove all migration directory content except __init__.py (look up for a linux command to do this)
+- chmod and chown as written in other note
+- makemigrations/migrate/collectstatic
+
 change media/default.jpg itself as well 
-post edit -> previous image number not working (just showing 1 where two images in a post) -> FIXED?
 edit style clear (remove) checkbox for clear image -> FIXED?
 
-
-can access Media files.... from external... (is this fine?) -> not because if that image is private.... 
-(how to control?)
-
 ************** aws ****************
-How to make uploading a file larger than 2.5MB 
+May consider implement X-sendfile as it is more efficient in serving large files... when traffic increases
 ***********************************
 
-
-
-### To develop and implement (old items - to review)
+### To develop and implement (items - to review)
 
 Multiple images in a post 
 - [ ] carousel - only limited to 3 images, and need to make it longer (any length)

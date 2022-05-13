@@ -47,9 +47,9 @@
     {% for post in posts %}
     <div class="col-md-6 col-xl-4 mb-2">
       <div class="row">
-        {% if post.image1 %}
+        {% if post.image1s %}
         <div class="col-4 pe-0 mt-1">
-          <img class="img-fluid post-list-image" src="{{ post.image1.url }}">
+          <img class="img-fluid post-list-image" src="{{ post.image1s.url }}">
         </div>
         <div class="col-8">
           {% if card.is_public %}
@@ -136,7 +136,7 @@
                 </div>
               </div>
               <div class="row">
-                {% if post.image1 and post.image2 %}
+                {% if post.image1s and post.image2s %}
                 <div class="col-sm-6 mt-1">
                   <div id="carousel_indicators{{post.id}}" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
@@ -160,34 +160,34 @@
                     </div>
                     <div class="carousel-inner">
                       <div class="carousel-item active">
-                        <img src="{{ post.image1.url }}" class="d-block w-100 rounded">
+                        <img src="{{ post.image1s.url }}" class="d-block w-100 rounded">
                       </div>
                       <div class="carousel-item">
-                        <img src="{{ post.image2.url }}" class="d-block w-100 rounded">
+                        <img src="{{ post.image2s.url }}" class="d-block w-100 rounded">
                       </div>
                       {% if post.image3 %}
                       <div class="carousel-item">
-                        <img src="{{ post.image3.url }}" class="d-block w-100 rounded">
+                        <img src="{{ post.image3s.url }}" class="d-block w-100 rounded">
                       </div>
                       {% endif %}
                       {% if post.image4 %}
                       <div class="carousel-item">
-                        <img src="{{ post.image4.url }}" class="d-block w-100 rounded">
+                        <img src="{{ post.image4s.url }}" class="d-block w-100 rounded">
                       </div>
                       {% endif %}
                       {% if post.image5 %}
                       <div class="carousel-item">
-                        <img src="{{ post.image5.url }}" class="d-block w-100 rounded">
+                        <img src="{{ post.image5s.url }}" class="d-block w-100 rounded">
                       </div>
                       {% endif %}
                       {% if post.image6 %}
                       <div class="carousel-item">
-                        <img src="{{ post.image6.url }}" class="d-block w-100 rounded">
+                        <img src="{{ post.image6s.url }}" class="d-block w-100 rounded">
                       </div>
                       {% endif %}
                       {% if post.image7 %}
                       <div class="carousel-item">
-                        <img src="{{ post.image7.url }}" class="d-block w-100 rounded">
+                        <img src="{{ post.image7s.url }}" class="d-block w-100 rounded">
                       </div>
                       {% endif %}
                     </div>
@@ -204,9 +204,9 @@
                 <div class="col-sm-6">
                   <p class="article-content mt-2 mb-1">{{ post.content }}</p>
                 </div>
-                {% elif post.image1 %}
+                {% elif post.image1s %}
                 <div class="col-sm-6 mt-1">
-                  <img src="{{ post.image1.url }}" class="d-block w-100 rounded">
+                  <img src="{{ post.image1s.url }}" class="d-block w-100 rounded">
                 </div>
                 <div class="col-sm-6">
                   <p class="article-content mt-2 mb-1">{{ post.content }}</p>
@@ -217,18 +217,6 @@
                 </div>
                 {% endif %}
               </div>
-              <!-- <div class="row">
-                <div class="col-4">
-                  {% if post.image1 %}
-                  <img class="card-img-preview" src="{{ post.image1.url }}">
-                  {% else %}
-                  <span class="text-muted">no image</span>
-                  {% endif %}
-                </div>
-                <div class="col-8">
-                  {{ post.content }}
-                </div>
-              </div> -->
             </div>
           </div>
         </div>

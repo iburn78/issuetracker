@@ -18,5 +18,9 @@ urlpatterns = [
     path('post_delete/<int:card_id>/<int:pk>/', PostDeleteView.as_view(), name='post-delete'),
     path('post_update/<int:card_id>/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
     # path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
+
     path('favicon.ico', RedirectView.as_view(url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
+
+    path('media/uploaded_imgs/<str:file>', MediaView.as_view(), name='media-view'), 
+    path('media/uploaded_imgs_th/<str:file>', MediaView.as_view(), name='media-view'), 
 ]
