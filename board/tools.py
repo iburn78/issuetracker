@@ -38,6 +38,7 @@ def post_image_resize(post) -> None:
 
   if post.num_images == 0: 
     return None
+  print("gate 1")
 
   wa = []
   ha = []
@@ -59,6 +60,8 @@ def post_image_resize(post) -> None:
     text = "Exception in ar calc. - def post_image_resize: "+ th_images[i].name  
     exception_log(text)
     ar = 1
+  print("gate 2")
+  print(ar)
 
   croparea = []
   for i in range(0, post.num_images): 
@@ -69,21 +72,26 @@ def post_image_resize(post) -> None:
     else: 
       croparea.append((0, (h-w*ar)/2, w, (h+w*ar)/2))
 
+  print(croparea)
 
   for i in range(0, post.num_images): 
     img_io = BytesIO()
     img = Image.open(images[i].file)
     img_exif = ImageOps.exif_transpose(img)
 
-    exception_log("***********")
+    print("*******1")
+    print(croparea[i])
+    print(img_exif)
 
     res = img_exif.crop(croparea[i])
 
-    exception_log("1st step")
+    print(res)
+    print("*******2")
 
     res = image_resize(POST_IMG_MAXSIZE, res)
 
-    exception_log("SUCCESS")
+    print(res)
+    print("*******3")
 
     res.save(img_io, format=img.format)
     th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))

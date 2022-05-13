@@ -23,7 +23,7 @@ one image show page with full resolution
 
 Study how to give www-data permission to exception_log in aws.....
 -> exception_log.txt file has to be created and given permission already
--> it might be true that only group permission needs to be given
+-> only group permission needs to be given!!! 
 
 
 you can customize other image upload fields..... as you did with ClearableFileField
