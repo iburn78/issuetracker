@@ -72,23 +72,14 @@ def post_image_resize(post) -> None:
 
   for i in range(0, post.num_images): 
     img_io = BytesIO()
-    exception_log('step 1')
     img = Image.open(images[i].file)
-    exception_log('step 2')
     img_exif = ImageOps.exif_transpose(img)
-    exception_log('step 3')
-    try:
-      res = img_exif.crop(croparea[i])
-      exception_log('step 4')
-      res = image_resize(POST_IMG_MAXSIZE, res)
-      exception_log("SUCCESS")
-    except:
-      pass
-    exception_log('step 5')
+
+    res = img_exif.crop(croparea[i])
+    res = image_resize(POST_IMG_MAXSIZE, res)
+
     res.save(img_io, format=img.format)
-    exception_log('step 6')
     th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
-    exception_log('step 7')
   
 
 def exception_log(text): 
