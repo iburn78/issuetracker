@@ -37,6 +37,10 @@ def post_image_resize(post) -> None:
       print(text)
       exception_log(text)
 
+  if post.num_images == 0: 
+    print(post.num_images)
+    return None
+
   wa = []
   ha = []
   hh = []
@@ -50,7 +54,13 @@ def post_image_resize(post) -> None:
       hh.append(h*h)
       wh.append(w*h)
 
-  ar = float(sum(hh)/sum(wh))
+  try:
+    ar = float(sum(hh)/sum(wh))
+  except: 
+    text = "Exception in ar calc. - def post_image_resize: "+ th_images[i].name  
+    print(text)
+    exception_log(text)
+    ar = 1
 
   croparea = []
   for i in range(0, post.num_images): 
