@@ -129,6 +129,7 @@ USE_TZ = True
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880
+DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
