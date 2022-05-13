@@ -33,7 +33,6 @@ SECRET_KEY = config.get('SECRET_KEY')
 DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', '52.78.166.22', 'issuetracker.info']
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -128,6 +127,8 @@ USE_TZ = True
 
 # default auto field new from Django 3.2
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 5242880
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/

@@ -81,6 +81,7 @@ def post_image_resize(post) -> None:
       res = img_exif.crop(croparea[i])
       exception_log('step 4')
       res = image_resize(POST_IMG_MAXSIZE, res)
+      exception_log("SUCCESS")
     except:
       pass
     exception_log('step 5')
