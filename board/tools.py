@@ -36,9 +36,9 @@ def post_image_resize(post) -> None:
       text = "Exception in delete images - def post_image_resize: "+ th_images[i].name  
       print(text)
       exception_log(text)
+    th_images[i] = ""
 
   if post.num_images == 0: 
-    print(post.num_images)
     return None
 
   wa = []
@@ -79,6 +79,10 @@ def post_image_resize(post) -> None:
     res = image_resize(POST_IMG_MAXSIZE, res)
     res.save(img_io, format=img.format)
     th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
+  
+    print(th_images[i], "((((((((((((******************)))))))))))))))))))")
+
+  
 
 def exception_log(text): 
   logfilepath = os.path.join(settings.BASE_DIR, 'etc') 
