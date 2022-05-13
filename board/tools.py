@@ -91,7 +91,7 @@ def exception_log(text):
   print("--------------->>>>>>")
   print(text)
   logfilepath = os.path.join(settings.BASE_DIR, 'etc') 
-  with open(os.path.join(logfilepath, 'exception_log.txt'), 'aw') as logfile: 
+  with open(os.path.join(logfilepath, 'exception_log.txt'), 'a') as logfile: 
     now = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
     logfile.write(now + " " + text + "\n")
 
