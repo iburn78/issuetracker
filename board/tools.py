@@ -80,9 +80,6 @@ def post_image_resize(post) -> None:
     res.save(img_io, format=img.format)
     th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
   
-    print(th_images[i], "((((((((((((******************)))))))))))))))))))")
-
-  
 
 def exception_log(text): 
   logfilepath = os.path.join(settings.BASE_DIR, 'etc') 
