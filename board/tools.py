@@ -5,7 +5,7 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
 POST_IMG_MAXSIZE = 2000
-
+IMG_ORIENTATION = 274 # exif code
 
 def image_resize(maxsize, img: Image) -> Image:
   w, h = img.size
@@ -38,21 +38,28 @@ def post_image_resize(post) -> None:
 
   if post.num_images == 0: 
     return None
-  print("gate 1")
 
   wa = []
   ha = []
   hh = []
   wh = []
+  exif = []
   for i in range(0, post.num_images): 
     with Image.open(images[i].file) as img:
-      img = ImageOps.exif_transpose(img)
-      w, h = img.size
+      try: 
+        orientation = int(img._getexif()[IMG_ORIENTATION])
+      except:
+        orientation = 1
+      if orientation >= 5:
+        exif.append(True)
+        h, w = img.size
+      else: 
+        exif.append(False)
+        w, h = img.size
       wa.append(w)
       ha.append(h)
       hh.append(h*h)
       wh.append(w*h)
-    
 
   try:
     ar = float(sum(hh)/sum(wh))
@@ -60,41 +67,32 @@ def post_image_resize(post) -> None:
     text = "Exception in ar calc. - def post_image_resize: "+ th_images[i].name  
     exception_log(text)
     ar = 1
-  print("gate 2")
-  print(ar)
 
   croparea = []
   for i in range(0, post.num_images): 
     w = wa[i]
     h = ha[i]
     if ar >= h/w:
-      croparea.append(((w-h/ar)/2, 0, (w+h/ar)/2, h))
+      if exif[i]: 
+        croparea.append((0, (w-h/ar)/2, h, (w+h/ar)/2)) # transpose
+      else:
+        croparea.append(((w-h/ar)/2, 0, (w+h/ar)/2, h))
     else: 
-      croparea.append((0, (h-w*ar)/2, w, (h+w*ar)/2))
-
-  print(croparea)
+      if exif[i]: 
+        croparea.append(((h-w*ar)/2, 0, (h+w*ar)/2, w)) # transpose 
+      else:
+        croparea.append((0, (h-w*ar)/2, w, (h+w*ar)/2))
 
   for i in range(0, post.num_images): 
     img_io = BytesIO()
-    img = Image.open(images[i].file)
-    img_exif = ImageOps.exif_transpose(img)
-
-    print("*******1")
-    print(croparea[i])
-    print(img_exif)
-
-    res = img_exif.crop(croparea[i])
-
-    print(res)
-    print("*******2")
-
-    res = image_resize(POST_IMG_MAXSIZE, res)
-
-    print(res)
-    print("*******3")
-
-    res.save(img_io, format=img.format)
-    th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
+    with Image.open(images[i].file) as img: 
+      ft = img.format
+      img = img.crop(croparea[i])
+      img = image_resize(POST_IMG_MAXSIZE, img)
+      res = ImageOps.exif_transpose(img)
+      res.save(img_io, format=ft)
+      th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
+      res.close()
   
 
 def exception_log(text): 
@@ -104,40 +102,3 @@ def exception_log(text):
     now = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
     logfile.write(now + " " + text + "\n")
 
-
-# from pathlib import Path
-# import json
-# import os
-
-# BASE_DIR = Path(__file__).resolve().parent.parent
-# i1 = Image.open(os.path.join(BASE_DIR,'media/temp/background.jpg'))
-# i2 = Image.open(os.path.join(BASE_DIR,'media/temp/cap.JPG'))
-# i3 = Image.open(os.path.join(BASE_DIR,'media/temp/xooos.JPG'))
-
-# wa = []
-# ha = []
-# hh = []
-# wh = []
-# for i in [i1, i2, i3]:
-#   w, h = i.size
-#   print('before')
-#   print(w,h)
-#   img = ImageOps.exif_transpose(i)
-#   w, h = img.size
-#   print('after')
-#   print(w,h)
-#   wa.append(w)
-#   ha.append(h)
-#   hh.append(h*h)
-#   wh.append(w*h)
-
-# ar = float(sum(hh)/sum(wh))
-
-# for i in [i1, i2, i3]:
-#   w, h = img.size
-#   if ar >= h/w:
-#     croparea = ((w-h/ar)/2, 0, (w+h/ar)/2, h)
-#   else: 
-#     croparea = (0, (h-w*ar)/2, w, (h+w*ar)/2)
-#   print(ar)
-#   print(croparea)
