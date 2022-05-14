@@ -37,6 +37,7 @@ Steps
 - clean media content (uploaded_imgs, profile_pics, etc) in remote
 - gacp / gpr / git pull 
 - makemigrations/migrate in remote
+- delete all users, and delete default.jpg / copy default_user.png
 
 Steps for initiating DB
 - delete db
@@ -82,3 +83,13 @@ Card movements
 
 
 
+
+
+
+
+*********
+
+- urls -> limit access to default_card_imgs (?) -> 
+- urls -> limit access to card_imgs, post_images -> SHOULD ALLOW IF CARDS OR POSTS ARE PUBLIC......
+- also put userid number to card image?????
+- CardFrom why customclearabletemplate do do not work? REMOVE -> back to random image

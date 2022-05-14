@@ -23,4 +23,5 @@ urlpatterns = [
 
     path('media/uploaded_imgs/<str:file>', MediaView.as_view(), name='media-view'), 
     path('media/uploaded_imgs_th/<str:file>', MediaView.as_view(), name='media-view'), 
+    path('media/card_imgs/<str:file>', CardMediaView.as_view(), name='media-view'), 
 ]

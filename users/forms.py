@@ -16,8 +16,25 @@ class UserUpdateForm(forms.ModelForm):
         model = User
         fields = ['email']
 
-class ProfileUpdateForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control',
+            })
+            
+class CustomclearableProfile(forms.ClearableFileInput):
+    template_name='users/custom_clearable_profile.html'
 
+class ProfileUpdateForm(forms.ModelForm):
+    picture = forms.ImageField(required=True, widget=CustomclearableProfile)
     class Meta:
         model = Profile 
-        fields = ['image']
+        fields = ['picture']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control',
+            })

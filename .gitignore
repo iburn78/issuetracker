@@ -134,6 +134,7 @@ db.sqlite3
 profile_pics/
 uploaded_imgs/
 uploaded_imgs_th/
+card_imgs/
 migrations/
 temp/
 exception_log.txt

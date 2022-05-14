@@ -25,6 +25,7 @@ def image_resize(maxsize, img: Image) -> Image:
       res = img.resize((wr, hr))
   return res
 
+
 def post_image_resize(post) -> None:
   images = [post.image1, post.image2, post.image3, post.image4, post.image5, post.image6, post.image7]
   th_images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s]

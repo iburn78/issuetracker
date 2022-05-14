@@ -30,10 +30,11 @@
 		<form method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
 			<fieldset class ="form-group">
-				{{ u_form | crispy }}
-				{{ p_form | crispy }}
-				<a class="btn btn-outline-secondary" href="{% url 'password_reset' %}">Reset Password</a>
-				<button class="btn btn-primary float-end" type="submit">Update</button>
+				{{ u_form }}
+				{{ p_form }}
+				<a class="mt-2 btn btn-outline-secondary btn-sm" href="{% url 'password_reset' %}">Reset Password</a>
+				<button class="mt-2 btn btn-primary btn-sm float-end" type="submit">Update</button>
+        <input type="button" class="mt-2 me-1 btn btn-sm btn-outline-secondary float-end" value="cancel" onClick="javascript:history.go(-1);">
 			</fieldset>
 		</form>
 	</div>

@@ -1,30 +1,27 @@
 from email.policy import default
 from random import choice
-from re import A
-import re
 from django import forms
 from board.models import Card, Post
 
+class Customclearable(forms.ClearableFileInput):
+    template_name='board/custom_clearable_file.html'
+
 class CardForm(forms.ModelForm):
+    image_input = forms.ImageField(required=False, widget=Customclearable)
     class Meta:
         model = Card
-        fields = ['title', 'image', 'card_color', 'desc', 'is_public', 'linked_card']
+        fields = ['title', 'image_input', 'card_color', 'desc', 'is_public', 'linked_card']
         widgets = {
-            # 'is_public': forms.HiddenInput,  
             'is_public': forms.CheckboxInput,  
-            # 'card_color': forms.TextInput(attrs={'type': 'color'})
             'title': forms.TextInput(attrs={'class':'form-control',}), 
             'desc': forms.Textarea(attrs={'class':'form-control', 'rows':3}), 
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['image'].widget.attrs.update({
+        self.fields['image_input'].widget.attrs.update({
             'class': 'form-control',
         })
-
-class Customclearable(forms.ClearableFileInput):
-    template_name='board/custom_clearable_file.html'
 
 class PostForm(forms.ModelForm):
     image1_input = forms.ImageField(required=False, widget=Customclearable)

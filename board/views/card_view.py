@@ -8,8 +8,7 @@ from django.views.generic import (
     DeleteView,
 )
 from django.views import View
-from jmespath import search
-from board.models import Card, Post
+from board.models import Card, Post, CARD_UPLOADED_IMGS
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 
@@ -17,11 +16,41 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib import messages
 from django.http import Http404
 from django.views.static import serve
+from board.tools import *
 import os
+CARD_IMAGE_MAXSIZE = 2000
 
 
 def about(request):
     return render(request, 'board/about.html')
+
+def card_image_resize(form):
+    if form.cleaned_data['image_input'] == None:
+        image_path = os.path.dirname(form.instance.image.file.name)
+        if os.path.basename(image_path) == CARD_UPLOADED_IMGS:
+            return None
+        else: 
+            img = Image.open(form.instance.image.file)
+            filename = os.path.basename(form.instance.image.name)
+    else: 
+        name = form.instance.image.name
+        try:
+            form.instance.image.delete()
+        except:
+            text = "Exception in delete cared image - card_image_resize: "+ name  
+            exception_log(text)
+        img = Image.open(form.cleaned_data['image_input'])
+        filename = os.path.basename(form.cleaned_data['image_input'].name)
+
+    img_io = BytesIO()
+    ft = img.format
+    img = image_resize(CARD_IMAGE_MAXSIZE, img)
+    res = ImageOps.exif_transpose(img)
+    res.save(img_io, format=ft)
+    form.instance.image.save(filename, ContentFile(img_io.getvalue()))
+    res.close()
+    img.close()
+
 
 class CardListView(ListView):
     model = Card
@@ -53,6 +82,7 @@ class CardListView(ListView):
         messages.info(self.request, f"Search Keyword {search_term} entered")
         return redirect('/')
 
+
 class CardSelectView(LoginRequiredMixin, CardListView): # a view for creating a new post 
     template_name = "board/card_list.html"
 
@@ -69,8 +99,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
-        # if self.request.user.is_public_card_manager:
-        #     form.instance.is_public = True
+        card_image_resize(form)
         new_card = form.save(commit=False)
         new_card.save()
         form.save_m2m()
@@ -122,7 +151,7 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'board/card_create.html'
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
+        card_image_resize(form)
         newcard = form.save(commit=False)
         newcard.save()
         form.save_m2m()
@@ -142,6 +171,13 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['c_u'] = 'Update'
         return context
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['image_input'] = self.object.image
+        return initial
+
+
 
 
 class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -175,3 +211,13 @@ class MediaView(LoginRequiredMixin, UserPassesTestMixin, View): #Inheritance seq
             return True
         return False
     
+class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View): #Inheritance sequence is important
+
+    def get(self, *args, **kwargs):
+        target_file = self.kwargs.get('file')
+        target_dir = os.path.dirname(resolve(self.request.path_info).route)
+        return serve(self.request, target_file, target_dir)
+
+    def test_func(self):
+        print('test undergoing')
+        return True

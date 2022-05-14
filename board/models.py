@@ -1,11 +1,17 @@
-from re import A
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
 from taggit.managers import TaggableManager
 from users.models import User
-from board.tools import exception_log
+from board.tools import *
 import os
+from django.conf import settings
+from random import choice
+from os.path import join as path_join
+from os import listdir
+from os.path import isfile
+CARD_UPLOADED_IMGS = 'card_imgs'
+
 # Important concepts:
 # - public card / public posts (vs private, by default)
 # - approved user to use key features
@@ -33,13 +39,17 @@ def path_to_imgs_th(instance, filename):
     # newname = filename_gen(instance.author, filename)  # as this add author code twice
     return os.path.join(path, filename)
 
+def random_img():
+    dir_path = path_join(settings.MEDIA_ROOT, 'card_default_imgs')
+    files = [content for content in listdir(dir_path) if isfile(path_join(dir_path, content))]
+    return path_join(dir_path, choice(files))
 
 class Card(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
     date_created = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=70)
     desc = models.TextField(blank=True)
-    image = models.ImageField(upload_to='uploaded_imgs', blank=True)
+    image = models.ImageField(default=random_img, upload_to=CARD_UPLOADED_IMGS)
     card_color = models.CharField(
         max_length=30, default='rgb(233, 236, 239)')  # gray-200
     is_public = models.BooleanField(default=False)
@@ -49,6 +59,21 @@ class Card(models.Model):
     # Rules
     # only admin users can make a card public
     # linking a card: a user can link a public card to his/her own card
+
+    def delete(self, *args, **kwargs): 
+        name = str(self.image.name)
+        try:
+            image_path = os.path.basename(os.path.dirname(self.image.name))
+            if CARD_UPLOADED_IMGS == image_path:
+                self.image.delete()
+        except:
+            text = "Exception in deleting image - class Card delete(): " + name
+            exception_log(text)
+        return super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return self.title
