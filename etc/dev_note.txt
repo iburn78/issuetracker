@@ -92,4 +92,3 @@ Card movements
 - urls -> limit access to default_card_imgs (?) -> 
 - urls -> limit access to card_imgs, post_images -> SHOULD ALLOW IF CARDS OR POSTS ARE PUBLIC......
 - also put userid number to card image?????
-- CardFrom why customclearabletemplate do do not work? REMOVE -> back to random image

@@ -6,8 +6,11 @@ from board.models import Card, Post
 class Customclearable(forms.ClearableFileInput):
     template_name='board/custom_clearable_file.html'
 
+class Cardclearable(forms.ClearableFileInput):
+    template_name='board/card_clearable_file.html'
+
 class CardForm(forms.ModelForm):
-    image_input = forms.ImageField(required=False, widget=Customclearable)
+    image_input = forms.ImageField(required=False, widget=Cardclearable)
     class Meta:
         model = Card
         fields = ['title', 'image_input', 'card_color', 'desc', 'is_public', 'linked_card']
