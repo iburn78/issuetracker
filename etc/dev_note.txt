@@ -11,8 +11,6 @@ for below items click will lead to post_detail.html so I need it (with goback to
  - author post list  
  - tag post list
 
-in card model or view, reallocate images from image1, 2, etc.... 
-
 when deleting a card, add logic to handle posts (e.g., put max limit on the number of posts to perform delete the current card...)
 deleting from django shell do not delete post images.... -> be careful... 
 
@@ -26,10 +24,12 @@ Study how to give www-data permission to exception_log in aws.....
 -> file: only group permission needs to be given!
 -> directory: both user and group permission needs to be given!
 
-
 you can customize other image upload fields..... as you did with ClearableFileField
 - profile_pics
 - card pics 
+
+make images rounded..... 1. in card update, 2. ... else
+make image previews -> post edit page
 
 Steps 
 - makemigrations/migrate/collectstatic in local
