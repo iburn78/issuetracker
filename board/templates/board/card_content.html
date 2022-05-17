@@ -209,7 +209,7 @@
                 </div>
                 {% elif post.image1s %}
                 <div class="col-sm-6 mt-1">
-                  <img src="{{ post.image1s.url }}" class="d-block w-100 rounded">
+                  <a href="{{post.image1.url}}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
                 </div>
                 <div class="col-sm-6">
                   <p class="article-content mt-2 mb-1">{{ post.content }}</p>
