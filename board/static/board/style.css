@@ -869,6 +869,18 @@ body {
   background-color: #cfe2ff;
 }
 
+.post-img-update {
+  height: 100px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 8px;
+  background-color: #cfe2ff;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
 .card-img-select {
   height: 3.5em;
   width: 100%;
@@ -887,7 +899,7 @@ body {
   width: 40px;
   overflow: hidden;
   z-index: 0;
-  border-radius: 7px;
+  border-radius: 8px;
   background-color: #cfe2ff;
 }
 

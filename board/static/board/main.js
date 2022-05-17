@@ -8,8 +8,12 @@ function menu_close(event) {
     document.getElementById("navbar-toggle-button").click();
     event.preventDefault();
   }
+  var _card_opened = document.getElementById("collapseDesc").classList.contains("show");
+  if (_card_opened === true && event.target.classList.contains("js-toggle-except") === false ) {
+    document.getElementById("collapseToggle").click();
+    event.preventDefault();
+  }
 };
-
 
 document.querySelectorAll('.color-element').forEach(element => {
   let bg_color = 'null';

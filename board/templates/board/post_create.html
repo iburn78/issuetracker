@@ -18,6 +18,13 @@
       </legend>
       <p class="m-0">Content*</p>
       {{ form.content }}
+      {% if num_images >= 1 %}<img src="{{ th_image1.url }}" alt="" class="post-img-update">{% endif %} 
+      {% if num_images >= 2 %}<img src="{{ th_image2.url }}" alt="" class="post-img-update">{% endif %} 
+      {% if num_images >= 3 %}<img src="{{ th_image3.url }}" alt="" class="post-img-update">{% endif %} 
+      {% if num_images >= 4 %}<img src="{{ th_image4.url }}" alt="" class="post-img-update">{% endif %} 
+      {% if num_images >= 5 %}<img src="{{ th_image5.url }}" alt="" class="post-img-update">{% endif %} 
+      {% if num_images >= 6 %}<img src="{{ th_image6.url }}" alt="" class="post-img-update">{% endif %} 
+      {% if num_images >= 7 %}<img src="{{ th_image7.url }}" alt="" class="post-img-update">{% endif %} 
       <p class="mt-1 mb-0 p-0" id="image1" style="display:{% if num_images >= 1 %}block{% else %}none{% endif %}">Image 1 
         <img class="float-end mt-1 mb-1" id="clear-image1" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
         {{ form.image1_input }}

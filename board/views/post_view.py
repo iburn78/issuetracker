@@ -148,6 +148,13 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['update'] = True
         context['num_images'] = max(1, self.get_object().num_images)
+        context['th_image1'] = self.get_object().image1s
+        context['th_image2'] = self.get_object().image2s
+        context['th_image3'] = self.get_object().image3s
+        context['th_image4'] = self.get_object().image4s
+        context['th_image5'] = self.get_object().image5s
+        context['th_image6'] = self.get_object().image6s
+        context['th_image7'] = self.get_object().image7s
         return context
     
     def get_initial(self):

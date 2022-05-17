@@ -1,9 +1,8 @@
 {% load static %}
 {% if widget.is_initial %}
-<span class="">
-  <!-- <a href="{{ widget.value.url }}"><img src="{% static 'icons/card-image.svg' %}" class="nav-item mb-1" width="20" height="20"></a> -->
-  <img src="{{ widget.value.url }}" class="nav-item py-1 w-100">
-</span>
+<div class="py-1">
+  <img class="rounded w-100" src="{{ widget.value.url }}">
+</div>
 {% endif %}
 <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
 

@@ -14,9 +14,6 @@ exception_log.txt file has to be created and given permission already (:www-data
 -> file: only group permission needs to be given!
 -> directory: both user and group permission needs to be given!
 
-make images rounded..... 1. in card update, 2. ... else
-make image previews -> post edit page
-
 Steps 
 - makemigrations/migrate/collectstatic in local
 - remove Post, User, Card in remote
@@ -30,9 +27,19 @@ Steps
 May consider implement X-sendfile as it is more efficient in serving large files... when traffic increases
 ***********************************
 
-- urls -> limit access to default_card_imgs (?) -> 
+
+make prettier full image screen (when clicking a post image)
+
+!!!!!!!!!!!!!!
+- urls -> limit access to default_card_imgs 
+- urls -> limit access to profile_pics 
 - urls -> limit access to card_imgs, post_images -> SHOULD ALLOW IF CARDS OR POSTS ARE PUBLIC......
-- also put userid number to card image?????
+- also put userid number to card image
+
+
+
+
+
 
 ### To develop and implement (items - to review)
 
