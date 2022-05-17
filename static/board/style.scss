@@ -185,6 +185,17 @@ body {
   background-color: $blue-100;
 }
 
+.post-img-update {
+  height: 100px;
+  object-fit: cover;
+  overflow: hidden;
+  z-index: 0;
+  border-radius: 8px;
+  background-color: $blue-100;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
 .card-img-select {
   height: 3.5em;
   width: 100%;
@@ -201,7 +212,7 @@ body {
   width: 40px;
   overflow: hidden;
   z-index: 0;
-  border-radius: 7px;
+  border-radius: 8px;
   background-color: $blue-100;
 }
 
@@ -321,3 +332,4 @@ main::after {
   background-image: none;
   background-color: $blue-100;
 }
+
