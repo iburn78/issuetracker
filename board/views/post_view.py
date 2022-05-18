@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -8,10 +8,16 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
 )
+from django.views import View
 from board.models import Card, Post
 from board.forms import PostForm
+# use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
 from board.tools import post_image_resize, exception_log
+from django.urls import resolve
+from django.views.static import serve
+import os
+
 
 class PostCreateView(CreateView):
     model = Post
@@ -37,13 +43,16 @@ class PostCreateView(CreateView):
 
     def form_valid(self, form):
         images = []
-        img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'], form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
+        img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
+                           form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
         for img in img_field_input:
-            if img != None: images.append(img)
+            if img != None:
+                images.append(img)
         form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
-        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7] = images
+        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
+            form.instance.image5, form.instance.image6, form.instance.image7] = images
         form.instance.author = self.request.user
         form.instance.card = get_object_or_404(
             Card, id=self.kwargs.get('card_id'))
@@ -52,14 +61,15 @@ class PostCreateView(CreateView):
         form.save_m2m()
         post_image_resize(new_post)
         return redirect(self.get_success_url())
-    
+
     def get_success_url(self) -> str:
         card_id = self.kwargs.get('card_id')
         return f'/card/{card_id}'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['card'] = get_object_or_404(Card, id=self.kwargs.get('card_id'))
+        context['card'] = get_object_or_404(
+            Card, id=self.kwargs.get('card_id'))
         context['num_images'] = 1
         return context
 
@@ -109,24 +119,28 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def form_valid(self, form):
         images = []
-        img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'], form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
-        original_images = [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7]
+        img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
+                           form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
+        original_images = [form.instance.image1, form.instance.image2, form.instance.image3,
+                           form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7]
         for i, img in enumerate(img_field_input):
             if img_field_input[i] != original_images[i]:
                 try:
                     if original_images[i].name != "":
                         original_images[i].delete()
                 except:
-                    text = "Exception in delete th_images - class PostUpdateView delete(): "+ original_images[i].name  
+                    text = "Exception in delete th_images - class PostUpdateView delete(): " + \
+                        original_images[i].name
                     exception_log(text)
 
-            if img != False and img != None: 
+            if img != False and img != None:
                 images.append(img)
         form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
-        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7] = images
-        
+        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
+            form.instance.image5, form.instance.image6, form.instance.image7] = images
+
         form.instance.author = self.request.user
         rev_post = form.save(commit=False)
         rev_post.save()
@@ -156,7 +170,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['th_image6'] = self.get_object().image6s
         context['th_image7'] = self.get_object().image7s
         return context
-    
+
     def get_initial(self):
         initial = super().get_initial()
         initial['image1_input'] = self.object.image1
@@ -167,3 +181,22 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         initial['image6_input'] = self.object.image6
         initial['image7_input'] = self.object.image7
         return initial
+
+
+# Inheritance sequence is important
+class PostMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
+
+    def get(self, *args, **kwargs):
+        target_file = self.kwargs.get('file')
+        target_dir = os.path.dirname(resolve(self.request.path_info).route)
+        return serve(self.request, target_file, target_dir)
+
+    def test_func(self):
+        userid = str(self.request.user)
+        res = ""
+        for ch in userid:
+            res += str(ord(ch))
+        res = res[:7]
+        if str(self.kwargs.get('file')).startswith(res):
+            return True
+        return False

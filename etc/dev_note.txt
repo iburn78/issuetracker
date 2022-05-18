@@ -1,5 +1,4 @@
 image selection for user photo: multiful basic images 
-in post, click should show image larger
 make carousel element full width
 
 for below items click will lead to post_detail.html so I need it (with goback to prev page)
@@ -10,44 +9,14 @@ for below items click will lead to post_detail.html so I need it (with goback to
 when deleting a card, add logic to handle posts (e.g., put max limit on the number of posts to perform delete the current card...)
 deleting from django shell do not delete post images.... -> be careful... 
 
-exception_log.txt file has to be created and given permission already (:www-data, www-data)
--> file: only group permission needs to be given!
--> directory: both user and group permission needs to be given!
-
-Steps 
-- makemigrations/migrate/collectstatic in local
-- remove Post, User, Card in remote
-- clean media content (uploaded_imgs, profile_pics, etc) in remote
-- gacp / gpr / git pull 
-- makemigrations/migrate in remote
-- remove all migration directory content except __init__.py 
-- makemigrations/migrate/collectstatic
-
-************** aws ****************
-May consider implement X-sendfile as it is more efficient in serving large files... when traffic increases
-***********************************
-
-
 make prettier full image screen (when clicking a post image)
 
-!!!!!!!!!!!!!!
-- urls -> limit access to default_card_imgs 
-- urls -> limit access to profile_pics 
 - urls -> limit access to card_imgs, post_images -> SHOULD ALLOW IF CARDS OR POSTS ARE PUBLIC......
-- also put userid number to card image
-
-
-
-
-
 
 ### To develop and implement (items - to review)
 
 Multiple images in a post 
-- [ ] carousel - only limited to 3 images, and need to make it longer (any length)
 - [ ] image size control required in post-detail page
-- [ ] currently image1 is required / in view, this might be improved
-- [ ] if there is only 1 image, disable carousel / implement this in view
 - [ ] currently only image1 is shown in post-list-view in a card (i.e., implement carousel in post-list-view as well)
 - [ ] in post create form, make that once an image be uploaded (after validation), another image field appear (may use javascript, but may need to disassemble the crispy form thing)
 

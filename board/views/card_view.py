@@ -11,51 +11,22 @@ from django.views import View
 from board.models import Card, Post, CARD_UPLOADED_IMGS
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
-
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
 from django.http import Http404
 from django.views.static import serve
 from board.tools import *
 import os
-CARD_IMAGE_MAXSIZE = 2000
 
 
 def about(request):
     return render(request, 'board/about.html')
 
-def card_image_resize(form):
-    if form.cleaned_data['image_input'] == None:
-        image_path = os.path.dirname(form.instance.image.file.name)
-        if os.path.basename(image_path) == CARD_UPLOADED_IMGS:
-            return None
-        else: 
-            img = Image.open(form.instance.image.file)
-            filename = os.path.basename(form.instance.image.name)
-    else: 
-        name = form.instance.image.name
-        try:
-            form.instance.image.delete()
-        except:
-            text = "Exception in delete cared image - card_image_resize: "+ name  
-            exception_log(text)
-        img = Image.open(form.cleaned_data['image_input'])
-        filename = os.path.basename(form.cleaned_data['image_input'].name)
-
-    img_io = BytesIO()
-    ft = img.format
-    img = image_resize(CARD_IMAGE_MAXSIZE, img)
-    res = ImageOps.exif_transpose(img)
-    res.save(img_io, format=ft)
-    form.instance.image.save(filename, ContentFile(img_io.getvalue()))
-    res.close()
-    img.close()
-
 
 class CardListView(ListView):
     model = Card
     template_name = 'board/main.html'
-    context_object_name = 'cards' # get_queryset result
+    context_object_name = 'cards'  # get_queryset result
     revisit = False
     card_list = False
 
@@ -83,7 +54,7 @@ class CardListView(ListView):
         return redirect('/')
 
 
-class CardSelectView(LoginRequiredMixin, CardListView): # a view for creating a new post 
+class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a new post
     template_name = "board/card_list.html"
 
     def get_context_data(self, **kwargs):
@@ -109,7 +80,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['c_u'] = 'Create'
         return context
-    
+
 
 class CardContentListView(ListView):
     model = Post
@@ -141,7 +112,8 @@ class CardContentListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['card_id'] = self.kwargs.get('card_id')
-        context['card'] = get_object_or_404(Card, id=self.kwargs.get('card_id'))
+        context['card'] = get_object_or_404(
+            Card, id=self.kwargs.get('card_id'))
         return context
 
 
@@ -178,8 +150,6 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return initial
 
 
-
-
 class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Card
     success_url = '/'
@@ -194,7 +164,8 @@ class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
 
-class MediaView(LoginRequiredMixin, UserPassesTestMixin, View): #Inheritance sequence is important
+# Inheritance sequence is important
+class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def get(self, *args, **kwargs):
         target_file = self.kwargs.get('file')
@@ -210,14 +181,3 @@ class MediaView(LoginRequiredMixin, UserPassesTestMixin, View): #Inheritance seq
         if str(self.kwargs.get('file')).startswith(res):
             return True
         return False
-    
-class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View): #Inheritance sequence is important
-
-    def get(self, *args, **kwargs):
-        target_file = self.kwargs.get('file')
-        target_dir = os.path.dirname(resolve(self.request.path_info).route)
-        return serve(self.request, target_file, target_dir)
-
-    def test_func(self):
-        print('test undergoing')
-        return True
