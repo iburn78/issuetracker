@@ -21,37 +21,48 @@ from os.path import isfile
 # - tags
 
 
-def filename_gen(userid, filename):
+def filename_gen_userid(userid, filename):
     userid = str(userid)
     res = ""
     for ch in userid:
         res += str(ord(ch))
-    res = res[:7]+"_"+filename
-    return res
+    return res[:7]+"_"+filename
 
+def filename_gen_randomize(userid, filename):
+    res = str(abs(hash(str(userid))))
+    return res[:7]+"_"+filename
 
 def path_to_card_imgs(instance, filename):
-    path = CARD_UPLOADED_IMGS
-    newname = filename_gen(instance.owner, filename)
+    if instance.is_public == True: 
+        path = CARD_PUBLIC_UPLOADED_IMGS
+        newname = filename_gen_randomize(instance.owner, filename)
+    else:
+        path = CARD_UPLOADED_IMGS
+        newname = filename_gen_userid(instance.owner, filename)
     return os.path.join(path, newname)
 
 
 def path_to_imgs(instance, filename):
-    path = "uploaded_imgs/"
-    newname = filename_gen(instance.author, filename)
+    if instance.card.is_public: 
+        path = POST_PUBLIC_UPLOADED_IMGS
+        newname = filename_gen_randomize(instance.author, filename)
+    else:
+        path = POST_UPLOADED_IMGS
+        newname = filename_gen_userid(instance.author, filename)
     return os.path.join(path, newname)
 
 
 def path_to_imgs_th(instance, filename):
-    path = "uploaded_imgs_th/"
-    # newname = filename_gen(instance.author, filename)  # as this add author code twice
+    if instance.card.is_public: 
+        path = POST_PUBLIC_UPLOADED_IMGS_RESIZED
+    else:
+        path = POST_UPLOADED_IMGS_RESIZED
     return os.path.join(path, filename)
 
 
 def random_img():
-    dir_path = path_join(settings.MEDIA_ROOT, 'card_default_imgs')
-    files = [content for content in listdir(
-        dir_path) if isfile(path_join(dir_path, content))]
+    dir_path = path_join(settings.MEDIA_ROOT, CARD_DEFAULT_IMAGES)
+    files = [content for content in listdir(dir_path) if isfile(path_join(dir_path, content))]
     return path_join(dir_path, choice(files))
 
 
@@ -75,7 +86,9 @@ class Card(models.Model):
         name = str(self.image.name)
         try:
             image_path = os.path.basename(os.path.dirname(self.image.name))
-            if CARD_UPLOADED_IMGS == image_path:
+            path_check_private = os.path.basename(CARD_UPLOADED_IMGS)
+            path_check_public = os.path.basename(CARD_PUBLIC_UPLOADED_IMGS)
+            if image_path == path_check_private or image_path == path_check_public:
                 self.image.delete()
         except:
             text = "Exception in deleting image - class Card delete(): " + name
@@ -125,25 +138,21 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        images = [self.image1, self.image2, self.image3,
-                  self.image4, self.image5, self.image6, self.image7]
-        th_images = [self.image1s, self.image2s, self.image3s,
-                     self.image4s, self.image5s, self.image6s, self.image7s]
+        images = [self.image1, self.image2, self.image3, self.image4, self.image5, self.image6, self.image7]
+        th_images = [self.image1s, self.image2s, self.image3s, self.image4s, self.image5s, self.image6s, self.image7s]
         for i in range(0, 7):
             try:
                 if images[i].name != "":
                     images[i].delete()
             except:
-                text = "Exception in delete images - class Post delete(): " + \
-                    images[i].name
+                text = "Exception in delete images - class Post delete(): " + images[i].name
                 exception_log(text)
 
             try:
                 if th_images[i].name != "":
                     th_images[i].delete()
             except:
-                text = "Exception in delete th_images - class Post delete(): " + \
-                    th_images[i].name
+                text = "Exception in delete th_images - class Post delete(): " + th_images[i].name
                 exception_log(text)
 
         return super().delete(*args, **kwargs)

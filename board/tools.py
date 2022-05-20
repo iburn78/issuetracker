@@ -1,13 +1,28 @@
 from PIL import Image, ImageOps
 from django.conf import settings
 import os
+from os.path import join as pj
 from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
-POST_IMG_MAXSIZE = 2000
+
+USER_UPLOADS = 'uploaded' # to be included in .gitignore
+
 CARD_IMAGE_MAXSIZE = 2000
-CARD_UPLOADED_IMGS = 'card_imgs'
+CARD_DEFAULT_IMAGES = 'default_card_imgs'  
+CARD_UPLOADED_IMGS = pj(USER_UPLOADS, 'card_imgs')   # url protected
+CARD_PUBLIC_UPLOADED_IMGS = pj(USER_UPLOADS, 'pubcard_imgs')
+
+POST_IMG_MAXSIZE = 2000
+POST_UPLOADED_IMGS = pj(USER_UPLOADS, 'post_imgs')   # url protected
+POST_UPLOADED_IMGS_RESIZED = pj(USER_UPLOADS, 'post_imgsr')   # url protected
+POST_PUBLIC_UPLOADED_IMGS = pj(USER_UPLOADS, 'pubpost_imgs')   
+POST_PUBLIC_UPLOADED_IMGS_RESIZED = pj(USER_UPLOADS, 'pubpost_imgsr')
+
 IMG_ORIENTATION = 274  # exif code
+DEFAULT_PIC = 'default_user.png'
+PROFILE_PICS = pj(USER_UPLOADS, 'profile_pics')
+
 
 
 def image_resize(maxsize, img: Image) -> Image:
@@ -31,8 +46,10 @@ def image_resize(maxsize, img: Image) -> Image:
 
 def card_image_resize(form):
     if form.cleaned_data['image_input'] == None:
-        image_path = os.path.dirname(form.instance.image.file.name)
-        if os.path.basename(image_path) == CARD_UPLOADED_IMGS:
+        image_path = os.path.basename(os.path.dirname(form.instance.image.file.name))
+        path_check_private = os.path.basename(CARD_UPLOADED_IMGS)
+        path_check_public = os.path.basename(CARD_PUBLIC_UPLOADED_IMGS)
+        if image_path == path_check_private or image_path == path_check_public:
             return None
         else:
             img = Image.open(form.instance.image.file)
@@ -58,10 +75,8 @@ def card_image_resize(form):
 
 
 def post_image_resize(post) -> None:
-    images = [post.image1, post.image2, post.image3,
-              post.image4, post.image5, post.image6, post.image7]
-    th_images = [post.image1s, post.image2s, post.image3s,
-                 post.image4s, post.image5s, post.image6s, post.image7s]
+    images = [post.image1, post.image2, post.image3, post.image4, post.image5, post.image6, post.image7]
+    th_images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s]
     for i in range(0, 7):
         try:
             if th_images[i].name != "":
@@ -127,8 +142,7 @@ def post_image_resize(post) -> None:
             img = image_resize(POST_IMG_MAXSIZE, img)
             res = ImageOps.exif_transpose(img)
             res.save(img_io, format=ft)
-            th_images[i].save(os.path.basename(
-                images[i].file.name), ContentFile(img_io.getvalue()))
+            th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
             res.close()
 
 

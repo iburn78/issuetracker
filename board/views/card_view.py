@@ -1,3 +1,4 @@
+from email.mime import base
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, resolve
 from django.views.generic import (
@@ -8,7 +9,7 @@ from django.views.generic import (
     DeleteView,
 )
 from django.views import View
-from board.models import Card, Post, CARD_UPLOADED_IMGS
+from board.models import Card, Post
 from board.forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # use info, success, warning to make it consistent with bootstrap5
@@ -165,7 +166,7 @@ class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 # Inheritance sequence is important
-class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
+class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View): 
 
     def get(self, *args, **kwargs):
         target_file = self.kwargs.get('file')

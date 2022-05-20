@@ -1,8 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import os
-from board.tools import exception_log
-DEFAULT_PIC = "default_user.png"
+from board.tools import *
 
 class User(AbstractUser):
     is_approved = models.BooleanField(default=False) # Not yet used... 
@@ -10,7 +9,7 @@ class User(AbstractUser):
 
 class Profile(models.Model): 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    image = models.ImageField(default=DEFAULT_PIC, upload_to='profile_pics')
+    image = models.ImageField(default=DEFAULT_PIC, upload_to=PROFILE_PICS)
 
     def __str__(self):
         return f'{self.user.username} Profile'

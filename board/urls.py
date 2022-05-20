@@ -3,6 +3,9 @@ from board.views.card_view import *
 from board.views.post_view import *
 from django.conf import settings
 from django.views.generic import RedirectView
+from board.tools import *
+from os.path import join
+
 
 urlpatterns = [
     path('', CardListView.as_view(revisit=False, card_list=True), name='main'),
@@ -22,12 +25,8 @@ urlpatterns = [
     path('post_update/<int:card_id>/<int:pk>/',
          PostUpdateView.as_view(), name='post-update'),
     # path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
-    path('favicon.ico', RedirectView.as_view(
-        url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
-    path('media/uploaded_imgs/<str:file>',
-         PostMediaView.as_view(), name='media-view'),
-    path('media/uploaded_imgs_th/<str:file>',
-         PostMediaView.as_view(), name='media-view'),
-    path('media/card_imgs/<str:file>',
-         CardMediaView.as_view(), name='media-view'),
+    path('favicon.ico', RedirectView.as_view(url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
+    path(join('media', POST_UPLOADED_IMGS, '<str:file>'), PostMediaView.as_view(), name='media-view'),
+    path(join('media', POST_UPLOADED_IMGS_RESIZED, '<str:file>'), PostMediaView.as_view(), name='media-view'),
+    path(join('media', CARD_UPLOADED_IMGS, '<str:file>'), CardMediaView.as_view(), name='media-view'),
 ]
