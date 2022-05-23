@@ -15,7 +15,7 @@ class CardForm(forms.ModelForm):
         model = Card
         fields = ['title', 'image_input', 'card_color', 'desc', 'is_public', 'linked_card']
         widgets = {
-            'is_public': forms.CheckboxInput,  
+            'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'title': forms.TextInput(attrs={'class':'form-control',}), 
             'desc': forms.Textarea(attrs={'class':'form-control', 'rows':3}), 
         }

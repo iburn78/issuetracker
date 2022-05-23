@@ -147,7 +147,6 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        initial['image_input'] = self.object.image
         return initial
 
 

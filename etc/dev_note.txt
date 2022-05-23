@@ -11,7 +11,6 @@ deleting from django shell do not delete post images.... -> be careful...
 
 make prettier full image screen (when clicking a post image)
 
-fix make this card public button larger
 IF A CARD IS ONCE PUBLIC, IT CANNOT GO BACK TO PRIVATE.... 
 
 ### To develop and implement (items - to review)

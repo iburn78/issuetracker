@@ -1,8 +1,2 @@
-{% load static %}
-{% if widget.is_initial %}
-<div class="py-1">
-  <img class="rounded w-100" src="{{ widget.value.url }}">
-</div>
-{% endif %}
 <input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
 

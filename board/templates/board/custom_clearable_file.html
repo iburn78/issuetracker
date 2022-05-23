@@ -1,11 +1,4 @@
-{% load static %}
 {% if widget.is_initial %}
-<!-- <span class="ms-1">
-  <a href="{{ widget.value.url }}">
-    <img src="{% static 'icons/card-image.svg' %}" class="mb-1" width="20" height="20">
-    <img src="{{ widget.value.url }}" class="rounded mb-1 post-img-update">
-  </a>
-</span> -->
 {% if not widget.required %}
 <span class="ms-2 form-check form-check-inline">
   <label class="form-check-label text-muted" for="{{ widget.checkbox_id }}"> remove </label>
