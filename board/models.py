@@ -62,7 +62,9 @@ def path_to_imgs_th(instance, filename):
 
 def random_img():
     dir_path = path_join(settings.MEDIA_ROOT, CARD_DEFAULT_IMAGES)
+    print(listdir(dir_path))
     files = [content for content in listdir(dir_path) if isfile(path_join(dir_path, content))]
+    print(files)
     return path_join(dir_path, choice(files))
 
 

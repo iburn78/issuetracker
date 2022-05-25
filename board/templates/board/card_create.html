@@ -12,9 +12,11 @@
         {{ form.card_color.as_hidden }}
         <div class="my-2">
           Image <br>
+        {% if form.instance.image %}
         <div class="py-1">
           <img class="rounded w-100" src="{{ form.instance.image.url }}">
         </div>
+        {% endif %}
           {{ form.image_input }}
         </div>
         {% if user.is_public_card_manager %}

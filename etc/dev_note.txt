@@ -1,6 +1,13 @@
 image selection for user photo: multiful basic images 
 make carousel element full width
 
+New card in aws
+-> default image broke -> path error
+
+Make it sure on chmod / chown : how to set them up...
+
+Make sure images delete when deleting a card
+
 for below items click will lead to post_detail.html so I need it (with goback to prev page)
  - search function -> post search  
  - author post list  
