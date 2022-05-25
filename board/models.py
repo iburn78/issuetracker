@@ -79,7 +79,6 @@ class Card(models.Model):
     linked_card = models.CharField(max_length=10, blank=True)
 
     # Rules
-    # only admin users can make a card public
     # linking a card: a user can link a public card to his/her own card
 
     def delete(self, *args, **kwargs):
