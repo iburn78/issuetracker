@@ -3,15 +3,12 @@ make carousel element full width
 
 Make it sure on chmod / chown : how to set them up...
 
-
 for below items click will lead to post_detail.html so I need it (with goback to prev page)
  - search function -> post search  
  - author post list  
  - tag post list
 
 when deleting a card, add logic to handle posts (e.g., put max limit on the number of posts to perform delete the current card...)
--> Make sure images delete when deleting a card -> implement calling each post.delete()
-deleting from django shell do not delete post images.... -> be careful...  (check if true....)
 
 make prettier full image screen (when clicking a post image)
 

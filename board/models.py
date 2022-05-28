@@ -92,6 +92,12 @@ class Card(models.Model):
         except:
             text = "Exception in deleting image - class Card delete(): " + name
             exception_log(text)
+        posts = self.post_set.all()
+        for post in posts: 
+            try:
+                post.delete()
+            except:
+                pass
         return super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):

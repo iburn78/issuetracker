@@ -9,15 +9,15 @@ from datetime import datetime
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
 
 CARD_IMAGE_MAXSIZE = 2000
-CARD_DEFAULT_IMAGES = 'default_card_imgs'  
+CARD_DEFAULT_IMAGES = 'default_imgs'  
 CARD_UPLOADED_IMGS = pj(USER_UPLOADS, 'card_imgs')   # url protected
-CARD_PUBLIC_UPLOADED_IMGS = pj(USER_UPLOADS, 'pubcard_imgs')
+CARD_PUBLIC_UPLOADED_IMGS = pj(USER_UPLOADS, 'pcard_imgs')
 
 POST_IMG_MAXSIZE = 2000
 POST_UPLOADED_IMGS = pj(USER_UPLOADS, 'post_imgs')   # url protected
 POST_UPLOADED_IMGS_RESIZED = pj(USER_UPLOADS, 'post_imgsr')   # url protected
-POST_PUBLIC_UPLOADED_IMGS = pj(USER_UPLOADS, 'pubpost_imgs')   
-POST_PUBLIC_UPLOADED_IMGS_RESIZED = pj(USER_UPLOADS, 'pubpost_imgsr')
+POST_PUBLIC_UPLOADED_IMGS = pj(USER_UPLOADS, 'ppost_imgs')   
+POST_PUBLIC_UPLOADED_IMGS_RESIZED = pj(USER_UPLOADS, 'ppost_imgsr')
 
 IMG_ORIENTATION = 274  # exif code
 DEFAULT_PIC = 'default_user.png'
