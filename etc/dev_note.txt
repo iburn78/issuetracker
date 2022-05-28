@@ -1,8 +1,6 @@
 image selection for user photo: multiful basic images 
 make carousel element full width
 
-Make it sure on chmod / chown : how to set them up...
-
 for below items click will lead to post_detail.html so I need it (with goback to prev page)
  - search function -> post search  
  - author post list  
@@ -12,26 +10,14 @@ when deleting a card, add logic to handle posts (e.g., put max limit on the numb
 
 make prettier full image screen (when clicking a post image)
 
-IF A CARD IS ONCE PUBLIC, IT CANNOT GO BACK TO PRIVATE.... 
-
-### To develop and implement (items - to review)
+IF A CARD IS ONCE PUBLIC, IT CANNOT GO BACK TO PRIVATE.... (NEED TO MAKE IT IMPLEMENTED....)
 
 Multiple images in a post 
-- [ ] image size control required in post-detail page
 - [ ] currently only image1 is shown in post-list-view in a card (i.e., implement carousel in post-list-view as well)
-- [ ] in post create form, make that once an image be uploaded (after validation), another image field appear (may use javascript, but may need to disassemble the crispy form thing)
-
-Authentication 
-- [ ] Private posts and cards have to be only exposed to the owner / access through urls have to be blocked
-
-Main page 
-- [ ] if not logged in, main page has to show a basic instruction how to use IssueTracker (with animated screen), public cards have to be shown
-- [ ] if logged in, main page has to show private cards and public cards 
 
 Card arrangement
 - [ ] Private/public cards have to be in accordian (bootstrap)
 - [ ] Private/public cards might be grouped into menu/nav
-- [ ] private cards -> mycards
 
 Card movements
 - [ ] may implement Apple-Album style (or much simpler) card movements using CSS/JS
