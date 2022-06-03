@@ -5,65 +5,64 @@
   <form method="POST" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     <fieldset>
-      <legend class="border-bottom mb-4">{{c_u}} card</legend>
-      <div>
-        Title* {{ form.title }}
-        Desc {{ form.desc }}
-        {{ form.card_color.as_hidden }}
-        <div class="my-2">
-          Image <br>
-        {% if form.instance.image %}
-        <div class="py-1">
-          <img class="rounded w-100" src="{{ form.instance.image.url }}">
+      <div class="row">
+        <legend class="border-bottom mb-4">{{c_u}} card</legend>
+        <div class="col-lg-6">
+          Title* {{ form.title }}
+          Desc {{ form.desc }}
+          {{ form.card_color.as_hidden }}
+          {% if user.is_public_card_manager %}
+          {{ form.is_public }} <b class="small">make this public</b>
+          {% endif %}
         </div>
-        {% endif %}
+        <div class="col-lg-6">
+          Image 
+          <img class="rounded w-100 mb-1" src="{{ form.instance.image.url }}">
+          <input type="hidden" name="default_img" value="{{ form.instance.image }}">
           {{ form.image_input }}
+          <div class="my-2">
+            <input type="button" class="btn btn-outline-secondary btn-sm float-end" value="cancel" onClick="javascript:history.go(-1);">
+            <button class="btn btn-outline-light bg-blue-500 btn-sm mb-2 me-1 float-end" type="submit">{{c_u}}</button>
+            <button type="button" class="btn btn-outline-primary btn-sm my-1" data-bs-toggle="modal" data-bs-target="#colorModal">
+              <b>Card color</b>
+            </button>
+          </div>
         </div>
-        {% if user.is_public_card_manager %}
-        {{ form.is_public }} <b class="small">make this public</b>
-        {% endif %}
-        <div class="my-2">
-          <button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
-            <b>Card color</b>
-          </button>
-          <input type="button" class="btn btn-outline-secondary btn-sm float-end" value="cancel" onClick="javascript:history.go(-1);">
-          <button class="btn btn-outline-light bg-blue-500 btn-sm mb-2 me-1 float-end" type="submit">{{c_u}}</button>
-        </div>
-        <!-- Modal -->
-        <!-- actual mechanism is implemented with javascript -->
-        <div class="modal fade" id="colorModal" tabindex="-1">
-          <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-              <div class="modal-header">
-                choose a color:
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-              </div>
-              <div class="modal-body">
-                <div class="container">
-                  <div class="row">
-                    <div class="col color-element bg-blue-100"></div>
-                    <div class="col color-element bg-yellow-100"></div>
-                    <div class="col color-element bg-red-100"></div>
-                    <div class="col color-element bg-orange-100"></div>
-                    <div class="col color-element bg-green-100"></div>
-                    <div class="col color-element bg-gray-200"></div>
-                  </div>
-                  <div class="row">
-                    <div class="col color-element bg-blue-200"></div>
-                    <div class="col color-element bg-yellow-200"></div>
-                    <div class="col color-element bg-red-200"></div>
-                    <div class="col color-element bg-orange-200"></div>
-                    <div class="col color-element bg-green-200"></div>
-                    <div class="col color-element bg-gray-300"></div>
-                  </div>
-                  <div class="row">
-                    <div class="col color-element bg-blue-300"></div>
-                    <div class="col color-element bg-yellow-300"></div>
-                    <div class="col color-element bg-red-300"></div>
-                    <div class="col color-element bg-orange-300"></div>
-                    <div class="col color-element bg-green-300"></div>
-                    <div class="col color-element bg-gray-400"></div>
-                  </div>
+      </div>
+      <!-- Modal -->
+      <!-- actual mechanism is implemented with javascript -->
+      <div class="modal fade" id="colorModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header p-1">
+              choose a color:
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <div class="container">
+                <div class="row">
+                  <div class="col color-element bg-blue-100"></div>
+                  <div class="col color-element bg-yellow-100"></div>
+                  <div class="col color-element bg-red-100"></div>
+                  <div class="col color-element bg-orange-100"></div>
+                  <div class="col color-element bg-green-100"></div>
+                  <div class="col color-element bg-gray-200"></div>
+                </div>
+                <div class="row">
+                  <div class="col color-element bg-blue-200"></div>
+                  <div class="col color-element bg-yellow-200"></div>
+                  <div class="col color-element bg-red-200"></div>
+                  <div class="col color-element bg-orange-200"></div>
+                  <div class="col color-element bg-green-200"></div>
+                  <div class="col color-element bg-gray-300"></div>
+                </div>
+                <div class="row">
+                  <div class="col color-element bg-blue-300"></div>
+                  <div class="col color-element bg-yellow-300"></div>
+                  <div class="col color-element bg-red-300"></div>
+                  <div class="col color-element bg-orange-300"></div>
+                  <div class="col color-element bg-green-300"></div>
+                  <div class="col color-element bg-gray-400"></div>
                 </div>
               </div>
             </div>
@@ -71,8 +70,6 @@
         </div>
       </div>
     </fieldset>
-    
-    
   </form>
 </div>
 {% endblock content %}

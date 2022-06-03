@@ -20,9 +20,10 @@ POST_PUBLIC_UPLOADED_IMGS = pj(USER_UPLOADS, 'ppost_imgs')
 POST_PUBLIC_UPLOADED_IMGS_RESIZED = pj(USER_UPLOADS, 'ppost_imgsr')
 
 IMG_ORIENTATION = 274  # exif code
-DEFAULT_PIC = 'default_user.png'
+USER_DEFAULT_IMAGES = 'default_users'  
 PROFILE_PICS = pj(USER_UPLOADS, 'profile_pics')
 
+POST_MAX_COUNT_TO_DELETE_A_CARD = 10
 
 
 def image_resize(maxsize, img: Image) -> Image:
@@ -46,11 +47,16 @@ def image_resize(maxsize, img: Image) -> Image:
 
 def card_image_resize(form):
     if form.cleaned_data['image_input'] == None:
+        def_img = form.cleaned_data['default_img']
         image_path = os.path.basename(os.path.dirname(form.instance.image.file.name))
         path_check_private = os.path.basename(CARD_UPLOADED_IMGS)
         path_check_public = os.path.basename(CARD_PUBLIC_UPLOADED_IMGS)
         if image_path == path_check_private or image_path == path_check_public:
             return None
+        elif os.path.basename(os.path.dirname(def_img)) == CARD_DEFAULT_IMAGES: 
+            def_img_location = os.path.join(settings.MEDIA_ROOT, def_img)
+            img = Image.open(def_img_location)
+            filename = os.path.basename(def_img)
         else:
             img = Image.open(form.instance.image.file)
             filename = os.path.basename(form.instance.image.name)

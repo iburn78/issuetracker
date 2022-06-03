@@ -41,7 +41,6 @@ def path_to_card_imgs(instance, filename):
         newname = filename_gen_userid(instance.owner, filename)
     return os.path.join(path, newname)
 
-
 def path_to_imgs(instance, filename):
     if instance.card.is_public: 
         path = POST_PUBLIC_UPLOADED_IMGS
@@ -51,14 +50,12 @@ def path_to_imgs(instance, filename):
         newname = filename_gen_userid(instance.author, filename)
     return os.path.join(path, newname)
 
-
 def path_to_imgs_th(instance, filename):
     if instance.card.is_public: 
         path = POST_PUBLIC_UPLOADED_IMGS_RESIZED
     else:
         path = POST_UPLOADED_IMGS_RESIZED
     return os.path.join(path, filename)
-
 
 def random_img():
     dir_path = path_join(settings.MEDIA_ROOT, CARD_DEFAULT_IMAGES)

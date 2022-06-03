@@ -5,24 +5,38 @@
     {% csrf_token %}
     <fieldset class ="form-group">
       <legend class="border-bottom mb-4">Delete card?</legend>
-      <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-        <div class="card border-0">
-          {% if card.image %}
-          <img src="{{ card.image.url }}" class="card-img">
-          {% else %}
-          <img src="" class="card-img">
+      <div class="row justify-content-center">
+        <div class="col-md-6 col-xl-4">
+          <div class="card border-0">
+            {% if card.image %}
+            <img src="{{ card.image.url }}" class="card-img">
+            {% else %}
+            <img src="" class="card-img">
+            {% endif %}
+            <a href="{% url 'card-content' card.id %}">
+              <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+                <h5 class="card-title card-title-size">{{ card.title }}</h5>
+                <p class="card-text card-text-size">
+                  {{ card.desc }}
+                </p>
+              </div>
+            </a>
+          </div>
+          <input type="button" class="btn btn-sm btn-outline-secondary mt-2 float-end" value="cancel" onClick="javascript:history.go(-1);">
+          {% if card.post_set.count <= post_limit %}
+          <button class="btn btn-sm btn-danger mt-2 me-1 float-end" type="submit">Delete</button>
           {% endif %}
-          <a href="{% url 'card-content' card.id %}">
-            <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
-              <h5 class="card-title card-title-size">{{ card.title }}</h5>
-              <p class="card-text card-text-size">
-                {{ card.desc }}
-              </p>
-            </div>
-          </a>
         </div>
-        <input type="button" class="btn btn-sm btn-outline-secondary mt-2 float-end" value="cancel" onClick="javascript:history.go(-1);">
-        <button class="btn btn-sm btn-danger mt-2 me-1 float-end" type="submit">Delete</button>
+        <div class="col-md-6 col-xl-4">
+          <div class="alert alert-info mt-2" role="alert">
+            <div>{{ author_count }} authors and {{ card.post_set.count }} posts in this card</div>
+          </div>
+          {% if card.post_set.count > post_limit %}
+          <div class="alert alert-danger mt-2" role="alert">
+            <div>There is {{ card.post_set.count }} posts in this card. If there is more than {{ post_limit }} posts, you cannot delete this card.</div>
+          </div>
+          {% endif %}
+        </div>
       </div>
     </fieldset>
   </form>

@@ -9,12 +9,13 @@ import datetime
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, LogoutView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
-from users.models import User, DEFAULT_PIC
+from users.models import User
 from PIL import Image, ImageOps
 from io import BytesIO
 from board.tools import image_resize, exception_log
 from django.core.files.base import ContentFile
 import os
+from board.tools import USER_DEFAULT_IMAGES
 PROFILE_PIC_MAXSIZE = 2000
 
 
@@ -48,22 +49,22 @@ def profile(request):
             request.POST, request.FILES, instance=request.user.profile, initial={'picture': request.user.profile.image})
         if u_form.is_valid() and p_form.is_valid():
             u_form.save()
-            file_to_delete = str(p_form.instance.image)
-            try:
-                if os.path.basename(file_to_delete) != DEFAULT_PIC:
-                    p_form.instance.image.delete()
-            except: 
-                text = "Exception in delete profile pic - view fuction profile(): " + file_to_delete
-                exception_log(text)
-
-            with Image.open(p_form.cleaned_data['picture']) as img:
-                img_io = BytesIO()
-                ft = img.format
-                img = image_resize(PROFILE_PIC_MAXSIZE, img)
-                res = ImageOps.exif_transpose(img)
-                res.save(img_io, format=ft)
-                p_form.instance.image.save(os.path.basename(p_form.cleaned_data['picture'].name), ContentFile(img_io.getvalue()))
-                res.close()
+            if p_form.cleaned_data['picture'] != p_form.instance.image:
+                user_img = str(p_form.instance.image)
+                if os.path.basename(os.path.dirname(user_img)) != USER_DEFAULT_IMAGES: 
+                    try:
+                        p_form.instance.image.delete()
+                    except: 
+                        text = "Exception in delete profile pic - view fuction profile(): " + user_img
+                        exception_log(text)
+                with Image.open(p_form.cleaned_data['picture']) as img:
+                    img_io = BytesIO()
+                    ft = img.format
+                    img = image_resize(PROFILE_PIC_MAXSIZE, img)
+                    res = ImageOps.exif_transpose(img)
+                    res.save(img_io, format=ft)
+                    p_form.instance.image.save(os.path.basename(p_form.cleaned_data['picture'].name), ContentFile(img_io.getvalue()))
+                    res.close()
             p_form.save()
             messages.success(request, 'your account has been updated')
             return redirect('profile')

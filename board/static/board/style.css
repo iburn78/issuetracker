@@ -843,7 +843,6 @@ body {
 }
 
 .card-create-container-style {
-  max-width: 600px;
   background-color: #e9ecef;
 }
 
@@ -900,7 +899,6 @@ body {
   overflow: hidden;
   z-index: 0;
   border-radius: 8px;
-  background-color: #cfe2ff;
 }
 
 .card-title-select {
@@ -1019,5 +1017,10 @@ main::after {
 .dropdown-menu > a:hover {
   background-image: none;
   background-color: #cfe2ff;
+}
+
+.modal-body {
+  margin: 0;
+  padding: 0;
 }
 /*# sourceMappingURL=style.css.map */

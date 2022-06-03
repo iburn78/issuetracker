@@ -161,7 +161,6 @@ body {
 }
 
 .card-create-container-style {
-  max-width: 600px;
   background-color: $gray-200;
 }
 
@@ -213,7 +212,6 @@ body {
   overflow: hidden;
   z-index: 0;
   border-radius: 8px;
-  background-color: $blue-100;
 }
 
 .card-title-select {
@@ -333,3 +331,7 @@ main::after {
   background-color: $blue-100;
 }
 
+.modal-body {
+  margin: 0;
+  padding: 0;
+}

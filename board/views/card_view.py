@@ -20,6 +20,7 @@ from board.tools import *
 import os
 
 
+
 def about(request):
     return render(request, 'board/about.html')
 
@@ -33,8 +34,7 @@ class CardListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        public_cards = Card.objects.filter(
-            is_public=True).order_by('-date_created')
+        public_cards = Card.objects.filter(is_public=True).order_by('-date_created')
         context['public_cards'] = public_cards
         context['card_list'] = self.card_list
         return context
@@ -68,6 +68,8 @@ class CardCreateView(LoginRequiredMixin, CreateView):
     model = Card
     form_class = CardForm
     template_name = 'board/card_create.html'
+    def get(self, request, *args, **kwargs):
+        return super().get(self, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user
@@ -113,8 +115,14 @@ class CardContentListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['card_id'] = self.kwargs.get('card_id')
-        context['card'] = get_object_or_404(
-            Card, id=self.kwargs.get('card_id'))
+        card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
+        context['card'] = card
+        posts = Post.objects.filter(card__id = card.id)
+        authors = []
+        for post in posts: 
+            authors.append(post.author)
+        context['author_count'] = len(set(authors))
+        context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         return context
 
 
@@ -156,13 +164,29 @@ class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     template_name = 'board/card_delete.html'
 
     def test_func(self):
-        ################################
-        # ADD LOGIC ON POSTS IN THE CARD
-        ################################
         if self.request.user == self.get_object().owner:
             return True
         return False
+    
+    def post(self, request, *args, **kwargs):
+        card = self.get_object()
+        post_count = card.post_set.count() 
+        if post_count > POST_MAX_COUNT_TO_DELETE_A_CARD: 
+            messages.warning(self.request, f"NOT DELETED!! Post count is {post_count} - not allowed to delete a card with more than {POST_MAX_COUNT_TO_DELETE_A_CARD} posts")
+            return redirect('card-content', card.id)
+        return super().post(request, *args, **kwargs)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        card = self.get_object()
+        posts = Post.objects.filter(card__id = card.id)
+        authors = []
+        for post in posts: 
+            authors.append(post.author)
+        context['author_count'] = len(set(authors))
+        context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
+        return context
+    
 
 # Inheritance sequence is important
 class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View): 

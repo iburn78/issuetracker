@@ -11,13 +11,15 @@ class Cardclearable(forms.ClearableFileInput):
 
 class CardForm(forms.ModelForm):
     image_input = forms.ImageField(required=False, widget=Cardclearable)
+    default_img = forms.CharField(required=False)
     class Meta:
         model = Card
-        fields = ['title', 'image_input', 'card_color', 'desc', 'is_public', 'linked_card']
+        fields = ['title', 'image_input', 'default_img', 'card_color', 'desc', 'is_public', 'linked_card']
         widgets = {
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'title': forms.TextInput(attrs={'class':'form-control',}), 
             'desc': forms.Textarea(attrs={'class':'form-control', 'rows':3}), 
+            'default_img': forms.HiddenInput,
         }
 
     def __init__(self, *args, **kwargs):

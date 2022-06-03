@@ -70,30 +70,30 @@ class PostCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['card'] = get_object_or_404(
             Card, id=self.kwargs.get('card_id'))
-        context['num_images'] = 1
+        context['num_images'] = 0
         return context
 
 
-# class PostDetailView(DetailView): # DO I NEED THIS?
-#     model = Post
-#     template_name = 'board/post_detail.html'
+class PostDetailView(DetailView): # DO I NEED THIS?
+    model = Post
+    template_name = 'board/post_detail.html'
 
-#     def get(self, request, *args, **kwargs):
-#         post = get_object_or_404(Post, id=kwargs.get('pk'))
-#         if post.card.is_public:
-#             return super().get(request, *args, **kwargs)
-#         else:
-#             if not self.request.user.is_authenticated:
-#                 return redirect('login')
-#             else:
-#                 if self.request.user == post.card.owner:
-#                     return super().get(request, *args, **kwargs)
-#                 else:
-#                     raise PermissionDenied
+    def get(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, id=kwargs.get('pk'))
+        if post.card.is_public:
+            return super().get(request, *args, **kwargs)
+        else:
+            if not self.request.user.is_authenticated:
+                return redirect('login')
+            else:
+                if self.request.user == post.card.owner:
+                    return super().get(request, *args, **kwargs)
+                else:
+                    raise PermissionDenied
 
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         return context
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -107,7 +107,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return False
 
     def post(self, request, *args, **kwargs):
-        card_id = self.kwargs.get('card_id')
+        card_id = self.get_object().card.id
         self.success_url = f'/card/{card_id}'
         return super().post(request, *args, **kwargs)
 
@@ -149,7 +149,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return redirect(self.get_success_url())
 
     def get_success_url(self) -> str:
-        card_id = self.kwargs.get('card_id')
+        card_id = self.get_object().card.id
         return f'/card/{card_id}'
 
     def test_func(self):
@@ -161,7 +161,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['update'] = True
-        context['num_images'] = max(1, self.get_object().num_images)
+        context['num_images'] = self.get_object().num_images
         context['th_image1'] = self.get_object().image1s
         context['th_image2'] = self.get_object().image2s
         context['th_image3'] = self.get_object().image3s

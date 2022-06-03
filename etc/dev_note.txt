@@ -1,24 +1,10 @@
-image selection for user photo: multiful basic images 
-make carousel element full width
+search pages
 
-for below items click will lead to post_detail.html so I need it (with goback to prev page)
- - search function -> post search  
- - author post list  
- - tag post list
+am I looking at a private card / post or public???? be clear... 
 
-when deleting a card, add logic to handle posts (e.g., put max limit on the number of posts to perform delete the current card...)
-
-make prettier full image screen (when clicking a post image)
+PUBLIC CARD MANAGER -> all managers can delete card? or creater can only delete the card? 
 
 IF A CARD IS ONCE PUBLIC, IT CANNOT GO BACK TO PRIVATE.... (NEED TO MAKE IT IMPLEMENTED....)
 
 Multiple images in a post 
 - [ ] currently only image1 is shown in post-list-view in a card (i.e., implement carousel in post-list-view as well)
-
-Card arrangement
-- [ ] Private/public cards have to be in accordian (bootstrap)
-- [ ] Private/public cards might be grouped into menu/nav
-
-Card movements
-- [ ] may implement Apple-Album style (or much simpler) card movements using CSS/JS
-        
