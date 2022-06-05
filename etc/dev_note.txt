@@ -1,10 +1,5 @@
 search pages
 
-am I looking at a private card / post or public???? be clear... 
-
 PUBLIC CARD MANAGER -> all managers can delete card? or creater can only delete the card? 
 
 IF A CARD IS ONCE PUBLIC, IT CANNOT GO BACK TO PRIVATE.... (NEED TO MAKE IT IMPLEMENTED....)
-
-Multiple images in a post 
-- [ ] currently only image1 is shown in post-list-view in a card (i.e., implement carousel in post-list-view as well)

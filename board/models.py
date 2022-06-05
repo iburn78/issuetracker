@@ -111,7 +111,7 @@ class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
-    content = models.TextField()
+    content = models.TextField(blank=True)
     num_images = models.IntegerField(default=0)
     image1 = models.ImageField(upload_to=path_to_imgs, blank=True)
     image2 = models.ImageField(upload_to=path_to_imgs, blank=True)

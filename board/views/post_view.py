@@ -48,14 +48,18 @@ class PostCreateView(CreateView):
         for img in img_field_input:
             if img != None:
                 images.append(img)
+
+        if form.cleaned_data['content'] == '' and len(images) == 0:
+            messages.warning(self.request, "Enter content or at least 1 image")
+            return redirect('post-create', self.kwargs.get('card_id'))
+
         form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
         form.instance.author = self.request.user
-        form.instance.card = get_object_or_404(
-            Card, id=self.kwargs.get('card_id'))
+        form.instance.card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         new_post = form.save(commit=False)
         new_post.save()
         form.save_m2m()
@@ -73,6 +77,10 @@ class PostCreateView(CreateView):
         context['num_images'] = 0
         return context
 
+    def get_initial(self):
+        initial = super().get_initial()
+        # initial['content'] = "(ENTER CONTENT)"
+        return initial
 
 class PostDetailView(DetailView): # DO I NEED THIS?
     model = Post
@@ -135,6 +143,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
             if img != False and img != None:
                 images.append(img)
+
         form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
@@ -146,7 +155,13 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         rev_post.save()
         form.save_m2m()
         post_image_resize(rev_post)
-        return redirect(self.get_success_url())
+        
+        redirect_url = redirect(self.get_success_url())
+        if rev_post.content == '' and rev_post.num_images == 0:
+            messages.warning(self.request, "Post deleted - no content and no images")
+            rev_post.delete()
+
+        return redirect_url
 
     def get_success_url(self) -> str:
         card_id = self.get_object().card.id

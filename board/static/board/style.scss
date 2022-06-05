@@ -160,10 +160,6 @@ body {
   border-radius: 8px;
 }
 
-.card-create-container-style {
-  background-color: $gray-200;
-}
-
 .card-img {
   height: 270px;
   width: auto;
@@ -297,8 +293,8 @@ a.article-title:hover {
   margin-top: 2px;
   margin-bottom: 2px;
   width: 100%;
-  height: 3px;
-  background-color: $blue-100;
+  height: 5px;
+  background-color: black;
 }
 
 #divider-bar-narrower {

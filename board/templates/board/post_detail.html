@@ -25,9 +25,9 @@
         <div class="d-flex align-items-center float-end">
           <span class="me-2">Delete?</span>
           <form method="POST" action="{% url 'post-delete' post.id %}">
-            {% csrf_token %}<input type="submit" class="btn btn-sm btn-outline-danger me-2" value="confirm"></input>
+            {% csrf_token %}<input type="submit" class="btn btn-sm btn-outline-danger me-2 my-1" value="confirm"></input>
           </form>
-          <button type="button" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}" class="btn btn-sm btn-outline-dark me-1">no</button>
+          <button type="button" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}" class="btn btn-sm btn-outline-dark me-1 my-1">no</button>
         </div>
       </div>
     </div>

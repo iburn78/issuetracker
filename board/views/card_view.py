@@ -82,6 +82,7 @@ class CardCreateView(LoginRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['c_u'] = 'Create'
+        context['bg_color'] = 'rgb(233, 236, 239)'
         return context
 
 
@@ -151,6 +152,7 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['c_u'] = 'Update'
+        context['bg_color'] = self.get_object().card_color
         return context
 
     def get_initial(self):

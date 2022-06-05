@@ -71,19 +71,19 @@
 }
 
 .bg-purple-100 {
-  background-color: #c5b3e6 !important;
-}
-
-.text-purple-100 {
-  color: #c5b3e6 !important;
-}
-
-.bg-purple-200 {
   background-color: #e2d9f3 !important;
 }
 
-.text-purple-200 {
+.text-purple-100 {
   color: #e2d9f3 !important;
+}
+
+.bg-purple-200 {
+  background-color: #c5b3e6 !important;
+}
+
+.text-purple-200 {
+  color: #c5b3e6 !important;
 }
 
 .bg-purple-300 {
@@ -842,10 +842,6 @@ body {
   border-radius: 8px;
 }
 
-.card-create-container-style {
-  background-color: #e9ecef;
-}
-
 .card-img {
   height: 270px;
   width: auto;
@@ -985,8 +981,8 @@ a.article-title:hover {
   margin-top: 2px;
   margin-bottom: 2px;
   width: 100%;
-  height: 3px;
-  background-color: #cfe2ff;
+  height: 5px;
+  background-color: black;
 }
 
 #divider-bar-narrower {

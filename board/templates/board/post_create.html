@@ -63,10 +63,10 @@
       <p class="m-0">Tags</p>
       <p>{{ form.tags }}</p>
       <p id="clear-image1"></p>
-      <button class="btn btn-primary mb-2" type="submit">
+      <input type="button" class="btn btn-secondary btn-sm float-end mb-2" value="cancel" onClick="javascript:history.go(-1);">
+      <button class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
         {% if update %}Update{% else %}Create{% endif %}
       </button>
-      <input type="button" class="btn btn-outline-secondary mb-2" value="cancel" onClick="javascript:history.go(-1);">
     </fieldset>
   </form>
 </div>
