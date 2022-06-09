@@ -11,15 +11,6 @@ from os.path import join as path_join
 from os import listdir
 from os.path import isfile
 
-# Important concepts:
-# - public card / public posts (vs private, by default)
-# - approved user to use key features
-# - linking cards
-# - publishing posts
-# - importing posts
-# - comments in published posts
-# - tags
-
 
 def filename_gen_userid(userid, filename):
     userid = str(userid)
@@ -72,11 +63,6 @@ class Card(models.Model):
     card_color = models.CharField(
         max_length=30, default='rgb(233, 236, 239)')  # gray-200
     is_public = models.BooleanField(default=False)
-    # for id of a public card / can link only one card
-    linked_card = models.CharField(max_length=10, blank=True)
-
-    # Rules
-    # linking a card: a user can link a public card to his/her own card
 
     def delete(self, *args, **kwargs):
         name = str(self.image.name)
@@ -131,10 +117,6 @@ class Post(models.Model):
 
     tags = TaggableManager(blank=True)
     is_published = models.BooleanField(default=False)
-
-    # Rules
-    # publishing posts: posts can be published (only) to public cards, and posts in public cards must be (all) publised
-    # importing posts: a user can import published posts to his/her own linked card
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

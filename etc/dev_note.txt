@@ -1,5 +1,47 @@
-search pages
+USER TIER: 
+- Issuetracker Citizen: entry level user
+- VIP: no specific privilage assigned (need to be implemented)
+- Public Card Manager: manages public cards
+- Superuser / Staff: no specific privilage assigned
 
-PUBLIC CARD MANAGER -> all managers can delete card? or creater can only delete the card? 
+Public Card:
+ (a) pub card owner (by definition pub mgr) - post (pa) 
+ (b) other pub mgr - post (pb) 
+ (c) other general user - author - post (pc) 
+ (d) other general user - not a author
 
-IF A CARD IS ONCE PUBLIC, IT CANNOT GO BACK TO PRIVATE.... (NEED TO MAKE IT IMPLEMENTED....)
+- write: all allowed
+- delete / edit:
+     (pa), (pb), (pc)
+  (a) yes, no, yes(tbc)
+  (b) no, yes, no
+  (c) no, no, yes
+  (d) no, no, no
+
+Official Public Card:
+- the same as Public Card but gnenral user cannot write/delete/edit
+
+IMPORT / PUBLISH
+- public card -> private card: not allowed (maybe allowed for archive purpose... or, do it by categorize the card to 'archived')
+- private card -> public card: allowed
+- private post -> public post: "Publish", you can copy the post to a public card 
+    1) soft copy (guess this might be the right way)
+         . the date has to be public time 
+         . make it only 1 publish is possible
+         . comments in published card can be seen in private card as well
+         . Post model has to be changed to track published card
+    2) deep copy 
+         . only 1 publish is has to be allowed
+         . linkage may be made through a link (not if edit involves, it could be complicated)
+- public card -> private card: "Import", you can copy the post to a private card
+    1) soft copy (guess this might be the right way)
+    2) deep copy
+
+To implement:
+- card order changer implement
+- card categorization implmenet (may be later)
+- comment system implement
+- search (refer to previous implement)
+- about page revise
+- Publish / Import counter
+- time concept: created time vs edited time vs published time vs publisehd but edited time

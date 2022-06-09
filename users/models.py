@@ -14,7 +14,7 @@ def random_user_img():
     return path_join(USER_DEFAULT_IMAGES, choice(files))
 
 class User(AbstractUser):
-    is_approved = models.BooleanField(default=False) # Not yet used... 
+    is_VIP = models.BooleanField(default=False) # Not yet used... 
     is_public_card_manager = models.BooleanField(default=False)
 
 class Profile(models.Model): 

@@ -190,7 +190,6 @@ class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return context
     
 
-# Inheritance sequence is important
 class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View): 
 
     def get(self, *args, **kwargs):

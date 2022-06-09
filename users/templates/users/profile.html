@@ -1,15 +1,27 @@
 {% extends "board/base.html" %}
 {% load crispy_forms_tags %}
 {% block content %}
+{% load static %}
 <div class="container-sm">
 	<div class="row">
-		<div class="col-4">
-			<img class="rounded" src="{{user.profile.image.url}}" width="100%">
+		<div class="col">
+			<legend class="border-bottom">Profile</legend>
+		</div>
+	</div>	
+	<div class="row">
+		<div class="col-md-5">
+			<img class="rounded mb-2" src="{{user.profile.image.url}}" width="100%">
+			
 		</div>	
-		<div class="col-8">
+		<div class="col-md-7">
 			<div class="media-body">
-				<legend class="border-bottom mb-4">Profile Info</legend>
 				<h4 class="account-heading">{{user.username}}</h4>
+				<p class="emphasis-font text-red-700">Issuetracker CITIZEN
+					<a data-bs-toggle="collapse" data-bs-target="#collapseProfile" id="collapseToggle"><img src="{% static 'icons/signpost-2.svg' %}" width="20" height="20"></a>
+				</p>
+				{% if user.is_VIP %}
+				<p class="emphasis-font text-red-700">VIP</p>
+				{% endif %}
 				{% if user.is_public_card_manager %}
 				<p class="emphasis-font text-red-700">PUBLIC CARD MANAGER</p>
 				{% endif %}
@@ -19,6 +31,14 @@
 				{% if user.is_staff %}
 				<p class="emphasis-font text-red-700">STAFF</p>
 				{% endif %}
+				<div class="collapse bg-yellow-100" id="collapseProfile">
+				{% if not user.is_VIP %}
+					<p class="p-0 m-0 ms-2 text-muted">achieve <span class="emphasis-font text-red-700">VIP</span> with more activities</p>
+				{% endif %}
+				{% if not user.is_public_card_manager %}
+					<p class="p-0 m-0 ms-2 text-muted">apply for <span class="emphasis-font text-red-700">PUBLIC CARD MANAGER</span> - contact admin</p>
+				{% endif %}
+				</div>
 				<p class="text-secondary mt-1 mb-0">{{user.email}}</p>
 				<p class="text-secondary mt-1 mb-0"><small><b>date join:</b></small> {{user.date_joined|date:"M d, Y H:i" }}</p>
 				<p class="text-secondary mt-1 mb-0"><small><b>last login:</b></small> {{user.last_login|date:"M d, Y H:i" }}</p>
@@ -26,6 +46,7 @@
 		</div>
 	</div>
 	<div id="divider-bar" class="bg-gray-400"></div>
+	
 	<div class="row">
 		<form method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
@@ -33,7 +54,7 @@
 				{{ u_form }}
 				{{ p_form }}
 				<a class="mt-2 btn btn-outline-secondary btn-sm" href="{% url 'password_reset' %}">Reset Password</a>
-        <input type="button" class="mt-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onClick="javascript:history.go(-1);">
+				<input type="button" class="mt-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onClick="javascript:history.go(-1);">
 				<button class="mt-2 btn btn-primary btn-sm float-end me-1" type="submit">Update</button>
 			</fieldset>
 		</form>

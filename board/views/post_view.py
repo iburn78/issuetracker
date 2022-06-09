@@ -79,7 +79,6 @@ class PostCreateView(CreateView):
 
     def get_initial(self):
         initial = super().get_initial()
-        # initial['content'] = "(ENTER CONTENT)"
         return initial
 
 class PostDetailView(DetailView): # DO I NEED THIS?
@@ -87,7 +86,7 @@ class PostDetailView(DetailView): # DO I NEED THIS?
     template_name = 'board/post_detail.html'
 
     def get(self, request, *args, **kwargs):
-        post = get_object_or_404(Post, id=kwargs.get('pk'))
+        post = self.get_object()
         if post.card.is_public:
             return super().get(request, *args, **kwargs)
         else:
@@ -101,6 +100,8 @@ class PostDetailView(DetailView): # DO I NEED THIS?
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        context['bg_color'] = post.card.card_color
         return context
 
 
@@ -198,7 +199,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         return initial
 
 
-# Inheritance sequence is important
 class PostMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
 
     def get(self, *args, **kwargs):

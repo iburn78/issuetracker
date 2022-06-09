@@ -14,7 +14,7 @@ class CardForm(forms.ModelForm):
     default_img = forms.CharField(required=False)
     class Meta:
         model = Card
-        fields = ['title', 'image_input', 'default_img', 'card_color', 'desc', 'is_public', 'linked_card']
+        fields = ['title', 'image_input', 'default_img', 'card_color', 'desc', 'is_public']
         widgets = {
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'title': forms.TextInput(attrs={'class':'form-control',}), 
