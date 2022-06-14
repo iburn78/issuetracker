@@ -14,6 +14,9 @@
         {% endif %}
         {% if card.is_public %}
         <span class="float-end">(<img src="{% static 'icons/people-fill.svg' %}" width="20" height="20">)</span>
+          {% if card.is_official %}
+          <span class="float-end me-1"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="24" height="24"></span>
+          {% endif %}
         {% endif %}
       </legend>
       <p class="m-0">Content*</p>

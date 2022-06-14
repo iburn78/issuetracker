@@ -82,6 +82,9 @@
           <div class="col-10 ps-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
               <span class="float-end" style="margin-right: -10px;">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
+            {% if card.is_official %}
+              <span class="float-end me-1" style="margin-right: -10px;"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
+            {% endif %}
               <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>

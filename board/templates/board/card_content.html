@@ -5,6 +5,9 @@
   <div class="row">
     <div class="col">
       {% if card.is_public %}
+        {% if card.is_official %}
+        <img src="{% static 'board/IssueTracker_Logo.png' %}" width="24" height="24">
+        {% endif %}
       <img src="{% static 'icons/people-fill.svg' %}" width="24" height="24">
       {% else %}
       <img src="{% static 'icons/person-circle.svg' %}" width="24" height="24">

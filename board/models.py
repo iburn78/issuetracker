@@ -63,6 +63,7 @@ class Card(models.Model):
     card_color = models.CharField(
         max_length=30, default='rgb(233, 236, 239)')  # gray-200
     is_public = models.BooleanField(default=False)
+    is_official = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):
         name = str(self.image.name)
@@ -84,6 +85,8 @@ class Card(models.Model):
         return super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
+        if self.is_official: 
+            self.is_public = True
         super().save(*args, **kwargs)
 
     def __str__(self):

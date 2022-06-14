@@ -14,9 +14,10 @@ class CardForm(forms.ModelForm):
     default_img = forms.CharField(required=False)
     class Meta:
         model = Card
-        fields = ['title', 'image_input', 'default_img', 'card_color', 'desc', 'is_public']
+        fields = ['title', 'image_input', 'default_img', 'card_color', 'desc', 'is_public', 'is_official']
         widgets = {
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
+            'is_official': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'title': forms.TextInput(attrs={'class':'form-control',}), 
             'desc': forms.Textarea(attrs={'class':'form-control', 'rows':3}), 
             'default_img': forms.HiddenInput,

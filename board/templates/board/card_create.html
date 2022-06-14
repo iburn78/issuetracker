@@ -11,9 +11,22 @@
           Title* {{ form.title }}
           Desc {{ form.desc }}
           {{ form.card_color.as_hidden }}
+
           {% if user.is_public_card_manager %}
-          {{ form.is_public }} <b class="small">make this public</b>
+            {% if c_u == "Create" %}
+            <p id="public_card_check_id" class="m-0">{{ form.is_public }} <b class="small">make this public</b></p>
+            <p class="m-0">{{ form.is_official }} <b class="small">make this public and official</b></p>
+            {% else %}
+            <p hidden>{{ form.is_public }} {{ form.is_official }}</p>
+            {% if card.is_public %}
+				      <p class="emphasis-font text-red-700 m-0">PUBLIC CARD</p>
+            {% endif %}
+            {% if card.is_official %}
+				      <p class="emphasis-font text-red-700 m-0">OFFICIAL CARD</p>
+            {% endif %}
+            {% endif %}
           {% endif %}
+
         </div>
         <div class="col-lg-6">
           Image 
@@ -116,5 +129,16 @@
     </fieldset>
   </form>
 </div>
+
+<script>
+  document.getElementById("id_is_official").addEventListener('change', e => {
+    if (e.currentTarget.checked) {
+      document.getElementById("public_card_check_id").style.display = "none";
+    } else {
+      document.getElementById("public_card_check_id").style.display = "block";
+    }
+  })
+</script>
+
 {% endblock content %}
 
