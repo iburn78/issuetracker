@@ -1,63 +1,31 @@
 USER TIER: 
 - Issuetracker Citizen: entry level user
 - VIP: no specific privilage assigned (need to be implemented)
+    * E.g., no limit in number of cards... 
+    * E.g., right to write in any public cards... etc...
 - Public Card Manager: manages public cards
 - Staff / Superuser: no specific privilage assigned
 
-Public Card:
- (a) pub card owner (by definition pub mgr) - post (pa) 
- (b) other pub mgr - post (pb) 
- (c) other general user - author - post (pc) 
- (d) other general user - not a author
+- Official/Public card status cannot be changed (implemented)
 
-- Public card status cannot be changed
-- write: all allowed
-  -> currently, only pub_card_mgr can write posts in public cards
-  -> general user - can only write into public cards through publish(?)
-                  - or, allow general user to write directly in pulbic cards(?)
-- delete / edit:
-     (pa), (pb), (pc)
-  (a) yes, no, yes(tbc - note)
-  (b) no, yes, no
-  (c) no, no, yes
-  (d) no, no, no
-  note: if a pub card is deleted, test_func in post_view() is not called (that is, of course in a sense)
-        also if it is published, only published post can be deleted... not the post in private card...
+- write posts (implemented)
+  - official cards: public card managers can write posts
+  - public cards: anybody
+  - private cards: only owner can write posts
 
-Official Public Card:
-- the same as Public Card but gnenral user cannot write/delete/edit
-- pub card managers can make a official card
-- Official status cannot be changed
+- delete / edit posts (implemented)
+  - author can modify/delete own posts
+  - public/official cards: owner can also modify/delete post 
+  note: if a card is deleted, test_func() in post_view() is not called -> all posts are deleted regardless of authors
 
-IMPORT / PUBLISH
-- private post -> public post: "Publish", you can copy the post to a public card 
-    soft copy
-         . the date has to be public time 
-         . make it only 1 publish is possible
-         . comments in published card can be seen in private card as well
-         . Post model has to be changed to track published card
-- public card -> private card: "Import", you can copy the post to a private card
-    soft copy
-- Do I really need import? (or, just like will be enough -> make a page with likes, e.g. through search)
-
+-------------
 To implement:
+-------------
+- Like mark / Like counter
+- Dislike mark / Dislike counter
 - card order changer implement 
    . who will manage public card order(maybe staff?)
-- card categorization implmenet (maybe later)
 - comment system implement
-- search (refer to previous implement)
+- keyword search (refer to previous implement)
+- author / tag / mylikes search
 - about-page revise
-- Publish / Import counter
-- time concept: created time vs edited time vs published time vs publisehd but edited time
-
-
-
-
-<PAGE DESIGN - PUBLISH>
-- Post Create / Update page -> put a publish button
-- Publish button clicked -> Create a view to select which card to publish
-- A card is chosen -> both the private card and public card have a same post
-- Post model -> a new attr 'published_card' <- a card
-- Card model -> a nwe attr 'published_posts' <- array of posts (do I need to develop a new wheel?)
-=> Or instead, publish just change card... to destination public card
-

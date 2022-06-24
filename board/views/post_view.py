@@ -30,11 +30,14 @@ class PostCreateView(CreateView):
         if not self.request.user.is_authenticated:
             return redirect('login')
 
-        if selected_card.is_public:
+        if selected_card.is_official:
             if self.request.user.is_public_card_manager:
                 return super().get(request, *args, **kwargs)
             else:
                 raise PermissionDenied
+        elif selected_card.is_public:
+            # anybody can write in public cards
+            return super().get(request, *args, **kwargs)
         else:
             if self.request.user == selected_card.owner:
                 return super().get(request, *args, **kwargs)
@@ -111,7 +114,7 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
     def test_func(self):
         post = self.get_object()
-        if self.request.user == post.author:
+        if self.request.user == post.card.owner or self.request.user == post.author:
             return True
         return False
 
@@ -151,7 +154,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 
-        form.instance.author = self.request.user
+        form.instance.author = self.get_object().author
         rev_post = form.save(commit=False)
         rev_post.save()
         form.save_m2m()
@@ -170,7 +173,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def test_func(self):
         post = self.get_object()
-        if self.request.user == post.author:
+        if self.request.user == post.card.owner or self.request.user == post.author:
             return True
         return False
 
