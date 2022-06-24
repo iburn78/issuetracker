@@ -1,7 +1,7 @@
 from email.policy import default
 from random import choice
 from django import forms
-from board.models import Card, Post
+from .models import Card, Post
 
 class Customclearable(forms.ClearableFileInput):
     template_name='board/custom_clearable_file.html'

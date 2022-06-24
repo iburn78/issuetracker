@@ -1,9 +1,9 @@
 from django.urls import path
-from board.views.card_view import *
-from board.views.post_view import *
+from .views.card_view import *
+from .views.post_view import *
 from django.conf import settings
 from django.views.generic import RedirectView
-from board.tools import *
+from .tools import *
 from os.path import join
 
 

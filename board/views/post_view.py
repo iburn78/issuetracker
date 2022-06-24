@@ -9,14 +9,15 @@ from django.views.generic import (
     DeleteView,
 )
 from django.views import View
-from board.models import Card, Post
-from board.forms import PostForm
+from ..models import Card, Post
+from ..forms import PostForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
-from board.tools import post_image_resize, exception_log
+from ..tools import post_image_resize, exception_log
 from django.urls import resolve
 from django.views.static import serve
 import os
+from django.http import HttpResponseRedirect
 
 
 class PostCreateView(CreateView):
@@ -87,6 +88,10 @@ class PostCreateView(CreateView):
 class PostDetailView(DetailView): # DO I NEED THIS?
     model = Post
     template_name = 'board/post_detail.html'
+
+    def post(self, request, *args, **kwargs):
+        print(request.POST.get('liked_user_id'))
+        return HttpResponseRedirect(self.request.path_info)
 
     def get(self, request, *args, **kwargs):
         post = self.get_object()

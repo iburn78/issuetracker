@@ -3,7 +3,7 @@ from django.utils import timezone
 from django.urls import reverse
 from taggit.managers import TaggableManager
 from users.models import User
-from board.tools import *
+from .tools import *
 import os
 from django.conf import settings
 from random import choice
@@ -99,6 +99,8 @@ class Card(models.Model):
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
+    likes = models.ManyToManyField(User, related_name="liked_post_set", blank=True)
+    dislikes = models.ManyToManyField(User, related_name="disliked_post_set", blank=True)
     date_posted = models.DateTimeField(default=timezone.now)
     content = models.TextField(blank=True)
     num_images = models.IntegerField(default=0)

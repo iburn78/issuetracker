@@ -9,16 +9,16 @@ from django.views.generic import (
     DeleteView,
 )
 from django.views import View
-from board.models import Card, Post
-from board.forms import CardForm
+from ..models import Card, Post
+from ..forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
 from django.http import Http404
 from django.views.static import serve
-from board.tools import *
+from ..tools import *
 import os
-
+from django.http import HttpResponseRedirect
 
 
 def about(request):
@@ -91,6 +91,10 @@ class CardContentListView(ListView):
     template_name = 'board/card_content.html'
     context_object_name = 'posts'
     paginate_by = 12
+
+    def post(self, request, *args, **kwargs):
+        print(request.POST.get('liked_user_id'))
+        return HttpResponseRedirect(self.request.path_info)
 
     def get(self, request, *args, **kwargs):
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))

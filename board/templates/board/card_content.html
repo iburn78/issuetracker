@@ -166,6 +166,11 @@
                   </div>
                 </div>
                 <div class="col-5 p-0 d-flex align-items-center justify-content-end">
+                  <form action="" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="liked_user_id" value="{{user.id}}">
+                    <button type="submit" class="btn btn-sm btn-primary">like</button>
+                  </form>
                   {% if post.author == user or post.card.owner == user %}
                   <a class="me-2 float-end" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
                   <a class="me-2 float-end" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
