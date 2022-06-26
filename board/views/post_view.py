@@ -17,7 +17,6 @@ from ..tools import post_image_resize, exception_log
 from django.urls import resolve
 from django.views.static import serve
 import os
-from django.http import HttpResponseRedirect
 
 
 class PostCreateView(CreateView):
@@ -85,13 +84,30 @@ class PostCreateView(CreateView):
         initial = super().get_initial()
         return initial
 
-class PostDetailView(DetailView): # DO I NEED THIS?
+class PostDetailView(DetailView): 
     model = Post
     template_name = 'board/post_detail.html'
 
     def post(self, request, *args, **kwargs):
-        print(request.POST.get('liked_user_id'))
-        return HttpResponseRedirect(self.request.path_info)
+        like_status = request.POST.get('like_status')
+        post = self.get_object()
+        if like_status == 'liked':
+            if post.likes.all().filter(id=self.request.user.id).exists():
+                post.likes.remove(self.request.user)
+            else:
+                post.likes.add(self.request.user)
+                if post.dislikes.all().filter(id=self.request.user.id).exists():
+                    post.dislikes.remove(self.request.user)
+        elif like_status == 'disliked':
+            if post.dislikes.all().filter(id=self.request.user.id).exists():
+                post.dislikes.remove(self.request.user)
+            else:
+                post.dislikes.add(self.request.user)
+                if post.likes.all().filter(id=self.request.user.id).exists():
+                    post.likes.remove(self.request.user)
+        else:
+            pass
+        return self.get(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         post = self.get_object()
@@ -110,6 +126,16 @@ class PostDetailView(DetailView): # DO I NEED THIS?
         context = super().get_context_data(**kwargs)
         post = self.get_object()
         context['bg_color'] = post.card.card_color
+        if post.likes.all().filter(id=self.request.user.id).exists():
+            context['liked'] = True
+            context['disliked'] = False
+        elif post.dislikes.all().filter(id=self.request.user.id).exists():
+            context['liked'] = False
+            context['disliked'] = True 
+        else: 
+            context['liked'] = False
+            context['disliked'] = False
+        context['like_count'] = post.likes.all().count()
         return context
 
 

@@ -29,3 +29,6 @@ To implement:
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
 - about-page revise
+- view counter (maybe later)
+- content list view: might not be efficiently coded... 
+  -> fully load all posts in memory in a card  / dictionary access in template (likes, dislikes) is also inefficient

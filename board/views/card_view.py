@@ -18,7 +18,6 @@ from django.http import Http404
 from django.views.static import serve
 from ..tools import *
 import os
-from django.http import HttpResponseRedirect
 
 
 def about(request):
@@ -93,8 +92,26 @@ class CardContentListView(ListView):
     paginate_by = 12
 
     def post(self, request, *args, **kwargs):
-        print(request.POST.get('liked_user_id'))
-        return HttpResponseRedirect(self.request.path_info)
+        like_status = request.POST.get('like_status')
+        post_id = request.POST.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        if like_status == 'liked':
+            if post.likes.all().filter(id=self.request.user.id).exists():
+                post.likes.remove(self.request.user)
+            else:
+                post.likes.add(self.request.user)
+                if post.dislikes.all().filter(id=self.request.user.id).exists():
+                    post.dislikes.remove(self.request.user)
+        elif like_status == 'disliked':
+            if post.dislikes.all().filter(id=self.request.user.id).exists():
+                post.dislikes.remove(self.request.user)
+            else:
+                post.dislikes.add(self.request.user)
+                if post.likes.all().filter(id=self.request.user.id).exists():
+                    post.likes.remove(self.request.user)
+        else:
+            pass
+        return self.get(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
@@ -122,10 +139,26 @@ class CardContentListView(ListView):
         context['card_id'] = self.kwargs.get('card_id')
         card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         context['card'] = card
-        posts = Post.objects.filter(card__id = card.id)
+        posts = self.get_queryset()
         authors = []
+        like_status = {}
+        like_count = {}
+        dislike_status = {}
         for post in posts: 
             authors.append(post.author)
+            if post.likes.all().filter(id=self.request.user.id).exists():
+                like_status = {int(post.id): True, **like_status}
+                dislike_status = {int(post.id): False, **dislike_status}
+            elif post.dislikes.all().filter(id=self.request.user.id).exists():
+                like_status = {int(post.id): False, **like_status}
+                dislike_status = {int(post.id): True, **dislike_status}
+            else: 
+                like_status = {int(post.id): False, **like_status}
+                dislike_status = {int(post.id): False, **dislike_status}
+            like_count = {int(post.id): post.likes.all().count(), **like_count}
+        context['like_status'] = like_status
+        context['like_count'] = like_count
+        context['dislike_status'] = dislike_status
         context['author_count'] = len(set(authors))
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         return context
