@@ -56,7 +56,7 @@ def random_img():
 
 class Card(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE)
-    date_created = models.DateTimeField(default=timezone.now)
+    card_order = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=70)
     desc = models.TextField(blank=True)
     image = models.ImageField(default=random_img, upload_to=path_to_card_imgs)

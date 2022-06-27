@@ -23,7 +23,7 @@ To implement:
 -------------
 - card order changer implement 
    . who will manage public card order(maybe staff?)
+   . add date_created for Card model
 - comment system implement
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
-- about-page revise

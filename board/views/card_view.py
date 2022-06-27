@@ -31,16 +31,50 @@ class CardListView(ListView):
     revisit = False
     card_list = False
 
+    def post(self, request, *args, **kwargs):
+        up_down = request.POST.get('up_down')
+
+        if up_down == 'up' or up_down =='down':
+            card_id = request.POST.get('card_to_move_id')
+            card_to_move = get_object_or_404(Card, id=card_id)
+            if card_to_move.is_public:
+                card_set = Card.objects.filter(is_public=True).order_by('-card_order')
+            else:
+                card_set = self.get_queryset()
+            card_location = 0 
+            for card in card_set: 
+                if str(card.id) == card_id:
+                    break
+                card_location += 1
+            if (up_down == 'up' and card_location == 0) or (up_down == 'down' and card_location == len(card_set)-1):
+                pass
+            else: 
+                if up_down == 'up':
+                    target_location = card_location-1
+                else: 
+                    target_location = card_location+1
+                temp_order = card_to_move.card_order
+                card_to_move.card_order = card_set[target_location].card_order
+                card_set[target_location].card_order = temp_order
+                card_to_move.save()
+                card_set[target_location].save()
+            return self.get(request, *args, **kwargs)
+
+        else:
+            search_term = request.POST.get('search_term')
+            messages.info(self.request, f"Search Keyword {search_term} entered")
+            return redirect('/')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        public_cards = Card.objects.filter(is_public=True).order_by('-date_created')
+        public_cards = Card.objects.filter(is_public=True).order_by('-card_order')
         context['public_cards'] = public_cards
         context['card_list'] = self.card_list
         return context
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return super().get_queryset().filter(owner=self.request.user).filter(is_public=False).order_by('-date_created')
+            return super().get_queryset().filter(owner=self.request.user).filter(is_public=False).order_by('-card_order')
         else:
             if self.request.session.get('login_recommend', True) and not self.revisit:
                 messages.info(
@@ -48,10 +82,6 @@ class CardListView(ListView):
                 self.request.session['login_recommend'] = False
             return super().get_queryset().none()
 
-    def post(self, request, *args, **kwargs):
-        search_term = request.POST.get('search_term')
-        messages.info(self.request, f"Search Keyword {search_term} entered")
-        return redirect('/')
 
 
 class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a new post

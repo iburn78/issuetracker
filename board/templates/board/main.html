@@ -21,6 +21,18 @@
             </p>
           </div>
         </a>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="up_down" value="up">
+          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+          <input type="image" class="" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22">
+        </form>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="up_down" value="down">
+          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+          <input type="image" class="" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
+        </form>
       </div>
     </div>
     {% endfor %}
@@ -68,6 +80,20 @@
             </p>
           </div>
         </a>
+        {% if user.is_authenticated and user.is_public_card_manager %}
+        <form action="" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="up_down" value="up">
+          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+          <input type="image" class="" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22">
+        </form>
+        <form action="" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="up_down" value="down">
+          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+          <input type="image" class="" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
+        </form>
+        {% endif %}
       </div>
     </div>
     {% endfor %}
