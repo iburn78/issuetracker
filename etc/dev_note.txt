@@ -21,12 +21,9 @@ USER TIER:
 -------------
 To implement:
 -------------
-- Like mark / Like counter
-- Dislike mark / Dislike counter
 - card order changer implement 
    . who will manage public card order(maybe staff?)
 - comment system implement
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
 - about-page revise
-- view counter (maybe later)
