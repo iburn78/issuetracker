@@ -121,14 +121,13 @@ class CardContentListView(ListView):
             return redirect('login')
 
     def get_queryset(self):
-        model_objects = super().get_queryset()
         selected_card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         if selected_card.is_public:
-            return model_objects.filter(card__id=selected_card.id).order_by('-date_posted')
+            return Post.objects.filter(card__id=selected_card.id).order_by('-date_posted')
         else:
             if self.request.user.is_authenticated:
                 if self.request.user == selected_card.owner:
-                    return model_objects.filter(author=self.request.user).filter(card__id=selected_card.id).order_by('-date_posted')
+                    return Post.objects.filter(author=self.request.user).filter(card__id=selected_card.id).order_by('-date_posted')
                 else:
                     raise Http404("Page not found")
             else:
@@ -139,7 +138,7 @@ class CardContentListView(ListView):
         context['card_id'] = self.kwargs.get('card_id')
         card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         context['card'] = card
-        posts = self.get_queryset()
+        posts = context['posts']
         authors = []
         like_status = {}
         like_count = {}

@@ -112,14 +112,30 @@
           </div>
         </div>
         <div class="col-8">
-          {% if card.is_public %}
-          <!-- <img class="user-image-small" src="{{ post.author.profile.image.url }}"> -->
-          <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a> 
-          {% else %}
-          <!-- <img src="{% static 'icons/pencil-square.svg' %}" width="12"> --> 
-          {% endif %}
+          <div class="d-flex justify-content-between">
+            <div class="d-flex">
+              {% if card.is_public %}
+              <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a>
+              {% endif %}
+              <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+                <div class="text-gray-500 small"> 
+                  {{ post.date_posted|date:"M d" }} 
+                </div>
+              </a>
+            </div>
+            
+            <div class="d-flex">
+              {% if card.is_public %}
+              {% for key, val in like_count.items %}
+              {% if key == post.id %} 
+              <span class="float-end me-1 small text-muted">{{ val }} likes</span>
+              {% endif %}
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+          
           <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
-            <small class="text-gray-500"> {{ post.date_posted|date:"M d" }}</small>
             <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
             <p class="article-content text-dark mb-1">{{ post.get_preview_text }}</p>
           </a>
@@ -131,14 +147,29 @@
         </div>
         {% else %}
         <div class="col m-0 pb-0">
-          {% if card.is_public %}
-          <!-- <img class="user-image-small" src="{{ post.author.profile.image.url }}"> -->
-          <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a>
-          {% else %}
-          <!-- <img src="{% static 'icons/pencil-square.svg' %}" width="12"> -->
-          {% endif %}
+          <div class="d-flex justify-content-between">
+            <div class="d-flex">
+              {% if card.is_public %}
+              <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a>
+              {% endif %}
+              <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+                <div class="text-gray-500 small"> 
+                  {{ post.date_posted|date:"M d" }}
+                </div>
+              </a>
+            </div>
+            
+            <div class="d-flex">
+              {% if card.is_public %}
+              {% for key, val in like_count.items %}
+              {% if key == post.id %} 
+              <span class="float-end me-1 small text-muted">{{ val }} likes</span>
+              {% endif %}
+              {% endfor %}
+              {% endif %}
+            </div>
+          </div>
           <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
-            <small class="text-gray-500"> {{ post.date_posted|date:"M d" }}</small>
             <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
             <p class="article-content text-dark mb-1">{{ post.get_preview_text }}</p>
           </a>
@@ -278,6 +309,7 @@
                 {% endif %}
               </div>
               
+              {% if card.is_public %}
               <div class="row m-0 mt-1 bg-gray-100">
                 <div class="col p-2">
                   {% if user.is_authenticated %}
@@ -287,9 +319,9 @@
                     <input type="hidden" name="post_id" value="{{ post.id }}">
                     {% for key, val in dislike_status.items %}
                     {% if key == post.id and val %} 
-                    <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="24" height="24">
+                    <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22">
                     {% elif key == post.id %}
-                    <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down.svg' %}" width="24" height="24">
+                    <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22">
                     {% endif %}
                     {% endfor %}
                   </form>
@@ -304,9 +336,9 @@
                     {% endfor %}
                     {% for key, val in like_status.items %}
                     {% if key == post.id and val %} 
-                    <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="24" height="24">
+                    <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22">
                     {% elif key == post.id %}
-                    <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="24" height="24">
+                    <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
                     {% endif %}
                     {% endfor %}
                   </form>
@@ -316,10 +348,11 @@
                   <span class="float-end me-2">({{ val }})</span>
                   {% endif %}
                   {% endfor %}
-                  <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="24" height="24">
+                  <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
                   {% endif %}
                 </div>
               </div>
+              {% endif %}
             </div>
           </div>
         </div>
