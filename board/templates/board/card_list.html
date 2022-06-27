@@ -4,6 +4,7 @@
 {% if user.is_authenticated %}
 <div class="container-fluid">
   {% if card_select_for_new_post %}
+  <input type="button" class="btn btn-sm btn-outline-secondary float-end" value="cancel" onClick="javascript:history.go(-1);">
   <p><b class="text-red-600">Choose a card for your new post</b></p>
   {% if not cards %}
   {% if not public_cards and user.is_public_card_manager or not user_is_public_card_manager %}
@@ -28,6 +29,22 @@
           </div>
           <div class="col-10 ps-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+              <div class="float-end mt-1">
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="up_down" value="down">
+                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                  <input type="image" class="" src="{% static 'icons/chevron-right.svg' %}" width="16" height="16">
+                </form>
+              </div>
+              <div class="float-end me-1 mt-1">
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="up_down" value="up">
+                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                  <input type="image" class="" src="{% static 'icons/chevron-left.svg' %}" width="16" height="16">
+                </form>
+              </div>
               <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>
@@ -35,24 +52,6 @@
       </div>
     </div>
     {% endfor %}
-    <!-- {% if not card_select_for_new_post %}
-    <div class="col-sm-12 col-md-6 col-xxl-4">
-      <div class="card border-0">
-        <div class="row">
-          <div class="col-2 pe-1">
-            <div class="card-img-select"><a href="{% url 'card-create' %}"><img src="{% static 'icons/plus-lg.svg' %}" height="24px" width="24px" 
-              style="position: absolute; top: 50%; left: 7.5%; transform: translate(-50%, -50%);" ></a>
-            </div>
-          </div>
-          <div class="col-10 ps-0">
-            <div class="card-body bg-blue-200 text-dark">
-              <a href="{% url 'card-create' %}" class="card-title-select text-dark"><img src="{% static 'icons/textarea-resize.svg' %}" width="20" height="20"> New Card</a>           </a>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    {% endif %} -->
   </div>
 </div>
 {% endif %}
@@ -82,9 +81,27 @@
           <div class="col-10 ps-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
               <span class="float-end" style="margin-right: -10px;">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
-            {% if card.is_official %}
+              {% if card.is_official %}
               <span class="float-end me-1" style="margin-right: -10px;"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
-            {% endif %}
+              {% endif %}
+              {% if user.is_authenticated and user.is_public_card_manager %}
+              <div class="float-end me-1 mt-1">
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="up_down" value="down">
+                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                  <input type="image" class="" src="{% static 'icons/chevron-right.svg' %}" width="16" height="16">
+                </form>
+              </div>
+              <div class="float-end me-1 mt-1">
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" name="up_down" value="up">
+                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                  <input type="image" class="" src="{% static 'icons/chevron-left.svg' %}" width="16" height="16">
+                </form>
+              </div>
+              {% endif %}
               <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>
