@@ -15,40 +15,31 @@
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark p-2" style="background-color: {{ card.card_color }};">
+            <div class="float-end">
+              <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="up_down" value="down">
+                <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                <input type="image" class="" src="{% static 'icons/chevron-right.svg' %}" width="16" height="16">
+              </form>
+            </div>
+            <div class="float-end me-1">
+              <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="up_down" value="up">
+                <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                <input type="image" class="" src="{% static 'icons/chevron-left.svg' %}" width="16" height="16">
+              </form>
+            </div>
             <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
             <p class="card-text card-text-size">
               {{ card.desc }}
             </p>
           </div>
         </a>
-        <form action="" method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="up_down" value="up">
-          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-          <input type="image" class="" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22">
-        </form>
-        <form action="" method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="up_down" value="down">
-          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-          <input type="image" class="" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
-        </form>
       </div>
     </div>
     {% endfor %}
-    <!-- <div class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
-      <div class="card border-0">
-        <img src="" class="card-img bg-blue-100">
-        <a href="{% url 'card-create' %}" class="card-link">
-          <img src="{% static 'icons/plus-lg.svg' %}" class="card-img addition">
-          <div class="card-body bg-blue-200 text-dark p-2">
-            <h5 class="card-title card-title-size"><img src="{% static 'icons/textarea-resize.svg' %}" width="25" height="25"> New Card</h5>
-            <p class="card-text card-text-size">
-            </p>
-          </div>
-        </a>
-      </div>
-    </div> -->
   </div>
 </div>
 {% endif %}
@@ -72,28 +63,32 @@
           <div class="card-body text-dark p-2" style="background-color: {{ card.card_color }};">
             <span class="float-end pub-icon-style">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
             {% if card.is_official %}
-              <span class="float-end pub-icon-style me-1"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
+            <span class="float-end pub-icon-style me-1"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
+            {% endif %}
+            {% if user.is_authenticated and user.is_public_card_manager %}
+            <div class="float-end">
+              <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="up_down" value="down">
+                <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                <input type="image" class="" src="{% static 'icons/chevron-right.svg' %}" width="16" height="16">
+              </form>
+            </div>
+            <div class="float-end me-1">
+              <form action="" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="up_down" value="up">
+                <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
+                <input type="image" class="" src="{% static 'icons/chevron-left.svg' %}" width="16" height="16">
+              </form>
+            </div>
             {% endif %}
             <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
             <p class="card-text card-text-size">
-              {{ card.desc }}
+              {{ card.desc }}gg
             </p>
           </div>
         </a>
-        {% if user.is_authenticated and user.is_public_card_manager %}
-        <form action="" method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="up_down" value="up">
-          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-          <input type="image" class="" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22">
-        </form>
-        <form action="" method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="up_down" value="down">
-          <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-          <input type="image" class="" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
-        </form>
-        {% endif %}
       </div>
     </div>
     {% endfor %}

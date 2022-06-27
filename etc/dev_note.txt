@@ -18,12 +18,12 @@ USER TIER:
   - public/official cards: owner can also modify/delete post 
   note: if a card is deleted, test_func() in post_view() is not called -> all posts are deleted regardless of authors
 
+- card order change (implemented)
+  - public card managers can change orders of cards
+
 -------------
 To implement:
 -------------
-- card order changer implement 
-   . who will manage public card order(maybe staff?)
-   . add date_created for Card model
 - comment system implement
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
