@@ -17,7 +17,7 @@
   <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
   <div class="row gy-1">
     {% for card in cards %}
-    <div class="col-sm-12 col-md-6 col-xxl-4">
+    <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4">
       <div class="card border-0">
         <div class="row">
           <div class="col-2 pe-1">
@@ -29,22 +29,8 @@
           </div>
           <div class="col-10 ps-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
-              <div class="float-end mt-1">
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" name="up_down" value="down">
-                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-                  <input type="image" class="" src="{% static 'icons/chevron-right.svg' %}" width="16" height="16">
-                </form>
-              </div>
-              <div class="float-end me-1 mt-1">
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" name="up_down" value="up">
-                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-                  <input type="image" class="" src="{% static 'icons/chevron-left.svg' %}" width="16" height="16">
-                </form>
-              </div>
+              <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
+              <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
               <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>
@@ -68,7 +54,7 @@
   <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
   <div class="row gy-1">
     {% for card in public_cards %}
-    <div class="col-sm-12 col-md-6 col-xxl-4">
+    <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4">
       <div class="card border-0">
         <div class="row">
           <div class="col-2 pe-1">
@@ -84,23 +70,9 @@
               {% if card.is_official %}
               <span class="float-end me-1" style="margin-right: -10px;"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
               {% endif %}
+              <span class="float-end" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
+              <span class="float-end" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
               {% if user.is_authenticated and user.is_public_card_manager %}
-              <div class="float-end me-1 mt-1">
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" name="up_down" value="down">
-                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-                  <input type="image" class="" src="{% static 'icons/chevron-right.svg' %}" width="16" height="16">
-                </form>
-              </div>
-              <div class="float-end me-1 mt-1">
-                <form action="" method="POST">
-                  {% csrf_token %}
-                  <input type="hidden" name="up_down" value="up">
-                  <input type="hidden" name="card_to_move_id" value="{{ card.id }}">
-                  <input type="image" class="" src="{% static 'icons/chevron-left.svg' %}" width="16" height="16">
-                </form>
-              </div>
               {% endif %}
               <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
@@ -122,7 +94,43 @@
       window.location.href = origin.href+'new_post/';
     };
   });
+
 </script>
 {% endif %}
 {% endblock content %}
 
+{% block script %}
+<script>
+  
+  function move_card(e, id, up_down) {
+    e.preventDefault();
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'card-move' %}", true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        let target_card_id = JSON.parse(this.responseText).target_card_id;
+        if(target_card_id != "none") {
+          let dom_origin = document.getElementById('card_dom'+id);
+          let dom_target = document.getElementById('card_dom'+target_card_id);
+          exchangeElements(dom_origin, dom_target);
+        };
+      };
+    }
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('card_id', id);
+    formData.append('up_down', up_down);
+    request.send(formData);
+  }
+  function exchangeElements(element1, element2)
+  {
+    var clonedElement1 = element1.cloneNode(true);
+    var clonedElement2 = element2.cloneNode(true);
+    element2.parentNode.replaceChild(clonedElement1, element2);
+    element1.parentNode.replaceChild(clonedElement2, element1);
+    return clonedElement1;
+  }
+  
+</script>
+{% endblock script %}

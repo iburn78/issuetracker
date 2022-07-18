@@ -24,9 +24,8 @@ USER TIER:
 -------------
 To implement:
 -------------
+- apply ajax to everywhere possible (comments, etc...)
 - comment system implement
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
-- remove modal page and make it a separate page
-- make ESC to go back in certain pages 
-- AJAX: let's learn this
+- improve new post / update post page with better design

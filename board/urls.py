@@ -25,4 +25,7 @@ urlpatterns = [
     path(join('media', POST_UPLOADED_IMGS, '<str:file>'), PostMediaView.as_view(), name='media-view'),
     path(join('media', POST_UPLOADED_IMGS_RESIZED, '<str:file>'), PostMediaView.as_view(), name='media-view'),
     path(join('media', CARD_UPLOADED_IMGS, '<str:file>'), CardMediaView.as_view(), name='media-view'),
+    
+    path('api/post/vote/', vote, name='post-vote'),
+    path('api/card/move/', CardListView.as_view(), name='card-move'),
 ]

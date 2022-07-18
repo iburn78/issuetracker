@@ -82,7 +82,7 @@
       {% endif %} 
       <div id="announcement_area"></div>
     </div>
-    {% block content %}{% endblock %}
+    {% block content %}{% endblock content %}
   </main>
   <footer class="footer mt-auto py-2 bg-blue-800 text-light">
     <div class="container-fluid">
@@ -90,5 +90,6 @@
     </div>
   </footer>
   <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   
+  {% block script %}{% endblock script %}
 </body> 
 </html>

@@ -10,6 +10,7 @@ from django.views.generic import (
 )
 from django.views import View
 from ..models import Card, Post
+from users.models import User
 from ..forms import CardForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # use info, success, warning to make it consistent with bootstrap5
@@ -18,11 +19,11 @@ from django.http import Http404
 from django.views.static import serve
 from ..tools import *
 import os
-
+from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
+from django.core import serializers
 
 def about(request):
     return render(request, 'board/about.html')
-
 
 class CardListView(ListView):
     model = Card
@@ -32,10 +33,9 @@ class CardListView(ListView):
     card_list = False
 
     def post(self, request, *args, **kwargs):
-        up_down = request.POST.get('up_down')
-
-        if up_down == 'up' or up_down =='down':
-            card_id = request.POST.get('card_to_move_id')
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
+            card_id = request.POST.get('card_id')
+            up_down = request.POST.get('up_down')
             card_to_move = get_object_or_404(Card, id=card_id)
             if card_to_move.is_public:
                 card_set = Card.objects.filter(is_public=True).order_by('-card_order')
@@ -43,11 +43,11 @@ class CardListView(ListView):
                 card_set = self.get_queryset()
             card_location = 0 
             for card in card_set: 
-                if str(card.id) == card_id:
+                if str(card.id) == str(card_id):
                     break
                 card_location += 1
             if (up_down == 'up' and card_location == 0) or (up_down == 'down' and card_location == len(card_set)-1):
-                pass
+                target_card_id = 'none'
             else: 
                 if up_down == 'up':
                     target_location = card_location-1
@@ -58,12 +58,13 @@ class CardListView(ListView):
                 card_set[target_location].card_order = temp_order
                 card_to_move.save()
                 card_set[target_location].save()
-            return self.get(request, *args, **kwargs)
+                target_card_id = card_set[target_location].id
+            return JsonResponse({"target_card_id": target_card_id}, status=200)
+        else: 
+            search_word = request.POST.get('search_term')
+            messages.info(self.request, f"Search Keyword {search_word} entered")
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-        else:
-            search_term = request.POST.get('search_term')
-            messages.info(self.request, f"Search Keyword {search_term} entered")
-            return redirect('/')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -121,28 +122,6 @@ class CardContentListView(ListView):
     context_object_name = 'posts'
     paginate_by = 12
 
-    def post(self, request, *args, **kwargs):
-        like_status = request.POST.get('like_status')
-        post_id = request.POST.get('post_id')
-        post = get_object_or_404(Post, id=post_id)
-        if like_status == 'liked':
-            if post.likes.all().filter(id=self.request.user.id).exists():
-                post.likes.remove(self.request.user)
-            else:
-                post.likes.add(self.request.user)
-                if post.dislikes.all().filter(id=self.request.user.id).exists():
-                    post.dislikes.remove(self.request.user)
-        elif like_status == 'disliked':
-            if post.dislikes.all().filter(id=self.request.user.id).exists():
-                post.dislikes.remove(self.request.user)
-            else:
-                post.dislikes.add(self.request.user)
-                if post.likes.all().filter(id=self.request.user.id).exists():
-                    post.likes.remove(self.request.user)
-        else:
-            pass
-        return self.get(request, *args, **kwargs)
-
     def get(self, request, *args, **kwargs):
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
         if selected_card.is_public or self.request.user.is_authenticated:
@@ -169,12 +148,9 @@ class CardContentListView(ListView):
         card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         context['card'] = card
         posts = context['posts']
-        authors = []
         like_status = {}
-        like_count = {}
         dislike_status = {}
         for post in posts: 
-            authors.append(post.author)
             if post.likes.all().filter(id=self.request.user.id).exists():
                 like_status = {int(post.id): True, **like_status}
                 dislike_status = {int(post.id): False, **dislike_status}
@@ -184,11 +160,9 @@ class CardContentListView(ListView):
             else: 
                 like_status = {int(post.id): False, **like_status}
                 dislike_status = {int(post.id): False, **dislike_status}
-            like_count = {int(post.id): post.likes.all().count(), **like_count}
         context['like_status'] = like_status
-        context['like_count'] = like_count
         context['dislike_status'] = dislike_status
-        context['author_count'] = len(set(authors))
+        context['author_count'] = User.objects.filter(post__card_id = card.id).distinct().count()
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         return context
 
@@ -248,10 +222,7 @@ class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         card = self.get_object()
         posts = Post.objects.filter(card__id = card.id)
-        authors = []
-        for post in posts: 
-            authors.append(post.author)
-        context['author_count'] = len(set(authors))
+        context['author_count'] = User.objects.filter(post__card_id = card.id).distinct().count()
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         return context
     

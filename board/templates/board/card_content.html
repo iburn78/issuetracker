@@ -126,11 +126,7 @@
             
             <div class="d-flex">
               {% if card.is_public %}
-              {% for key, val in like_count.items %}
-              {% if key == post.id %} 
-              <span class="float-end me-1 small text-muted">{{ val }} likes</span>
-              {% endif %}
-              {% endfor %}
+              <span id="listpagecounter{{post.id}}" class="float-end me-1 small text-muted">{{ post.likes.count }} likes</span>
               {% endif %}
             </div>
           </div>
@@ -161,11 +157,7 @@
             
             <div class="d-flex">
               {% if card.is_public %}
-              {% for key, val in like_count.items %}
-              {% if key == post.id %} 
-              <span class="float-end me-1 small text-muted">{{ val }} likes</span>
-              {% endif %}
-              {% endfor %}
+              <span class="float-end me-1 small text-muted">{{ post.likes.count }} likes</span>
               {% endif %}
             </div>
           </div>
@@ -311,46 +303,29 @@
               
               {% if card.is_public %}
               <div class="row m-0 mt-1 bg-gray-100">
-                <div class="col p-2">
-                  {% if user.is_authenticated %}
-                  <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="like_status" value="disliked">
-                    <input type="hidden" name="post_id" value="{{ post.id }}">
-                    {% for key, val in dislike_status.items %}
-                    {% if key == post.id and val %} 
-                    <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22">
-                    {% elif key == post.id %}
-                    <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22">
-                    {% endif %}
-                    {% endfor %}
-                  </form>
-                  <form action="" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="like_status" value="liked">
-                    <input type="hidden" name="post_id" value="{{ post.id }}">
-                    {% for key, val in like_count.items %}
-                    {% if key == post.id %} 
-                    <span class="float-end me-2">({{ val }})</span>
-                    {% endif %}
-                    {% endfor %}
-                    {% for key, val in like_status.items %}
-                    {% if key == post.id and val %} 
-                    <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22">
-                    {% elif key == post.id %}
-                    <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
-                    {% endif %}
-                    {% endfor %}
-                  </form>
-                  {% else %}
-                  {% for key, val in like_count.items %}
-                  {% if key == post.id %} 
-                  <span class="float-end me-2">({{ val }})</span>
+                {% if user.is_authenticated %}
+                <div id="vote_meter_{{post.id}}" class="col p-2">
+                  {% for key, val in dislike_status.items %}
+                  {% if key == post.id and val %} 
+                  <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
+                  {% elif key == post.id %}
+                  <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
                   {% endif %}
                   {% endfor %}
-                  <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
+                  <span class="p-0 m-0 me-1 float-end">({{ post.likes.count }})</span>
+                  {% for key, val in like_status.items %}
+                  {% if key == post.id and val %} 
+                  <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
+                  {% elif key == post.id %}
+                  <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
                   {% endif %}
+                  {% endfor %}
                 </div>
+                {% else %}
+                <span class="float-end me-2">({{ post.likes.count }})</span>
+                <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
+                {% endif %}
+                
               </div>
               {% endif %}
             </div>
@@ -359,8 +334,6 @@
       </div>
       
       <!-- Modal page end -->
-      
-      
       
     </div>
     {% endfor %}
@@ -393,6 +366,55 @@
 </div>
 
 
-
-
 {% endblock content %}
+
+{% block script %}
+<script>
+  
+  function vote_click(id, up_down) {
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'post-vote' %}", true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        let dict = this.responseText;
+        let dataparse = JSON.parse(dict);
+        let fill_status = dataparse.fill_status;
+        let post = JSON.parse(dataparse.instance)[0];
+        let obj = post.fields;
+        let post_id = post.pk;
+        let num_likes = obj.likes.length;
+        document.getElementById('listpagecounter'+post_id).innerHTML = num_likes + " " + "likes";
+        if(fill_status === "neither") {
+          document.getElementById("vote_meter_"+id).innerHTML= 
+          `
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+          <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
+          `
+        }else if(fill_status === "up"){
+          document.getElementById("vote_meter_"+id).innerHTML= 
+          `
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+          <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
+          `
+        }else if(fill_status === "down"){
+          document.getElementById("vote_meter_"+id).innerHTML= 
+          `
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
+          <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
+          `
+        };
+      }
+    };
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('post_id', id);
+    formData.append('up_down', up_down);
+    request.send(formData);
+  }
+  
+</script>
+{% endblock script %}

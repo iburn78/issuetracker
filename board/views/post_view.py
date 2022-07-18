@@ -1,3 +1,4 @@
+from textwrap import fill
 from django.shortcuts import get_object_or_404, redirect
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -17,7 +18,36 @@ from ..tools import post_image_resize, exception_log
 from django.urls import resolve
 from django.views.static import serve
 import os
+from django.http import JsonResponse
+from django.core import serializers
 
+def vote(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
+        post_id = request.POST.get('post_id')
+        up_down = request.POST.get('up_down')
+        post = get_object_or_404(Post, id=post_id)
+        fill_status = 'neither'
+        if up_down == 'up':
+            if post.likes.all().filter(id=request.user.id).exists():
+                post.likes.remove(request.user)
+            else:
+                post.likes.add(request.user)
+                fill_status = 'up'
+                if post.dislikes.all().filter(id=request.user.id).exists():
+                    post.dislikes.remove(request.user)
+        elif up_down == 'down':
+            if post.dislikes.all().filter(id=request.user.id).exists():
+                post.dislikes.remove(request.user)
+            else:
+                post.dislikes.add(request.user)
+                fill_status = 'down'
+                if post.likes.all().filter(id=request.user.id).exists():
+                    post.likes.remove(request.user)
+        else:
+            pass
+        ser_instance = serializers.serialize('json', [post])
+        return JsonResponse({"instance": ser_instance, "fill_status": fill_status}, status=200)
+    return JsonResponse({"result": "failure"}, status = 400)
 
 class PostCreateView(CreateView):
     model = Post
@@ -87,27 +117,6 @@ class PostCreateView(CreateView):
 class PostDetailView(DetailView): 
     model = Post
     template_name = 'board/post_detail.html'
-
-    def post(self, request, *args, **kwargs):
-        like_status = request.POST.get('like_status')
-        post = self.get_object()
-        if like_status == 'liked':
-            if post.likes.all().filter(id=self.request.user.id).exists():
-                post.likes.remove(self.request.user)
-            else:
-                post.likes.add(self.request.user)
-                if post.dislikes.all().filter(id=self.request.user.id).exists():
-                    post.dislikes.remove(self.request.user)
-        elif like_status == 'disliked':
-            if post.dislikes.all().filter(id=self.request.user.id).exists():
-                post.dislikes.remove(self.request.user)
-            else:
-                post.dislikes.add(self.request.user)
-                if post.likes.all().filter(id=self.request.user.id).exists():
-                    post.likes.remove(self.request.user)
-        else:
-            pass
-        return self.get(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         post = self.get_object()

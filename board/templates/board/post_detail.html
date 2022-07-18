@@ -128,29 +128,23 @@
     </div>
     {% if post.card.is_public %}
     <div class="row m-0 mt-1 bg-gray-100">
-      <div class="col p-2">
+      <div id="vote_meter_{{post.id}}" class="col p-2">
         {% if user.is_authenticated %}
-        <form action="" method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="like_status" value="disliked">
-          {% if disliked %}
-          <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22">
-          {% else %}
-          <input type="image" class="me-3 float-end" src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22">
-          {% endif %}
-        </form>
-        <form action="" method="POST">
-          {% csrf_token %}
-          <input type="hidden" name="like_status" value="liked">
-          <span class="float-end me-2">({{ like_count }})</span>
-          {% if liked %}
-          <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22">
-          {% else %}
-          <input type="image" class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
-          {% endif %}
-        </form>
+        {% csrf_token %}
+        {% if disliked %}
+        <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
         {% else %}
-        <span class="float-end me-2">({{ like_count }})</span>
+        <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+        {% endif %}
+        {% csrf_token %}
+        <span class="float-end me-1">({{ like_count }})</span>
+        {% if liked %}
+        <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
+        {% else %}
+        <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
+        {% endif %}
+        {% else %}
+        <span class="float-end me-1">({{ like_count }})</span>
         <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
         {% endif %}
       </div>
@@ -159,3 +153,48 @@
   </article>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script>
+  function vote_click(id, up_down) {
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'post-vote' %}", true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        let dict = this.responseText;
+        let fill_status = JSON.parse(dict).fill_status;
+        let obj = JSON.parse(JSON.parse(dict).instance)[0].fields;
+        let num_likes = obj.likes.length;
+        if(fill_status === "neither") {
+          document.getElementById("vote_meter_"+id).innerHTML= 
+          `
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+          <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
+          `
+        }else if(fill_status === "up"){
+          document.getElementById("vote_meter_"+id).innerHTML= 
+          `
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+          <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
+          `
+        }else if(fill_status === "down"){
+          document.getElementById("vote_meter_"+id).innerHTML= 
+          `
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
+          <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
+          `
+        };
+      }
+    };
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('post_id', id);
+    formData.append('up_down', up_down);
+    request.send(formData);
+  }
+</script>
+{% endblock script %}
