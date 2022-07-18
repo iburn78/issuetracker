@@ -322,12 +322,14 @@
                   {% endfor %}
                 </div>
                 {% else %}
-                <span class="float-end me-2">({{ post.likes.count }})</span>
-                <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
+                <div class="col">
+                  <span class="float-end me-2">({{ post.likes.count }})</span>
+                  <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
+                </div>
                 {% endif %}
-                
               </div>
               {% endif %}
+              <br>
             </div>
           </div>
         </div>

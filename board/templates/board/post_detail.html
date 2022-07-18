@@ -130,13 +130,11 @@
     <div class="row m-0 mt-1 bg-gray-100">
       <div id="vote_meter_{{post.id}}" class="col p-2">
         {% if user.is_authenticated %}
-        {% csrf_token %}
         {% if disliked %}
         <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
         {% else %}
         <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
         {% endif %}
-        {% csrf_token %}
         <span class="float-end me-1">({{ like_count }})</span>
         {% if liked %}
         <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
@@ -150,6 +148,7 @@
       </div>
     </div>
     {% endif %}
+    <br>
   </article>
 </div>
 {% endblock content %}
