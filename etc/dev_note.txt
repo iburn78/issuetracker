@@ -24,8 +24,11 @@ USER TIER:
 -------------
 To implement:
 -------------
-- apply ajax to everywhere possible (comments, etc...)
 - comment system implement
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
 - improve new post / update post page with better design
+- image close-up page revise
+- apply ajax to everywhere possible (comments, etc...)
+- move likes to upward and look for other imoticons
+- android back-button: may need to override (maybe pretty easy... )
