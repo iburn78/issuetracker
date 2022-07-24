@@ -8,10 +8,13 @@ function menu_close(event) {
     document.getElementById("navbar-toggle-button").click();
     event.preventDefault();
   }
-  var _card_opened = document.getElementById("collapseDesc").classList.contains("show");
-  if (_card_opened === true && event.target.classList.contains("js-toggle-except") === false ) {
-    document.getElementById("collapseToggle").click();
-    event.preventDefault();
+  var _card_target = document.getElementById("collapseDesc")
+  if (_card_target != null) {
+    var _card_opened = _card_target.classList.contains("show");
+    if (_card_opened === true && event.target.classList.contains("js-toggle-except") === false ) {
+      document.getElementById("collapseToggle").click();
+      event.preventDefault();
+    }
   }
 };
 

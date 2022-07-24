@@ -1,0 +1,57 @@
+{% load static %}
+
+{% for comment in comments %}
+<div id="divider-bar-narrower"></div>
+<div class="bg-gray-100">
+  <span>{{ comment.author }}</span>
+  <small class="float-end text-muted">{{ comment.date_posted|date:"y-m-d H:i" }}</small>
+  {% if post.author == user %}
+  <a href="" class="me-3 float-end small text-muted" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}">del</a>
+  <small class="float-end text-muted mx-1">|</small> 
+  <a href="" class="float-end small text-muted" onclick="comment_edit(event, {{comment.id}})">edit</a> 
+  {% endif %}
+</div>
+<div id="divider-bar-narrower"></div>
+<div class="collapse p-0" id="delete_comment{{comment.id}}">
+  <div class="d-flex align-items-center justify-content-end">
+    <span class="me-2 small text-muted">delete?</span>
+    <form method="POST" action="">
+      {% csrf_token %}
+      <input type="submit" class="btn btn-sm btn-outline-danger me-2 my-1" onclick="comment_del(event, {{comment.id}})" value="confirm">
+    </form>
+    <button type="button" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}" class="btn btn-sm btn-outline-dark me-1 my-1">no</button>
+  </div>
+</div>
+<div id="comment_{{comment.id}}_content"><pre>{{ comment.content }}</pre></div>
+
+<div class="row p-0">
+<div class="d-flex align-items-center justify-content-end text-muted mb-3">reply</div>
+<div class="d-flex align-items-center justify-content-end text-muted mb-3">dislikes</div>
+<div class="d-flex align-items-center justify-content-end text-muted mb-3">likes</div>
+</div>
+{% endfor %}
+
+
+
+<div class="col d-flex justify-content-center align-items-center">
+  {% if is_paginated %}
+  {% if page_obj.has_previous %}
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+  {% endif %}
+  
+  {% for num in page_obj.paginator.page_range %}
+  {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+  
+  {% elif page_obj.number == num %}
+  <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="render_comments({{post.id}}, {{ num }})">{{ num }}</a>
+  {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+  {% endif %}
+  {% endfor %}
+  
+  {% if page_obj.has_next %}
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+  {% endif %}
+  {% endif %}
+</div>

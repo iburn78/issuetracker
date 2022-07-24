@@ -1,5 +1,5 @@
 from textwrap import fill
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -10,8 +10,10 @@ from django.views.generic import (
     DeleteView,
 )
 from django.views import View
+
+from users.models import User
 from ..models import Card, Post
-from ..forms import PostForm
+from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
 from ..tools import post_image_resize, exception_log
@@ -55,7 +57,6 @@ class PostCreateView(CreateView):
     template_name = 'board/post_create.html'
 
     def get(self, request, *args, **kwargs):
-
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
         if not self.request.user.is_authenticated:
             return redirect('login')
@@ -117,9 +118,11 @@ class PostCreateView(CreateView):
 class PostDetailView(DetailView): 
     model = Post
     template_name = 'board/post_detail.html'
+    form_class = CommentForm
+    context_object_name = 'comments'
 
     def get(self, request, *args, **kwargs):
-        post = self.get_object()
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         if post.card.is_public:
             return super().get(request, *args, **kwargs)
         else:
@@ -133,7 +136,8 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = self.get_object()
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        context['post'] = post
         context['bg_color'] = post.card.card_color
         if post.likes.all().filter(id=self.request.user.id).exists():
             context['liked'] = True
@@ -144,7 +148,7 @@ class PostDetailView(DetailView):
         else: 
             context['liked'] = False
             context['disliked'] = False
-        context['like_count'] = post.likes.all().count()
+        context['form'] = self.form_class()
         return context
 
 

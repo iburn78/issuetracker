@@ -1,6 +1,7 @@
 from django.urls import path
 from .views.card_view import *
 from .views.post_view import *
+from .views.comment_view import *
 from django.conf import settings
 from django.views.generic import RedirectView
 from .tools import *
@@ -28,4 +29,7 @@ urlpatterns = [
     
     path('api/post/vote/', vote, name='post-vote'),
     path('api/card/move/', CardListView.as_view(), name='card-move'),
+    path('api/post/<int:pk>/comment_list/', CommentListView.as_view(), name='comment-list'),
+    path('api/post/<int:pk>/comment_new/', CommentCreateView.as_view(), name='comment-new'),
+    path('api/post/<int:pk>/comment_mgmt/', CommentMgmtView.as_view(), name='comment-mgmt'),
 ]

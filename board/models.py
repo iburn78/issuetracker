@@ -97,6 +97,7 @@ class Card(models.Model):
         return reverse('main')
 
 
+
 class Post(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     card = models.ForeignKey(Card, on_delete=models.CASCADE)
@@ -122,7 +123,6 @@ class Post(models.Model):
     image7s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
 
     tags = TaggableManager(blank=True)
-    is_published = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -159,3 +159,17 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('card-content', kwargs={'card_id': self.card.id})
+
+
+class Comment(models.Model):
+    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    reply_to = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
+    date_posted = models.DateTimeField(default=timezone.now)
+    content = models.TextField()
+
+
+    def __str__(self):
+        return self.author.username + ": " + self.content[:50]
+
+
