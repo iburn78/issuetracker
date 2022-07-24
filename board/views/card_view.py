@@ -19,8 +19,7 @@ from django.http import Http404
 from django.views.static import serve
 from ..tools import *
 import os
-from django.http import JsonResponse, HttpResponse, HttpResponseRedirect
-from django.core import serializers
+from django.http import JsonResponse, HttpResponseRedirect
 
 def about(request):
     return render(request, 'board/about.html')
@@ -221,7 +220,6 @@ class CardDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         card = self.get_object()
-        posts = Post.objects.filter(card__id = card.id)
         context['author_count'] = User.objects.filter(post__card_id = card.id).distinct().count()
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         return context

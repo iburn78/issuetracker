@@ -989,8 +989,8 @@ a.article-title:hover {
   margin-top: 0px;
   margin-bottom: 0px;
   width: 100%;
-  height: 0.5px;
-  background-color: #cfe2ff;
+  height: 0.75px;
+  background-color: #e9ecef;
 }
 
 main::after {
@@ -1018,5 +1018,9 @@ main::after {
 .modal-body {
   margin: 0;
   padding: 0;
+}
+
+pre {
+  white-space: pre-wrap;
 }
 /*# sourceMappingURL=style.css.map */

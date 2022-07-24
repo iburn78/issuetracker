@@ -1,7 +1,7 @@
 from email.policy import default
 from random import choice
 from django import forms
-from .models import Card, Post
+from .models import Card, Post, Comment
 
 class Customclearable(forms.ClearableFileInput):
     template_name='board/custom_clearable_file.html'
@@ -39,12 +39,29 @@ class PostForm(forms.ModelForm):
     image7_input = forms.ImageField(required=False, widget=Customclearable)
     class Meta:
         model = Post
-        fields = ['content', 'tags', 'is_published', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
+        fields = ['content', 'tags', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
         widgets = {
             'content': forms.Textarea(attrs={'rows':'4', 'placeholder':''}), 
-            'is_published': forms.HiddenInput,
         }
     
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control',
+            })
+
+class CommentForm(forms.ModelForm):
+    class Meta: 
+        model = Comment
+        fields = ['content']
+        labels = {
+            'content': 'comment', 
+        }
+        widgets = {
+            'content': forms.Textarea(attrs={'rows':'2', 'placeholder':''}), 
+        }
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields:
