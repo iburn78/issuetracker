@@ -55,3 +55,4 @@ To revisit: (maybe no major issues)
 - if html tags are inserted in comments, it may not work well with edit/cancel javascript functions (<pre> tag)
 - if html tags are inserterd in post content, it may not work well with get_preview_text... need to check
 - model.textField -> set max lengths across POST, Comment models.... (think if necessary)
+- sometimes, system navigates to .../? -> maybe something to do with XHR (ajax request)? -> Empty Form on GET request might be possible scenario
