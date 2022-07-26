@@ -11,7 +11,7 @@ from django.views.generic import (
 from django.views import View
 from ..models import Card, Post
 from users.models import User
-from ..forms import CardForm
+from ..forms import CardForm, CommentForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
@@ -143,26 +143,12 @@ class CardContentListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['card_id'] = self.kwargs.get('card_id')
-        card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
-        context['card'] = card
-        posts = context['posts']
-        like_status = {}
-        dislike_status = {}
-        for post in posts: 
-            if post.likes.all().filter(id=self.request.user.id).exists():
-                like_status = {int(post.id): True, **like_status}
-                dislike_status = {int(post.id): False, **dislike_status}
-            elif post.dislikes.all().filter(id=self.request.user.id).exists():
-                like_status = {int(post.id): False, **like_status}
-                dislike_status = {int(post.id): True, **dislike_status}
-            else: 
-                like_status = {int(post.id): False, **like_status}
-                dislike_status = {int(post.id): False, **dislike_status}
-        context['like_status'] = like_status
-        context['dislike_status'] = dislike_status
-        context['author_count'] = User.objects.filter(post__card_id = card.id).distinct().count()
+        card_id = self.kwargs.get('card_id')
+        context['card_id'] = card_id
+        context['card'] = get_object_or_404(Card, id=card_id)
+        context['author_count'] = User.objects.filter(post__card_id = card_id).distinct().count()
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
+        context['form'] = CommentForm
         return context
 
 

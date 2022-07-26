@@ -25,9 +25,12 @@
 <div id="comment_{{comment.id}}_content"><pre>{{ comment.content }}</pre></div>
 
 <div class="row p-0">
-<div class="d-flex align-items-center justify-content-end text-muted mb-3">reply</div>
-<div class="d-flex align-items-center justify-content-end text-muted mb-3">dislikes</div>
-<div class="d-flex align-items-center justify-content-end text-muted mb-3">likes</div>
+  <div class="col">
+    <span class="text-muted">reply</span>
+    <span class="float-end text-muted">dislike</span>
+    <span class="float-end text-muted">|</span>
+    <span class="float-end text-muted">like</span>
+  </div>
 </div>
 {% endfor %}
 

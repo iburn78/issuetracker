@@ -138,16 +138,6 @@ class PostDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         context['post'] = post
-        context['bg_color'] = post.card.card_color
-        if post.likes.all().filter(id=self.request.user.id).exists():
-            context['liked'] = True
-            context['disliked'] = False
-        elif post.dislikes.all().filter(id=self.request.user.id).exists():
-            context['liked'] = False
-            context['disliked'] = True 
-        else: 
-            context['liked'] = False
-            context['disliked'] = False
         context['form'] = self.form_class()
         return context
 

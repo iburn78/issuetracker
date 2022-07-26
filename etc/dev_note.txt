@@ -33,7 +33,7 @@ To implement:
 - image close-up page revise
 - apply ajax to everywhere possible (comments, etc...)
 - move likes to upward and look for other imoticons
-- android back-button: may need to override (maybe pretty easy... )
+- android back-button: may need to override (maybe pretty easy... ) / to prevent card_content page close...
 - there might be models.ForeignKey performance issues with too many options... may need to limit options
 
 
@@ -46,6 +46,7 @@ To fix:
 - to make like/dislikes in comments
 - comments -> make supersuer or staff can delete comments (now only author can...)
 - limit max-lines(max-length) in a comment (at least when shown)
+- make report button (refer to other sites)
 
 
 
@@ -55,4 +56,4 @@ To revisit: (maybe no major issues)
 - if html tags are inserted in comments, it may not work well with edit/cancel javascript functions (<pre> tag)
 - if html tags are inserterd in post content, it may not work well with get_preview_text... need to check
 - model.textField -> set max lengths across POST, Comment models.... (think if necessary)
-- sometimes, system navigates to .../? -> maybe something to do with XHR (ajax request)? -> Empty Form on GET request might be possible scenario
+- sometimes, system navigates to .../? -> maybe something to do with XHR (ajax request)? -> Empty Form on GET request might be the possible scenario
