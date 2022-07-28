@@ -226,8 +226,8 @@
    {% include 'board/post_script.html' %}
    <script>
     document.getElementById("close_button"+{{post.id}}).innerHTML='<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>'
-    document.getElementById("close_button_mid"+{{post.id}}).innerHTML='<button type="button" class="float-end btn-close mx-2" data-bs-dismiss="modal"></button>'
-    document.getElementById("close_button_bottom"+{{post.id}}).innerHTML='<button type="button" class="float-end btn-close my-2 mx-3" data-bs-dismiss="modal"></button><br><br>'
+    document.getElementById("close_button_mid"+{{post.id}}).innerHTML='<a href="" class="text-muted small float-end mx-2 btn-close" data-bs-dismiss="modal"></a>'
+    document.getElementById("close_button_bottom"+{{post.id}}).innerHTML='<a href="" class="text-muted small float-end mt-2 mx-3" data-bs-dismiss="modal">close</a><br><br>'
    </script>
   {% endfor %}
 {% endblock script %}

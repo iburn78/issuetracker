@@ -12,6 +12,7 @@ class CommentListView(ListView):
     context_object_name = 'comments'
     template_name = 'board/comment_list.html'
     paginate_by = 7 
+    form_class = CommentForm
 
     def get(self, request, *args, **kwargs):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
@@ -25,6 +26,7 @@ class CommentListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['post'] = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        context['form'] = self.form_class()
         return context
 
 

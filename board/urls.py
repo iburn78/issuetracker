@@ -27,9 +27,9 @@ urlpatterns = [
     path(join('media', POST_UPLOADED_IMGS_RESIZED, '<str:file>'), PostMediaView.as_view(), name='media-view'),
     path(join('media', CARD_UPLOADED_IMGS, '<str:file>'), CardMediaView.as_view(), name='media-view'),
     
-    path('api/post/vote/', vote, name='post-vote'),
+    path('api/vote/', vote, name='vote'),
     path('api/card/move/', CardListView.as_view(), name='card-move'),
     path('api/post/<int:pk>/comment_list/', CommentListView.as_view(), name='comment-list'),
     path('api/post/<int:pk>/comment_new/', CommentCreateView.as_view(), name='comment-new'),
-    path('api/post/<int:pk>/comment_mgmt/', CommentMgmtView.as_view(), name='comment-mgmt'),
+    path('api/comment/<int:pk>/', CommentMgmtView.as_view(), name='comment-mgmt'),
 ]

@@ -3,15 +3,18 @@
 {% for comment in comments %}
 <div id="divider-bar-narrower"></div>
 <div class="bg-gray-100">
-  <span>{{ comment.author }}</span>
+  <span class="KR-font">{{ comment.author }}</span>
   <small class="float-end text-muted">{{ comment.date_posted|date:"y-m-d H:i" }}</small>
-  {% if post.author == user %}
+  {% if comment.author == user %}
   <a href="" class="me-3 float-end small text-muted" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}">del</a>
   <small class="float-end text-muted mx-1">|</small> 
   <a href="" class="float-end small text-muted" onclick="comment_edit(event, {{comment.id}})">edit</a> 
   {% endif %}
 </div>
 <div id="divider-bar-narrower"></div>
+
+<!-- delete modal part -->
+
 <div class="collapse p-0" id="delete_comment{{comment.id}}">
   <div class="d-flex align-items-center justify-content-end">
     <span class="me-2 small text-muted">delete?</span>
@@ -22,16 +25,50 @@
     <button type="button" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}" class="btn btn-sm btn-outline-dark me-1 my-1">no</button>
   </div>
 </div>
-<div id="comment_{{comment.id}}_content"><pre>{{ comment.content }}</pre></div>
 
-<div class="row p-0">
-  <div class="col">
-    <span class="text-muted">reply</span>
-    <span class="float-end text-muted">dislike</span>
-    <span class="float-end text-muted">|</span>
-    <span class="float-end text-muted">like</span>
+<!-- delete modal part end -->
+
+<div id="comment_{{comment.id}}_content" class=""><pre class="mt-1 mb-2 body-font fs-6">{{ comment.content }}</pre></div>
+<div class="row m-0">
+  <div class="col p-0 mb-2">
+    <a href="" id="replies_link_to_comment{{comment.id}}" class="text-muted p-0 m-0" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}"><img src="{% static 'icons/reply.svg' %}" class="me-1" width="18" height="20">reply</a>
+    <span id="vote_meter_comment{{comment.id}}">
+      {% if comment.post.card.is_public %}
+      <span class="float-end me-1">({{ comment.dislikes.count }})</span>
+      {% if user in comment.dislikes.all %}
+      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="18" height="18"></span>
+      {% else %}
+      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="18" height="18"></span>
+      {% endif %}
+      <span class="float-end me-1">({{ comment.likes.count }})</span>
+      {% if user in comment.likes.all %}
+      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'up', 'comment')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="18" height="18"></span>
+      {% else %}
+      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'up', 'comment')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="18" height="18"></span>
+      {% endif %}
+      {% endif %}
+    </span>
   </div>
 </div>
+
+
+<!-- replies modal part -->
+
+<div class="collapse bg-gray-100 p-1 m-1 mb-2 pb-4" id="comment_replies{{comment.id}}">
+  {% load crispy_forms_tags %}
+  {% if user.is_authenticated %}
+    <form id="commentReplyForm{{comment.id}}" method="POST">
+      {% csrf_token %}
+      {{ form | crispy }}
+      <button class="btn btn-secondary btn-sm" onclick="commentReply_submit(event, {{comment.id}})">submit</button>
+      <input type="button" class="btn btn-outline-secondary btn-sm float-end" value="clear" onclick="clear_commentReplyForm(event)">
+    </form>
+  {% endif %}
+    <button type="button" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}" class="btn btn-outline-secondary btn-sm float-end mt-2">close</button><br>
+</div>
+
+<!-- replies modal part end-->
+
 {% endfor %}
 
 
@@ -58,3 +95,19 @@
   {% endif %}
   {% endif %}
 </div>
+
+
+################################################################################# EDIT #############################################
+# ALSO FIX unnatual collapse.... 
+# BELOW NOT WORK AS this is not directly in body tag... 
+<script>
+document.getElementById("replies_link_to_comment126").addEventListener('click', e=>{
+  let obj = document.getElementById("comment_replies126");
+  if (obj.classList.contains("show")) {
+    alert("show");
+  }else{
+    alert("not");
+  };
+
+})
+</script>

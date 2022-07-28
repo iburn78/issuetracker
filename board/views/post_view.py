@@ -12,7 +12,7 @@ from django.views.generic import (
 from django.views import View
 
 from users.models import User
-from ..models import Card, Post
+from ..models import Card, Post, Comment
 from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
@@ -25,29 +25,35 @@ from django.core import serializers
 
 def vote(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
-        post_id = request.POST.get('post_id')
+        object_id = request.POST.get('object_id')
         up_down = request.POST.get('up_down')
-        post = get_object_or_404(Post, id=post_id)
+        object_type = request.POST.get('object')
+        if object_type == 'post': 
+            object = get_object_or_404(Post, id=object_id)
+        elif object_type == 'comment':
+            object = get_object_or_404(Comment, id=object_id)
+        else: 
+            return JsonResponse({"result": "failure"}, status = 400)
         fill_status = 'neither'
         if up_down == 'up':
-            if post.likes.all().filter(id=request.user.id).exists():
-                post.likes.remove(request.user)
+            if object.likes.all().filter(id=request.user.id).exists():
+                object.likes.remove(request.user)
             else:
-                post.likes.add(request.user)
+                object.likes.add(request.user)
                 fill_status = 'up'
-                if post.dislikes.all().filter(id=request.user.id).exists():
-                    post.dislikes.remove(request.user)
+                if object.dislikes.all().filter(id=request.user.id).exists():
+                    object.dislikes.remove(request.user)
         elif up_down == 'down':
-            if post.dislikes.all().filter(id=request.user.id).exists():
-                post.dislikes.remove(request.user)
+            if object.dislikes.all().filter(id=request.user.id).exists():
+                object.dislikes.remove(request.user)
             else:
-                post.dislikes.add(request.user)
+                object.dislikes.add(request.user)
                 fill_status = 'down'
-                if post.likes.all().filter(id=request.user.id).exists():
-                    post.likes.remove(request.user)
+                if object.likes.all().filter(id=request.user.id).exists():
+                    object.likes.remove(request.user)
         else:
             pass
-        ser_instance = serializers.serialize('json', [post])
+        ser_instance = serializers.serialize('json', [object])
         return JsonResponse({"instance": ser_instance, "fill_status": fill_status}, status=200)
     return JsonResponse({"result": "failure"}, status = 400)
 

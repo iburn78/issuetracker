@@ -1,8 +1,8 @@
 {% load static %}
 <script>
-function vote_click(id, up_down) {
+function vote_click(id, up_down, object) {
   let request = new XMLHttpRequest();
-  request.open("POST", "{% url 'post-vote' %}", true);
+  request.open("POST", "{% url 'vote' %}", true);
   request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   request.onreadystatechange = function() {
     if(this.readyState === 4 && this.status === 200) {
@@ -10,39 +10,38 @@ function vote_click(id, up_down) {
       let fill_status = JSON.parse(dict).fill_status;
       let obj = JSON.parse(JSON.parse(dict).instance)[0].fields;
       let num_likes = obj.likes.length;
+      let num_dislikes = obj.dislikes.length;
         
       let var_for_card_content_html_page = document.getElementById('listpagecounter'+{{post.id}})
       if (var_for_card_content_html_page != null ) {
         var_for_card_content_html_page.innerHTML = num_likes + " " + "likes";
       }
-      if(fill_status === "neither") {
-        document.getElementById("vote_meter_"+id).innerHTML= 
-        `
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
-        <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
-        `
-      }else if(fill_status === "up"){
-        document.getElementById("vote_meter_"+id).innerHTML= 
-        `
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
-        <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
-        `
+      let fill_down = "{% static 'icons/hand-thumbs-down.svg' %}";
+      let fill_up = "{% static 'icons/hand-thumbs-up.svg' %}";
+      let size = 22;
+      if(fill_status === "up"){
+        fill_up = "{% static 'icons/hand-thumbs-up-fill.svg' %}";
       }else if(fill_status === "down"){
-        document.getElementById("vote_meter_"+id).innerHTML= 
-        `
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
-        <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
-        `
+        fill_down = "{% static 'icons/hand-thumbs-down-fill.svg' %}";
       };
+      if(object === 'comment') {
+        size = 18;
+      };
+      vote_meter_text = 
+        `
+        <span class="p-0 m-0 me-1 float-end">(${num_dislikes})</span>
+        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down', '${object}')"><img src='${fill_down}' width="${size}" height="${size}"></span>
+        <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up', '${object}')"><img src='${fill_up}' width="${size}" height="${size}"></span>
+        `
+      document.getElementById("vote_meter_"+object+id).innerHTML= vote_meter_text;
     };
   };
   let formData = new FormData();
   formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-  formData.append('post_id', id);
+  formData.append('object_id', id);
   formData.append('up_down', up_down);
+  formData.append('object', object);
   request.send(formData);
 };
   
@@ -125,7 +124,7 @@ function comment_edit_confirm(event, comment_id) {
   request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   request.onreadystatechange = function() {
     if(this.readyState === 4 && this.status === 200) {
-      document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre>'+form.value+'</pre>';
+      document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre class="mt-1 mb-2 body-font fs-6">'+form.value+'</pre>';
     };
   };
   let formData = new FormData();
@@ -143,7 +142,7 @@ function comment_cancel(event, comment_id) {
   request.onreadystatechange = function() {
     if(this.readyState === 4 && this.status === 200) {
       let res = JSON.parse(this.responseText).content;
-      document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre>'+res+'</pre>';
+      document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre class="mt-1 mb-2 body-font fs-6">'+res+'</pre>';
     }; 
   };
   request.send();
@@ -155,4 +154,8 @@ function clear_commentForm(event) {
   comment.value = "";
   comment.focus();
 }
+
+
+
 </script>
+

@@ -167,6 +167,8 @@ class Comment(models.Model):
     reply_to = models.ForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)
     date_posted = models.DateTimeField(default=timezone.now)
     content = models.TextField()
+    likes = models.ManyToManyField(User, related_name="liked_comment_set", blank=True)
+    dislikes = models.ManyToManyField(User, related_name="disliked_comment_set", blank=True)
 
 
     def __str__(self):
