@@ -112,6 +112,9 @@
           </div>
         </div>
         <div class="col-8">
+        {% else %}
+        <div class="col m-0 pb-0">
+        {% endif %}
           <div class="d-flex justify-content-between">
             <div class="d-flex">
               {% if card.is_public %}
@@ -126,8 +129,9 @@
             
             <div class="d-flex">
               {% if card.is_public %}
-              <span id="listpagecounter{{post.id}}" class="float-end me-1 small text-muted">{{ post.likes.count }} likes | {{post.comment_set.count}} replies</span>
+              <span id="listpagecounter{{post.id}}" class="float-end me-2 small text-muted">{% if post.likes.count > 0 %}{{ post.likes.count }} likes{%endif%}</span>
               {% endif %}
+              <span id="allrepliescounter{{post.id}}" class="float-end small text-muted">{% if post.comment_set.count > 0 %}{{ post.comment_set.count }} replies{%endif%}</span>
             </div>
           </div>
           
@@ -141,37 +145,6 @@
             {% endfor %}
           </div>
         </div>
-        {% else %}
-        <div class="col m-0 pb-0">
-          <div class="d-flex justify-content-between">
-            <div class="d-flex">
-              {% if card.is_public %}
-              <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a>
-              {% endif %}
-              <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
-                <div class="text-gray-500 small"> 
-                  {{ post.date_posted|date:"M d" }}
-                </div>
-              </a>
-            </div>
-            
-            <div class="d-flex">
-              {% if card.is_public %}
-              <span id="listpagecounter{{post.id}}" class="float-end me-1 small text-muted">{{ post.likes.count }} likes | {{post.comment_set.count}} replies</span>
-              {% endif %}
-            </div>
-          </div>
-          <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
-            <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
-            <p class="article-content text-dark mb-1">{{ post.get_preview_text }}</p>
-          </a>
-          <div class="col float-end me-0 my-0 p-0">
-            {% for tag in post.tags.all %}
-            <a href="" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
-            {% endfor %}
-          </div>
-        </div>
-        {% endif %}
       </div>
       
       <!-- Modal page start -->
@@ -226,9 +199,6 @@
   <script>
   {% for post in posts %}
     render_comments({{post.id}}, 1);
-    document.getElementById("close_button"+{{post.id}}).innerHTML='<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>'
-    document.getElementById("close_button_mid"+{{post.id}}).innerHTML='<a href="" class="text-muted small float-end mx-2 btn-close" data-bs-dismiss="modal"></a>'
-    document.getElementById("close_button_bottom"+{{post.id}}).innerHTML='<a href="" class="text-muted small float-end mt-2 mx-3" data-bs-dismiss="modal">close</a><br><br>'
   {% endfor %}
   </script>
 {% endblock script %}

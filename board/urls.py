@@ -34,4 +34,6 @@ urlpatterns = [
     path('api/post/<int:pk>/comment_new/', CommentCreateView.as_view(), name='comment-new'),
     path('api/comment/<int:pk>/reply_new/', ReplyCreateView.as_view(), name='reply-new'),
     path('api/comment/<int:pk>/', CommentMgmtView.as_view(), name='comment-mgmt'),
+    path('api/comment/counter/', comment_counter, name='comment-counter'),
+    path('api/reply/counter/', reply_counter, name='reply-counter'),
 ]

@@ -14,7 +14,7 @@
     <a class="me-2 float-end" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
     <a class="me-2 float-end" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
     {% endif %}
-    <span id="close_button{{post.id}}"></span>
+    <button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>
   </div>
 </div>
 
@@ -128,39 +128,44 @@
 
 <div class="row m-0 mt-1 bg-yellow-100">
   <div class="col p-1 m-0">
-    <span id="close_button_mid{{post.id}}"></span>
     <span id="vote_meter_post{{post.id}}">
       {% if post.card.is_public %}
       {% if user.is_authenticated %}
-      <span class="float-end me-1">({{ post.dislikes.count }})</span>
+      <span class="float-end me-1">{% if post.dislikes.count > 0 %}{{ post.dislikes.count }}{%endif%}</span>
       {% if user in post.dislikes.all %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
       {% else %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
       {% endif %}
-      <span class="float-end me-1">({{ post.likes.count }})</span>
+      <span class="float-end me-1">{% if post.likes.count > 0 %}{{ post.likes.count }}{%endif%}</span>
       {% if user in post.likes.all %}
       <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up', 'post')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
       {% else %}
       <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up', 'post')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
       {% endif %}
       {% else %}
-      <span class="float-end me-1">({{ post.dislikes.count }})</span>
-      <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22">
-      <span class="float-end me-1">({{ post.likes.count }})</span>
-      <img class="me-1 float-end" src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22">
+      <span class="float-end me-1">{% if post.dislikes.count > 0 %}{{ post.dislikes.count }}{%endif%}</span>
+      <span class="p-0 m-0 ms-1 float-end"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+      <span class="float-end me-1">{% if post.likes.count > 0 %}{{ post.likes.count }}{%endif%}</span>
+      <span class="p-0 m-0 float-end"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
       {% endif %}
       {% endif %}
     </span>
   </div>
 </div>
+<div class="row m-0">
+  <div class="col mt-1">
+    <a href="" class="text-muted small float-end" data-bs-dismiss="modal">close</a>
+  </div>
+</div>
 
 <div class="row m-0">
+  <span id="commentscounter{{post.id}}" class="emphasis-font small">comments</span>
   <div id="comments_list{{post.id}}" class="mt-1">
   </div>
   {% load crispy_forms_tags %}
   {% if user.is_authenticated %}
-  <div>
+  <div class="mt-2"> 
     <form id="commentForm{{post.id}}" method="POST">
       {% csrf_token %}
       {{ form | crispy }}
@@ -171,4 +176,4 @@
   {% endif %}
 </div>
 
-<span id="close_button_bottom{{post.id}}"></span>
+<a href="" class="text-muted small float-end mt-2 mx-3" data-bs-dismiss="modal">close</a><br><br>

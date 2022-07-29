@@ -13,7 +13,7 @@
 </div>
 <div id="divider-bar-narrower"></div>
 
-<!-- delete modal part start -->
+<!-- delete collapse part start -->
 
 <div class="collapse p-0" id="delete_comment{{comment.id}}">
   <div class="d-flex align-items-center justify-content-end">
@@ -26,23 +26,24 @@
   </div>
 </div>
 
-<!-- delete modal part end -->
+<!-- delete collapse part end -->
 
 <div id="comment_{{comment.id}}_content" class=""><pre class="mt-1 mb-2 body-font fs-6">{{ comment.content }}</pre></div>
 <div class="row m-0">
   <div class="col p-0 mb-2">
-    <a href="" id="replies_link_to_comment{{comment.id}}" onclick="render_replies({{comment.id}}, 1)" class="text-muted p-0 m-0" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}">
-      <img src="{% static 'icons/reply.svg' %}" class="me-1" width="18" height="20">reply ({{comment.comment_set.count}})
+    <a href="" onclick="render_replies({{comment.id}}, 1)" class="text-muted p-0 m-0" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}">
+      <img src="{% static 'icons/reply.svg' %}" width="18" height="18">reply
+      <span id="repliescounter1_{{comment.id}}">{% if comment.comment_set.count > 0 %}({{comment.comment_set.count}}){% endif %}</span>
     </a>
     <span id="vote_meter_comment{{comment.id}}">
       {% if comment.post.card.is_public %}
-      <span class="float-end me-1">({{ comment.dislikes.count }})</span>
+      <span class="float-end">{% if comment.dislikes.count > 0 %}{{ comment.dislikes.count }}{%endif%}</span>
       {% if user in comment.dislikes.all %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="18" height="18"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="18" height="18"></span>
       {% else %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="18" height="18"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="18" height="18"></span>
       {% endif %}
-      <span class="float-end me-1">({{ comment.likes.count }})</span>
+      <span class="float-end">{% if comment.likes.count > 0 %}{{ comment.likes.count }}{%endif%}</span>
       {% if user in comment.likes.all %}
       <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'up', 'comment')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="18" height="18"></span>
       {% else %}
@@ -54,27 +55,27 @@
 </div>
 
 
-<!-- replies modal part start -->
+<!-- replies collapse part start -->
 
-<div class="collapse border border-warning rounded mb-2" id="comment_replies{{comment.id}}">
-  <div class="row p-1 m-1">
+<div class="collapse" id="comment_replies{{comment.id}}">
+  <div class="row p-2 m-0 border border-2 border-warning rounded mb-2">
     <div class="col p-0 m-0">
-      <span class="emphasis-font small">replies:</span>
-      <button type="button" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}" class="btn btn-close float-end"></button>
-      <div id="comment_replies_list{{comment.id}}" class="m-0 p-0"></div>
+      <span class="emphasis-font small" id="repliescounter2_{{comment.id}}">{% if comment.comment_set.count > 0 %}{{comment.comment_set.count}}{% endif %} replies</span>
+      <button id='close_replycollapse{{comment.id}}' type="button" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}" class="btn btn-close float-end"></button>
+      <div id="comment_replies_list{{comment.id}}" class="m-0 p-0 mb-2"></div>
       {% if user.is_authenticated %}
       <form id="commentReplyForm{{comment.id}}" method="POST">
         {% csrf_token %}
         {{ form.content }}
-        <button class="btn btn-secondary btn-sm mt-1" onclick="reply_submit(event, {{comment.id}})">submit</button>
-        <input type="button" class="btn btn-outline-secondary btn-sm float-end mt-1" value="clear" onclick="clear_commentReplyForm(event, {{comment.id}})">
+        <button class="btn btn-secondary btn-sm mt-2" onclick="reply_submit(event, {{comment.id}})">submit</button>
+        <input type="button" class="btn btn-outline-secondary btn-sm float-end mt-2" value="clear" onclick="clear_commentReplyForm(event, {{comment.id}})">
       </form>
       {% endif %}
     </div>
   </div>
 </div>
 
-<!-- replies modal part end-->
+<!-- replies collapse part end-->
 
 {% endfor %}
 

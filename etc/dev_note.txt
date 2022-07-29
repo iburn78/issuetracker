@@ -62,6 +62,5 @@ To revisit: (maybe no major issues)
 
 
 
-
-QUICK fix
-- replies count real time update
+- make back button to card list in card content view
+- inside reply click -> lead to collapse close

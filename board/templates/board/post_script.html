@@ -1,213 +1,291 @@
 {% load static %}
 <script>
-function vote_click(id, up_down, object) {
-  let request = new XMLHttpRequest();
-  request.open("POST", "{% url 'vote' %}", true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      let dict = this.responseText;
-      let fill_status = JSON.parse(dict).fill_status;
-      let obj = JSON.parse(JSON.parse(dict).instance)[0].fields;
-      let num_likes = obj.likes.length;
-      let num_dislikes = obj.dislikes.length;
+  function vote_click(id, up_down, object) {
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'vote' %}", true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        let dict = this.responseText;
+        let fill_status = JSON.parse(dict).fill_status;
+        let obj = JSON.parse(JSON.parse(dict).instance)[0].fields;
+        let num_likes = obj.likes.length;
+        let num_likes_sen = num_likes + " " + "likes";
+        if (num_likes == 0){
+          num_likes = "";
+          num_likes_sen = ""
+        };
+        let num_dislikes = obj.dislikes.length;
+        if (num_dislikes == 0){
+          num_dislikes = "";
+        };
         
-      let var_for_card_content_html_page = document.getElementById('listpagecounter'+id)
-      if (var_for_card_content_html_page != null ) {
-        var_for_card_content_html_page.innerHTML = num_likes + " " + "likes";
-      }
-      let fill_down = "{% static 'icons/hand-thumbs-down.svg' %}";
-      let fill_up = "{% static 'icons/hand-thumbs-up.svg' %}";
-      let size = 22;
-      if(fill_status === "up"){
-        fill_up = "{% static 'icons/hand-thumbs-up-fill.svg' %}";
-      }else if(fill_status === "down"){
-        fill_down = "{% static 'icons/hand-thumbs-down-fill.svg' %}";
-      };
-      if(object === 'comment') {
-        size = 18;
-      };
-      vote_meter_text = 
+        let likecounter = document.getElementById('listpagecounter'+id);
+        if (likecounter != null ) {
+          likecounter.innerHTML = num_likes_sen;
+        };
+        let fill_down = "{% static 'icons/hand-thumbs-down.svg' %}";
+        let fill_up = "{% static 'icons/hand-thumbs-up.svg' %}";
+        let size = 22;
+        if(fill_status === "up"){
+          fill_up = "{% static 'icons/hand-thumbs-up-fill.svg' %}";
+        }else if(fill_status === "down"){
+          fill_down = "{% static 'icons/hand-thumbs-down-fill.svg' %}";
+        };
+        if(object === 'comment') {
+          size = 18;
+        };
+        vote_meter_text = 
         `
-        <span class="p-0 m-0 me-1 float-end">(${num_dislikes})</span>
+        <span class="p-0 m-0 me-1 float-end">${num_dislikes}</span>
         <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down', '${object}')"><img src='${fill_down}' width="${size}" height="${size}"></span>
-        <span class="p-0 m-0 me-1 float-end">(${num_likes})</span>
+        <span class="p-0 m-0 me-1 float-end">${num_likes}</span>
         <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up', '${object}')"><img src='${fill_up}' width="${size}" height="${size}"></span>
         `
-      document.getElementById("vote_meter_"+object+id).innerHTML= vote_meter_text;
+        document.getElementById("vote_meter_"+object+id).innerHTML= vote_meter_text;
+      };
     };
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('object_id', id);
+    formData.append('up_down', up_down);
+    formData.append('object', object);
+    request.send(formData);
   };
-  let formData = new FormData();
-  formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-  formData.append('object_id', id);
-  formData.append('up_down', up_down);
-  formData.append('object', object);
-  request.send(formData);
-};
   
-function render_comments(post_id, page) {
-  let request = new XMLHttpRequest();
-  request.open("GET", "{% url 'comment-list' 1000 %}?page=".replace('1000', post_id.toString())+page.toString(), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      document.getElementById('comments_list'+post_id).innerHTML = this.responseText;
+  function render_comments(post_id, page) {
+    let request = new XMLHttpRequest();
+    request.open("GET", "{% url 'comment-list' 1000 %}?page=".replace('1000', post_id.toString())+page.toString(), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        document.getElementById('comments_list'+post_id).innerHTML = this.responseText;
+        close_opened_collapses(0);
+      };
     };
-  };
-  request.send();
-}
-
-function render_replies(comment_id, page) {
-  let request = new XMLHttpRequest();
-  request.open("GET", "{% url 'replies-list' 1000 %}?page=".replace('1000', comment_id.toString())+page.toString(), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      document.getElementById('comment_replies_list'+comment_id).innerHTML = this.responseText;
-    };
-  };
-  request.send();
-}
-  
-function comment_submit(event, post_id) {
-  event.preventDefault();
-  let comment = document.querySelector("#commentForm"+post_id+" #id_content");
-  if(comment.value == "") {
-    comment.focus();
-    return;
+    request.send();
+    commentscounter_update(post_id);
   }
-  let request = new XMLHttpRequest();
-  request.open("POST", "{% url 'comment-new' 1000 %}".replace('1000', post_id.toString()), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      render_comments(post_id, 1);
-    }; 
-  };
-  let commentForm = document.getElementById("commentForm"+post_id);
-  let formData = new FormData(commentForm);
-  commentForm.reset();
-  request.send(formData);
-}; 
-
-function reply_submit(event, comment_id) {
-  event.preventDefault();
-  let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
-  if(comment.value == "") {
-    comment.focus();
-    return;
+  
+  function render_replies(comment_id, page) {
+    let request = new XMLHttpRequest();
+    request.open("GET", "{% url 'replies-list' 1000 %}?page=".replace('1000', comment_id.toString())+page.toString(), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        document.getElementById('comment_replies_list'+comment_id).innerHTML = this.responseText;
+        close_opened_collapses(comment_id);
+      };
+    };
+    request.send();
+    repliescounter_update(comment_id);
   }
-  let request = new XMLHttpRequest();
-  request.open("POST", "{% url 'reply-new' 1000 %}".replace('1000', comment_id.toString()), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      render_replies(comment_id, 1);
-    }; 
-  };
-  let commentForm = document.getElementById("commentReplyForm"+comment_id);
-  let formData = new FormData(commentForm);
-  commentForm.reset();
-  request.send(formData);
-}; 
 
-function comment_del(event, comment_id, post_id) {
-  event.preventDefault();
-  let request = new XMLHttpRequest();
-  request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      render_comments(post_id, 1);
+  function commentscounter_update(post_id) {
+    let request = new XMLHttpRequest();
+    request.open("GET", "{% url 'comment-counter' %}?post_id="+ post_id.toString(), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        let allrepliescounter = document.getElementById('allrepliescounter'+post_id);
+        let commentscounter = document.getElementById('commentscounter'+post_id);
+        let num_allreplies = JSON.parse(this.responseText).allrepliescount;
+        let num_comments = JSON.parse(this.responseText).commentscount;
+        if (num_allreplies>0){
+          allrepliescounter.innerHTML = num_allreplies + " replies";
+        }
+        else{
+          allrepliescounter.innerHTML = "";
+        }
+        if (num_comments>0){
+          commentscounter.innerHTML = num_comments + " comments";
+        }
+        else{
+          commentscounter.innerHTML = "leave a comment:";
+        }
+      };
     };
-  };
-  let formData = new FormData();
-  formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-  formData.append('request_type', 'delete');
-  request.send(formData);
-}
+    request.send();
+  }
 
-function reply_del(event, comment_id, reply_to_id) {
-  event.preventDefault();
-  let request = new XMLHttpRequest();
-  request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      render_replies(reply_to_id, 1);
+  function repliescounter_update(comment_id) {
+    let request = new XMLHttpRequest();
+    request.open("GET", "{% url 'reply-counter' %}?comment_id="+ comment_id.toString(), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        let dict = JSON.parse(this.responseText);
+        let allrepliescounter = document.getElementById('allrepliescounter'+dict.post_id);
+        let repliescounter1 = document.getElementById('repliescounter1_'+comment_id);
+        let repliescounter2 = document.getElementById('repliescounter2_'+comment_id);
+        if (dict.allrepliescount>0){
+          allrepliescounter.innerHTML = dict.allrepliescount + " replies";
+        }
+        else{
+          allrepliescounter.innerHTML = "";
+        }
+        if (dict.repliescount>0){
+          repliescounter1.innerHTML = "(" + dict.repliescount + ")";
+          repliescounter2.innerHTML = dict.repliescount + " replies";
+        }
+        else{
+          repliescounter1.innerHTML = "";
+          repliescounter2.innerHTML = "reply to comment:";
+        }
+      };
     };
-  };
-  let formData = new FormData();
-  formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-  formData.append('request_type', 'delete');
-  request.send(formData);
-}
+    request.send();
+  }
   
-function comment_edit(event, comment_id) {
-  event.preventDefault();
-  let to_edit = document.getElementById('comment_'+comment_id.toString()+'_content').innerText;
-  document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = 
-  `
-  <form class="my-1">
-  <textarea class="form-control" id="comment-edit-form_comment_id" rows="4"></textarea>
-  <button type="submit" class="btn btn-sm bg-yellow-200 mt-1 mb-2" onclick="comment_edit_confirm(event, comment_id)">confirm</button>
-  <button type="" class="btn btn-outline-secondary btn-sm float-end mt-1 mb-2" onclick="comment_cancel(event, comment_id)">cancel</button>
-  </form>
-  `.replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString());
-  let form = document.getElementById("comment-edit-form_"+comment_id.toString());
-  form.value=to_edit; 
-  form.focus();
-}
+  function comment_submit(event, post_id) {
+    event.preventDefault();
+    let comment = document.querySelector("#commentForm"+post_id+" #id_content");
+    if(comment.value == "") {
+      comment.focus();
+      return;
+    }
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'comment-new' 1000 %}".replace('1000', post_id.toString()), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        render_comments(post_id, 1);
+      }; 
+    };
+    let commentForm = document.getElementById("commentForm"+post_id);
+    let formData = new FormData(commentForm);
+    commentForm.reset();
+    request.send(formData);
+  }; 
   
-function comment_edit_confirm(event, comment_id) {
-  event.preventDefault();
-  let form = document.getElementById("comment-edit-form_"+comment_id.toString());
-  if(form.value == "") {
+  function reply_submit(event, comment_id) {
+    event.preventDefault();
+    let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
+    if(comment.value == "") {
+      comment.focus();
+      return;
+    }
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'reply-new' 1000 %}".replace('1000', comment_id.toString()), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        render_replies(comment_id, 1);
+      }; 
+    };
+    let commentForm = document.getElementById("commentReplyForm"+comment_id);
+    let formData = new FormData(commentForm);
+    commentForm.reset();
+    request.send(formData);
+  }; 
+  
+  function comment_del(event, comment_id, post_id) {
+    event.preventDefault();
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        render_comments(post_id, 1);
+      };
+    };
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('request_type', 'delete');
+    request.send(formData);
+  }
+  
+  function reply_del(event, comment_id, reply_to_id) {
+    event.preventDefault();
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        render_replies(reply_to_id, 1);
+      };
+    };
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('request_type', 'delete');
+    request.send(formData);
+  }
+  
+  function comment_edit(event, comment_id) {
+    event.preventDefault();
+    let to_edit = document.getElementById('comment_'+comment_id.toString()+'_content').innerText;
+    document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = 
+    `
+    <form class="my-1">
+      <textarea class="form-control" id="comment-edit-form_comment_id" rows="4"></textarea>
+      <button type="submit" class="btn btn-sm bg-yellow-200 mt-1 mb-2" onclick="comment_edit_confirm(event, comment_id)">confirm</button>
+      <button type="" class="btn btn-outline-secondary btn-sm float-end mt-1 mb-2" onclick="comment_cancel(event, comment_id)">cancel</button>
+    </form>
+    `.replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString());
+    let form = document.getElementById("comment-edit-form_"+comment_id.toString());
+    form.value=to_edit; 
     form.focus();
-    return;
   }
-  let request = new XMLHttpRequest();
-  request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre class="mt-1 mb-2 body-font fs-6">'+form.value+'</pre>';
+  
+  function comment_edit_confirm(event, comment_id) {
+    event.preventDefault();
+    let form = document.getElementById("comment-edit-form_"+comment_id.toString());
+    if(form.value == "") {
+      form.focus();
+      return;
+    }
+    let request = new XMLHttpRequest();
+    request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre class="mt-1 mb-2 body-font fs-6">'+form.value+'</pre>';
+      };
     };
-  };
-  let formData = new FormData();
-  formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-  formData.append('request_type', 'update');
-  formData.append('content', form.value);
-  request.send(formData);
-}
+    let formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('request_type', 'update');
+    formData.append('content', form.value);
+    request.send(formData);
+  }
   
-function comment_cancel(event, comment_id) {
-  event.preventDefault();
-  let request = new XMLHttpRequest();
-  request.open("GET", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
-  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-  request.onreadystatechange = function() {
-    if(this.readyState === 4 && this.status === 200) {
-      let res = JSON.parse(this.responseText).content;
-      document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre class="mt-1 mb-2 body-font fs-6">'+res+'</pre>';
-    }; 
-  };
-  request.send();
-}
+  function comment_cancel(event, comment_id) {
+    event.preventDefault();
+    let request = new XMLHttpRequest();
+    request.open("GET", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
+    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+    request.onreadystatechange = function() {
+      if(this.readyState === 4 && this.status === 200) {
+        let res = JSON.parse(this.responseText).content;
+        document.getElementById('comment_'+comment_id.toString()+'_content').innerHTML = '<pre class="mt-1 mb-2 body-font fs-6">'+res+'</pre>';
+      }; 
+    };
+    request.send();
+  }
   
-function clear_commentForm(event, post_id) {
-  event.preventDefault();
-  let comment = document.querySelector("#commentForm"+post_id+" #id_content");
-  comment.value = "";
-  comment.focus();
-}
-
-function clear_commentReplyForm(event, comment_id) {
-  event.preventDefault();
-  let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
-  comment.value = "";
-  comment.focus();
-}
-
+  function clear_commentForm(event, post_id) {
+    event.preventDefault();
+    let comment = document.querySelector("#commentForm"+post_id+" #id_content");
+    comment.value = "";
+    comment.focus();
+  }
+  
+  function clear_commentReplyForm(event, comment_id) {
+    event.preventDefault();
+    let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
+    comment.value = "";
+    comment.focus();
+  }
+ 
+  function close_opened_collapses(comment_id) {
+    let cols = document.querySelectorAll(".collapse");
+    cols.forEach(c => {
+      c_id = c.id.replace('comment_replies', '');
+      if (c_id != comment_id.toString() && c.classList.contains('show')) {
+        document.getElementById('close_replycollapse'+c_id).click();
+      }
+    })
+  }
+  
 </script>
 

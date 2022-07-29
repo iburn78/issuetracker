@@ -7,6 +7,20 @@ from ..models import Post, Comment
 from ..forms import CommentForm
 from django.http import JsonResponse
 
+def comment_counter(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
+        post_id = request.GET.get('post_id')
+        post = get_object_or_404(Post, id=post_id)
+        commentscount = post.comment_set.filter(reply_to = None).count()
+        return JsonResponse({"allrepliescount": post.comment_set.count(), "commentscount": commentscount}, status = 200)
+
+def reply_counter(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
+        comment_id = request.GET.get('comment_id')
+        comment = get_object_or_404(Comment, id=comment_id)
+        repliescount = comment.comment_set.count()
+        return JsonResponse({"allrepliescount": comment.post.comment_set.count(), "repliescount": repliescount, "post_id": comment.post.id}, status = 200)
+
 class CommentListView(ListView): 
     model = Comment
     context_object_name = 'comments'
