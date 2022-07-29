@@ -13,14 +13,14 @@
 </div>
 <div id="divider-bar-narrower"></div>
 
-<!-- delete modal part -->
+<!-- delete modal part start -->
 
 <div class="collapse p-0" id="delete_comment{{comment.id}}">
   <div class="d-flex align-items-center justify-content-end">
     <span class="me-2 small text-muted">delete?</span>
     <form method="POST" action="">
       {% csrf_token %}
-      <input type="submit" class="btn btn-sm btn-outline-danger me-2 my-1" onclick="comment_del(event, {{comment.id}})" value="confirm">
+      <input type="submit" class="btn btn-sm btn-outline-danger me-2 my-1" onclick="{{CR}}_del(event, {{comment.id}}, {{linked_obj.id}})" value="confirm">
     </form>
     <button type="button" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}" class="btn btn-sm btn-outline-dark me-1 my-1">no</button>
   </div>
@@ -31,7 +31,9 @@
 <div id="comment_{{comment.id}}_content" class=""><pre class="mt-1 mb-2 body-font fs-6">{{ comment.content }}</pre></div>
 <div class="row m-0">
   <div class="col p-0 mb-2">
-    <a href="" id="replies_link_to_comment{{comment.id}}" class="text-muted p-0 m-0" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}"><img src="{% static 'icons/reply.svg' %}" class="me-1" width="18" height="20">reply</a>
+    <a href="" id="replies_link_to_comment{{comment.id}}" onclick="render_replies({{comment.id}}, 1)" class="text-muted p-0 m-0" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}">
+      <img src="{% static 'icons/reply.svg' %}" class="me-1" width="18" height="20">reply ({{comment.comment_set.count}})
+    </a>
     <span id="vote_meter_comment{{comment.id}}">
       {% if comment.post.card.is_public %}
       <span class="float-end me-1">({{ comment.dislikes.count }})</span>
@@ -52,19 +54,24 @@
 </div>
 
 
-<!-- replies modal part -->
+<!-- replies modal part start -->
 
-<div class="collapse bg-gray-100 p-1 m-1 mb-2 pb-4" id="comment_replies{{comment.id}}">
-  {% load crispy_forms_tags %}
-  {% if user.is_authenticated %}
-    <form id="commentReplyForm{{comment.id}}" method="POST">
-      {% csrf_token %}
-      {{ form | crispy }}
-      <button class="btn btn-secondary btn-sm" onclick="commentReply_submit(event, {{comment.id}})">submit</button>
-      <input type="button" class="btn btn-outline-secondary btn-sm float-end" value="clear" onclick="clear_commentReplyForm(event)">
-    </form>
-  {% endif %}
-    <button type="button" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}" class="btn btn-outline-secondary btn-sm float-end mt-2">close</button><br>
+<div class="collapse border border-warning rounded mb-2" id="comment_replies{{comment.id}}">
+  <div class="row p-1 m-1">
+    <div class="col p-0 m-0">
+      <span class="emphasis-font small">replies:</span>
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}" class="btn btn-close float-end"></button>
+      <div id="comment_replies_list{{comment.id}}" class="m-0 p-0"></div>
+      {% if user.is_authenticated %}
+      <form id="commentReplyForm{{comment.id}}" method="POST">
+        {% csrf_token %}
+        {{ form.content }}
+        <button class="btn btn-secondary btn-sm mt-1" onclick="reply_submit(event, {{comment.id}})">submit</button>
+        <input type="button" class="btn btn-outline-secondary btn-sm float-end mt-1" value="clear" onclick="clear_commentReplyForm(event, {{comment.id}})">
+      </form>
+      {% endif %}
+    </div>
+  </div>
 </div>
 
 <!-- replies modal part end-->
@@ -76,39 +83,23 @@
 <div class="col d-flex justify-content-center align-items-center">
   {% if is_paginated %}
   {% if page_obj.has_previous %}
-  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_{{CRs}}({{linked_obj.id}}, 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
   {% endif %}
   
   {% for num in page_obj.paginator.page_range %}
   {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
-  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_{{CRs}}({{linked_obj.id}}, {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
   
   {% elif page_obj.number == num %}
-  <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="render_comments({{post.id}}, {{ num }})">{{ num }}</a>
+  <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="render_{{CRs}}({{linked_obj.id}}, {{ num }})">{{ num }}</a>
   {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
-  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_{{CRs}}({{linked_obj.id}}, {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
   {% endif %}
   {% endfor %}
   
   {% if page_obj.has_next %}
-  <a class="btn btn-outline-light mb-4 me-1" onclick="render_comments({{post.id}}, {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+  <a class="btn btn-outline-light mb-4 me-1" onclick="render_{{CRs}}({{linked_obj.id}}, {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
   {% endif %}
   {% endif %}
 </div>
 
-
-################################################################################# EDIT #############################################
-# ALSO FIX unnatual collapse.... 
-
-# BELOW NOT WORK AS this is not directly in body tag... 
-<script>
-document.getElementById("replies_link_to_comment126").addEventListener('click', e=>{
-  let obj = document.getElementById("comment_replies126");
-  if (obj.classList.contains("show")) {
-    alert("show");
-  }else{
-    alert("not");
-  };
-
-})
-</script>

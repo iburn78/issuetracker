@@ -7,4 +7,7 @@
 
 {% block script %}
   {% include 'board/post_script.html' %}
+  <script>
+  render_comments({{post.id}}, 1);
+  </script>
 {% endblock script %}

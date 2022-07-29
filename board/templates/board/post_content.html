@@ -165,7 +165,7 @@
       {% csrf_token %}
       {{ form | crispy }}
       <button class="btn btn-secondary btn-sm" onclick="comment_submit(event, {{post.id}})">submit</button>
-      <input type="button" class="btn btn-outline-secondary btn-sm float-end" value="clear" onclick="clear_commentForm(event)">
+      <input type="button" class="btn btn-outline-secondary btn-sm float-end" value="clear" onclick="clear_commentForm(event, {{post.id}})">
     </form>
   </div>
   {% endif %}

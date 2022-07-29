@@ -30,6 +30,8 @@ urlpatterns = [
     path('api/vote/', vote, name='vote'),
     path('api/card/move/', CardListView.as_view(), name='card-move'),
     path('api/post/<int:pk>/comment_list/', CommentListView.as_view(), name='comment-list'),
+    path('api/comment/<int:pk>/replies_list/', RepliesListView.as_view(), name='replies-list'),
     path('api/post/<int:pk>/comment_new/', CommentCreateView.as_view(), name='comment-new'),
+    path('api/comment/<int:pk>/reply_new/', ReplyCreateView.as_view(), name='reply-new'),
     path('api/comment/<int:pk>/', CommentMgmtView.as_view(), name='comment-mgmt'),
 ]

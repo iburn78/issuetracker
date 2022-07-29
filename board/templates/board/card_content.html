@@ -126,7 +126,7 @@
             
             <div class="d-flex">
               {% if card.is_public %}
-              <span id="listpagecounter{{post.id}}" class="float-end me-1 small text-muted">{{ post.likes.count }} likes</span>
+              <span id="listpagecounter{{post.id}}" class="float-end me-1 small text-muted">{{ post.likes.count }} likes | {{post.comment_set.count}} replies</span>
               {% endif %}
             </div>
           </div>
@@ -157,7 +157,7 @@
             
             <div class="d-flex">
               {% if card.is_public %}
-              <span class="float-end me-1 small text-muted">{{ post.likes.count }} likes</span>
+              <span id="listpagecounter{{post.id}}" class="float-end me-1 small text-muted">{{ post.likes.count }} likes | {{post.comment_set.count}} replies</span>
               {% endif %}
             </div>
           </div>
@@ -222,12 +222,13 @@
 {% endblock content %}
 
 {% block script %}
+  {% include 'board/post_script.html' %}
+  <script>
   {% for post in posts %}
-   {% include 'board/post_script.html' %}
-   <script>
+    render_comments({{post.id}}, 1);
     document.getElementById("close_button"+{{post.id}}).innerHTML='<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>'
     document.getElementById("close_button_mid"+{{post.id}}).innerHTML='<a href="" class="text-muted small float-end mx-2 btn-close" data-bs-dismiss="modal"></a>'
     document.getElementById("close_button_bottom"+{{post.id}}).innerHTML='<a href="" class="text-muted small float-end mt-2 mx-3" data-bs-dismiss="modal">close</a><br><br>'
-   </script>
   {% endfor %}
+  </script>
 {% endblock script %}

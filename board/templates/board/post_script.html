@@ -12,7 +12,7 @@ function vote_click(id, up_down, object) {
       let num_likes = obj.likes.length;
       let num_dislikes = obj.dislikes.length;
         
-      let var_for_card_content_html_page = document.getElementById('listpagecounter'+{{post.id}})
+      let var_for_card_content_html_page = document.getElementById('listpagecounter'+id)
       if (var_for_card_content_html_page != null ) {
         var_for_card_content_html_page.innerHTML = num_likes + " " + "likes";
       }
@@ -56,7 +56,18 @@ function render_comments(post_id, page) {
   };
   request.send();
 }
-render_comments({{post.id}}, 1);
+
+function render_replies(comment_id, page) {
+  let request = new XMLHttpRequest();
+  request.open("GET", "{% url 'replies-list' 1000 %}?page=".replace('1000', comment_id.toString())+page.toString(), true);
+  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  request.onreadystatechange = function() {
+    if(this.readyState === 4 && this.status === 200) {
+      document.getElementById('comment_replies_list'+comment_id).innerHTML = this.responseText;
+    };
+  };
+  request.send();
+}
   
 function comment_submit(event, post_id) {
   event.preventDefault();
@@ -74,20 +85,56 @@ function comment_submit(event, post_id) {
     }; 
   };
   let commentForm = document.getElementById("commentForm"+post_id);
-  var formData = new FormData(commentForm);
-  formData.append('request_type', 'create');
+  let formData = new FormData(commentForm);
   commentForm.reset();
   request.send(formData);
 }; 
-  
-function comment_del(event, comment_id) {
+
+function reply_submit(event, comment_id) {
+  event.preventDefault();
+  let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
+  if(comment.value == "") {
+    comment.focus();
+    return;
+  }
+  let request = new XMLHttpRequest();
+  request.open("POST", "{% url 'reply-new' 1000 %}".replace('1000', comment_id.toString()), true);
+  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  request.onreadystatechange = function() {
+    if(this.readyState === 4 && this.status === 200) {
+      render_replies(comment_id, 1);
+    }; 
+  };
+  let commentForm = document.getElementById("commentReplyForm"+comment_id);
+  let formData = new FormData(commentForm);
+  commentForm.reset();
+  request.send(formData);
+}; 
+
+function comment_del(event, comment_id, post_id) {
   event.preventDefault();
   let request = new XMLHttpRequest();
   request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
   request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
   request.onreadystatechange = function() {
     if(this.readyState === 4 && this.status === 200) {
-      render_comments({{post.id}}, 1);
+      render_comments(post_id, 1);
+    };
+  };
+  let formData = new FormData();
+  formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+  formData.append('request_type', 'delete');
+  request.send(formData);
+}
+
+function reply_del(event, comment_id, reply_to_id) {
+  event.preventDefault();
+  let request = new XMLHttpRequest();
+  request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
+  request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+  request.onreadystatechange = function() {
+    if(this.readyState === 4 && this.status === 200) {
+      render_replies(reply_to_id, 1);
     };
   };
   let formData = new FormData();
@@ -148,14 +195,19 @@ function comment_cancel(event, comment_id) {
   request.send();
 }
   
-function clear_commentForm(event) {
+function clear_commentForm(event, post_id) {
   event.preventDefault();
-  let comment = document.querySelector("#commentForm{{post.id}} #id_content");
+  let comment = document.querySelector("#commentForm"+post_id+" #id_content");
   comment.value = "";
   comment.focus();
 }
 
-
+function clear_commentReplyForm(event, comment_id) {
+  event.preventDefault();
+  let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
+  comment.value = "";
+  comment.focus();
+}
 
 </script>
 
