@@ -221,8 +221,8 @@
     `
     <form class="my-1">
       <textarea class="form-control" id="comment-edit-form_comment_id" rows="4"></textarea>
-      <button type="submit" class="btn btn-sm bg-yellow-200 mt-1 mb-2" onclick="comment_edit_confirm(event, comment_id)">confirm</button>
-      <button type="" class="btn btn-outline-secondary btn-sm float-end mt-1 mb-2" onclick="comment_cancel(event, comment_id)">cancel</button>
+      <button type="" class="btn btn-outline-secondary btn-sm mt-1 mb-2" onclick="comment_cancel(event, comment_id)">cancel</button>
+      <button type="submit" class="btn btn-sm bg-yellow-300 mt-1 mb-2 float-end" onclick="comment_edit_confirm(event, comment_id)">confirm</button>
     </form>
     `.replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString());
     let form = document.getElementById("comment-edit-form_"+comment_id.toString());

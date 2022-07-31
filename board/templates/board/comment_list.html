@@ -66,7 +66,7 @@
 <!-- replies collapse part start -->
 
 <div class="collapse" id="comment_replies{{comment.id}}">
-  <div class="row p-2 m-0 border border-3 border-warning rounded mb-2">
+  <div class="row p-1 m-0 border border-2 border-warning rounded mb-2">
     <div class="col p-0 m-0">
       <span class="emphasis-font small" id="repliescounter2_{{comment.id}}">{% if comment.comment_set.count > 0 %}{{comment.comment_set.count}}{% endif %} replies</span>
       <button id='close_replycollapse{{comment.id}}' type="button" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}" class="btn btn-close float-end"></button>
@@ -76,8 +76,8 @@
       <form id="commentReplyForm{{comment.id}}" method="POST">
         {% csrf_token %}
         {{ form.content }}
-        <button class="btn btn-secondary btn-sm mt-2" onclick="reply_submit(event, {{comment.id}})">submit</button>
-        <input type="button" class="btn btn-outline-secondary btn-sm float-end mt-2" value="clear" onclick="clear_commentReplyForm(event, {{comment.id}})">
+        <input type="button" class="btn btn-outline-secondary btn-sm mt-2" value="clear" onclick="clear_commentReplyForm(event, {{comment.id}})">
+        <button class="float-end btn btn-primary btn-sm mt-2" onclick="reply_submit(event, {{comment.id}})">submit</button>
       </form>
       {% endif %}
     </div>

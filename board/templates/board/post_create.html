@@ -6,7 +6,7 @@
   <form method="POST" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     <fieldset>
-      <legend class="border-bottom mb-4">
+      <legend class="border-bottom mb-2">
         {% if update %}
         Update post for <b>{{ card.title }}</b>
         {% else %}
@@ -66,10 +66,10 @@
       <p class="m-0">Tags</p>
       <p>{{ form.tags }}</p>
       <p id="clear-image1"></p>
-      <input type="button" class="btn btn-secondary btn-sm float-end mb-2" value="cancel" onClick="javascript:history.go(-1);">
       <button class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
         {% if update %}Update{% else %}Create{% endif %}
       </button>
+      <input type="button" class="btn btn-outline-secondary btn-sm mb-2" value="cancel" onClick="javascript:history.go(-1);">
     </fieldset>
   </form>
 </div>
