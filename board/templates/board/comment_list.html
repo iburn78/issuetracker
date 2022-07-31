@@ -77,7 +77,7 @@
         {% csrf_token %}
         {{ form.content }}
         <input type="button" class="btn btn-outline-secondary btn-sm mt-2" value="clear" onclick="clear_commentReplyForm(event, {{comment.id}})">
-        <button class="float-end btn btn-primary btn-sm mt-2" onclick="reply_submit(event, {{comment.id}})">submit</button>
+        <button class="float-end btn bg-blue-200 btn-sm mt-2" onclick="reply_submit(event, {{comment.id}})">submit</button>
       </form>
       {% endif %}
     </div>
