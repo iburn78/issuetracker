@@ -175,6 +175,9 @@
     };
     let commentForm = document.getElementById("commentReplyForm"+comment_id);
     let formData = new FormData(commentForm);
+    let rtr_target = document.getElementById("rtr_target"+comment_id);
+    formData.append('rtr_target', rtr_target.innerHTML);
+    rtr_target.innerHTML='';
     commentForm.reset();
     request.send(formData);
   }; 
@@ -272,6 +275,7 @@
   
   function clear_commentReplyForm(event, comment_id) {
     event.preventDefault();
+    document.getElementById("rtr_target"+comment_id).innerHTML = '';
     let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
     comment.value = "";
     comment.focus();
@@ -285,6 +289,12 @@
         document.getElementById('close_replycollapse'+c_id).click();
       }
     })
+  }
+
+  function reply_to_reply(event, reply_to_id, comment_author) {
+    event.preventDefault();
+    document.getElementById("rtr_target"+reply_to_id).innerHTML = '@'+comment_author;
+    document.querySelector("#commentReplyForm"+reply_to_id+" #id_content").focus();
   }
   
 </script>

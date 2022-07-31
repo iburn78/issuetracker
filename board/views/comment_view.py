@@ -98,6 +98,9 @@ class ReplyCreateView(View):
             if not request.user.is_authenticated:
                 return JsonResponse({}, status=400)
             content = request.POST.get('content')
+            rtr_target = request.POST.get('rtr_target')
+            if rtr_target != '':
+                content = rtr_target +"\n "+content
             if content == "": 
                 return JsonResponse({}, status=400)
             cform = CommentForm()
