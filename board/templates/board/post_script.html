@@ -24,13 +24,13 @@
         if (likecounter != null ) {
           likecounter.innerHTML = num_likes_sen;
         };
-        let fill_down = "{% static 'icons/hand-thumbs-down.svg' %}";
-        let fill_up = "{% static 'icons/hand-thumbs-up.svg' %}";
+        let fill_down = "{% static 'icons/down-arrow.svg' %}";
+        let fill_up = "{% static 'icons/up-arrow.svg' %}";
         let size = 22;
         if(fill_status === "up"){
-          fill_up = "{% static 'icons/hand-thumbs-up-fill.svg' %}";
+          fill_up = "{% static 'icons/up-arrow-fill.svg' %}";
         }else if(fill_status === "down"){
-          fill_down = "{% static 'icons/hand-thumbs-down-fill.svg' %}";
+          fill_down = "{% static 'icons/down-arrow-fill.svg' %}";
         };
         if(object === 'comment') {
           size = 18;
@@ -182,30 +182,18 @@
     request.send(formData);
   }; 
   
-  function comment_del(event, comment_id, post_id) {
+  function comment_del(event, comment_id, tg_id, CR) {
     event.preventDefault();
     let request = new XMLHttpRequest();
     request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
     request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
     request.onreadystatechange = function() {
       if(this.readyState === 4 && this.status === 200) {
-        render_comments(post_id, 1);
-      };
-    };
-    let formData = new FormData();
-    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-    formData.append('request_type', 'delete');
-    request.send(formData);
-  }
-  
-  function reply_del(event, comment_id, reply_to_id) {
-    event.preventDefault();
-    let request = new XMLHttpRequest();
-    request.open("POST", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
-    request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-    request.onreadystatechange = function() {
-      if(this.readyState === 4 && this.status === 200) {
-        render_replies(reply_to_id, 1);
+        if (CR == "comment") {
+          render_comments(tg_id, 1);
+        }else if (CR == "reply") {
+          render_replies(tg_id, 1);
+        }
       };
     };
     let formData = new FormData();

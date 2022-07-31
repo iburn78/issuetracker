@@ -141,7 +141,7 @@ class CommentMgmtView(View):
                     raise PermissionDenied
 
             elif request_type == 'delete': 
-                if request.user == comment.author:
+                if request.user == comment.author or request.user.is_public_card_manager:
                     comment.delete()
                     return JsonResponse({}, status=200)
                 else:

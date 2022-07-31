@@ -3,7 +3,7 @@ USER TIER:
 - VIP: no specific privilage assigned (need to be implemented)
     * E.g., no limit in number of cards... 
     * E.g., right to write in any public cards... etc...
-- Public Card Manager: manages public cards
+- Public Card Manager: manages public cards / can delete comments, replies
 - Staff / Superuser: no specific privilage assigned
 
 - Official/Public card status cannot be changed (implemented)
@@ -58,8 +58,5 @@ To revisit: (maybe no major issues)
 - if html tags are inserterd in post content, it may not work well with get_preview_text... need to check
 - model.textField -> set max lengths across POST, Comment models.... (think if necessary)
 - sometimes, system navigates to .../? -> maybe something to do with XHR (ajax request)? -> Empty Form on GET request might be the possible scenario
-
-
-
 
 

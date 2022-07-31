@@ -9,6 +9,8 @@
   <a href="" class="me-3 float-end small text-muted" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}">del</a>
   <small class="float-end text-muted mx-1">|</small> 
   <a href="" class="float-end small text-muted" onclick="comment_edit(event, {{comment.id}})">edit</a> 
+  {% elif user.is_public_card_manager %}
+  <a href="" class="me-3 float-end small text-muted" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}">del</a>
   {% endif %}
 </div>
 <div id="divider-bar-narrower"></div>
@@ -20,7 +22,7 @@
     <span class="me-2 small text-muted">delete?</span>
     <form method="POST" action="">
       {% csrf_token %}
-      <input type="submit" class="btn btn-sm btn-outline-danger me-2 my-1" onclick="{{CR}}_del(event, {{comment.id}}, {{linked_obj.id}})" value="confirm">
+      <input type="submit" class="btn btn-sm btn-outline-danger me-2 my-1" onclick="comment_del(event, {{comment.id}}, {{linked_obj.id}}, '{{CR}}')" value="confirm">
     </form>
     <button type="button" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}" class="btn btn-sm btn-outline-dark me-1 my-1">no</button>
   </div>
@@ -35,15 +37,15 @@
       {% if comment.post.card.is_public %}
       <span class="float-end">{% if comment.dislikes.count > 0 %}{{ comment.dislikes.count }}{%endif%}</span>
       {% if user in comment.dislikes.all %}
-      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="18" height="18"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/down-arrow-fill.svg' %}" width="18" height="18"></span>
       {% else %}
-      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="18" height="18"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{comment.id}}, 'down', 'comment')"><img src="{% static 'icons/down-arrow.svg' %}" width="18" height="18"></span>
       {% endif %}
       <span class="float-end">{% if comment.likes.count > 0 %}{{ comment.likes.count }}{%endif%}</span>
       {% if user in comment.likes.all %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'up', 'comment')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="18" height="18"></span>
+      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'up', 'comment')"><img src="{% static 'icons/up-arrow-fill.svg' %}" width="18" height="18"></span>
       {% else %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'up', 'comment')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="18" height="18"></span>
+      <span class="p-0 m-0 float-end" onclick="vote_click({{comment.id}}, 'up', 'comment')"><img src="{% static 'icons/up-arrow.svg' %}" width="18" height="18"></span>
       {% endif %}
       {% endif %}
     </span>

@@ -113,7 +113,7 @@
         </div>
         <div class="col-8">
         {% else %}
-        <div class="col m-0 pb-0">
+        <div class="col m-0 pb-0">  <!-- Another div element inserted due to the logic: reindent lines in vscode might not work properly -->
         {% endif %}
           <div class="d-flex justify-content-between">
             <div class="d-flex">
@@ -200,5 +200,14 @@
   {% for post in posts %}
     render_comments({{post.id}}, 1);
   {% endfor %}
+  document.querySelectorAll("#modal_close_top").forEach(e => {
+    e.innerHTML = '<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>';
+  });
+  document.querySelectorAll("#modal_close_middle").forEach(e => {
+    e.innerHTML = '<a href="" class="text-muted small float-end" data-bs-dismiss="modal">close</a>';
+  });
+  document.querySelectorAll("#modal_close_bottom").forEach(e => {
+    e.innerHTML = '<a href="" class="text-muted small float-end mt-2 mx-3" data-bs-dismiss="modal">close</a><br><br>';
+  });
   </script>
 {% endblock script %}

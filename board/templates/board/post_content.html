@@ -14,7 +14,7 @@
     <a class="me-2 float-end" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
     <a class="me-2 float-end" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
     {% endif %}
-    <button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>
+    <span id="modal_close_top"></span>
   </div>
 </div>
 
@@ -133,21 +133,21 @@
       {% if user.is_authenticated %}
       <span class="float-end me-1">{% if post.dislikes.count > 0 %}{{ post.dislikes.count }}{%endif%}</span>
       {% if user in post.dislikes.all %}
-      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/hand-thumbs-down-fill.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/down-arrow-fill.svg' %}" width="22" height="22"></span>
       {% else %}
-      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 ms-1 float-end" onclick="vote_click({{post.id}}, 'down', 'post')"><img src="{% static 'icons/down-arrow.svg' %}" width="22" height="22"></span>
       {% endif %}
       <span class="float-end me-1">{% if post.likes.count > 0 %}{{ post.likes.count }}{%endif%}</span>
       {% if user in post.likes.all %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up', 'post')"><img src="{% static 'icons/hand-thumbs-up-fill.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up', 'post')"><img src="{% static 'icons/up-arrow-fill.svg' %}" width="22" height="22"></span>
       {% else %}
-      <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up', 'post')"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 float-end" onclick="vote_click({{post.id}}, 'up', 'post')"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
       {% endif %}
       {% else %}
       <span class="float-end me-1">{% if post.dislikes.count > 0 %}{{ post.dislikes.count }}{%endif%}</span>
-      <span class="p-0 m-0 ms-1 float-end"><img src="{% static 'icons/hand-thumbs-down.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 ms-1 float-end"><img src="{% static 'icons/down-arrow.svg' %}" width="22" height="22"></span>
       <span class="float-end me-1">{% if post.likes.count > 0 %}{{ post.likes.count }}{%endif%}</span>
-      <span class="p-0 m-0 float-end"><img src="{% static 'icons/hand-thumbs-up.svg' %}" width="22" height="22"></span>
+      <span class="p-0 m-0 float-end"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
       {% endif %}
       {% endif %}
     </span>
@@ -155,7 +155,7 @@
 </div>
 <div class="row m-0">
   <div class="col mt-1">
-    <a href="" class="text-muted small float-end" data-bs-dismiss="modal">close</a>
+    <span id="modal_close_middle"></span>
   </div>
 </div>
 
@@ -176,4 +176,4 @@
   {% endif %}
 </div>
 
-<a href="" class="text-muted small float-end mt-2 mx-3" data-bs-dismiss="modal">close</a><br><br>
+<span id="modal_close_bottom"></span>
