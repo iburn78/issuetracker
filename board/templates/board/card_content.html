@@ -1,9 +1,9 @@
 {% extends "board/base.html" %}
 {% block content %}
 {% load static %}
-<div class="container-fluid">
-  <div class="row">
-    <div class="col">
+<div class="container-fluid p-0 m-0">
+  <div class="row p-0 m-0">
+    <div class="col p-1 m-0">
       {% if card.is_public %}
       {% if card.is_official %}
       <img src="{% static 'board/IssueTracker_Logo.png' %}" width="24" height="24">
@@ -13,9 +13,11 @@
       <img src="{% static 'icons/person-circle.svg' %}" width="24" height="24">
       {% endif %}
       <b class="KR-font">{{ card.title }}</b>
-      {% if card.is_public and user.is_public_card_manager %}
+      {% if card.is_official and user.is_public_card_manager %}
       <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
-      {% elif not card.is_public and user.is_authenticated %}
+      {% elif not card.is_official and card.is_public %}
+      <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
+      {% elif not card.is_public and user == card.owner %}
       <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% endif %}
       <a class="float-end" href="" data-bs-toggle="collapse" data-bs-target="#collapseDesc" id="collapseToggle"><img src="{% static 'icons/textarea-resize.svg' %}" width="27" height="27"></a>
@@ -23,19 +25,19 @@
   </div>
   <div class="collapse" id="collapseDesc">
     <div id="divider-bar" style="background-color:{{card.card_color}}"></div>
-    <div class="row">
-      <div class="col-sm-7 col-xl-4">
+    <div class="row p-0 m-0">
+      <div class="col-sm-7 col-xl-4 p-0 m-0">
         {% if card.image %}
         <img class="card-img-preview" src="{{ card.image.url }}">
         {% else %}
-        <span class="text-muted">no card image</span>
+        <span class="text-muted"> no card image</span>
         {% endif %}
       </div>
-      <div class="col-sm-5 col-xl-8">
+      <div class="col-sm-5 col-xl-8 p-1 m-0">
         {% if card.is_public and user.is_public_card_manager %}
         <a class="float-end" href="{% url 'card-delete' card_id %}"><img class="js-toggle-except" src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
         <a class="me-2 float-end" href="{% url 'card-update' card_id %}"><img class="js-toggle-except" src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
-        {% elif not card.is_public and user.is_authenticated %}
+        {% elif not card.is_public and user == card.owner %}
         <a class="float-end" href="{% url 'card-delete' card_id %}"><img class="js-toggle-except" src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
         <a class="me-2 float-end" href="{% url 'card-update' card_id %}"><img class="js-toggle-except" src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
         {% endif %}
@@ -53,12 +55,12 @@
   </div>
   <div id="divider-bar" style="background-color:{{card.card_color}}"></div>
   
-  <div class="row">
+  <div class="row p-0 m-0">
     {% for post in posts %}
-    <div class="col-md-6 col-xl-4 mb-2">
-      <div class="row">
+    <div class="col-md-6 col-xl-4 col-xxl-3 p-0 m-0">
+      <div class="row m-0 p-0">
         {% if post.image1s %}
-        <div class="col-4 pe-0 mt-1">
+        <div class="col-4 m-0 p-1 pe-0">
           <div class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <div class="carousel-item active">
@@ -111,9 +113,9 @@
             </div>
           </div>
         </div>
-        <div class="col-8">
+        <div class="col-8 m-0 p-1">
         {% else %}
-        <div class="col m-0 pb-0">  <!-- Another div element inserted due to the logic: reindent lines in vscode might not work properly -->
+        <div class="col m-0 p-1">  <!-- Another div element inserted due to the logic: reindent lines in vscode might not work properly -->
         {% endif %}
           <div class="d-flex justify-content-between">
             <div class="d-flex">
@@ -139,7 +141,7 @@
             <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
             <p class="article-content text-dark mb-1">{{ post.get_preview_text }}</p>
           </a>
-          <div class="col float-end me-0 my-0 p-0">
+          <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}
             <a href="" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
             {% endfor %}

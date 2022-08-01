@@ -9,6 +9,8 @@ from os.path import join
 
 
 urlpatterns = [
+    path('test/', test, name='test'),
+
     path('', CardListView.as_view(revisit=False, card_list=True), name='main'),
     path('main/', CardListView.as_view(revisit=True, card_list=True), name='mainr'),
     path('card_list/', CardListView.as_view(template_name="board/card_list.html", card_list=False), name='card-list'),

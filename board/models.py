@@ -169,6 +169,7 @@ class Comment(models.Model):
     content = models.TextField()
     likes = models.ManyToManyField(User, related_name="liked_comment_set", blank=True)
     dislikes = models.ManyToManyField(User, related_name="disliked_comment_set", blank=True)
+    rtr = models.ForeignKey('self', blank=True, null=True, related_name="rtr_comment_set", on_delete=models.CASCADE)
 
     def __str__(self):
         return self.author.username + ": " + self.content[:50]

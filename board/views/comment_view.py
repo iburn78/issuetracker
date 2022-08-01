@@ -98,9 +98,7 @@ class ReplyCreateView(View):
             if not request.user.is_authenticated:
                 return JsonResponse({}, status=400)
             content = request.POST.get('content')
-            rtr_target = request.POST.get('rtr_target')
-            if rtr_target != '':
-                content = rtr_target +"\n "+content
+            rtr_target_id = request.POST.get('rtr_target_id')
             if content == "": 
                 return JsonResponse({}, status=400)
             cform = CommentForm()
@@ -109,6 +107,8 @@ class ReplyCreateView(View):
             reply_to_comment = get_object_or_404(Comment, id = self.kwargs.get('pk'))
             cform.instance.post_id = reply_to_comment.post.id
             cform.instance.content = content
+            if rtr_target_id != '':
+                cform.instance.rtr_id = rtr_target_id
             new_comment = cform.save(commit=False)
             new_comment.save()
             return JsonResponse({}, status=200)
@@ -121,7 +121,12 @@ class CommentMgmtView(View):
     def get(self, request, *args, **kwargs):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
             comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
-            return JsonResponse({"content": comment.content}, status=200)
+            contentbrief = comment.content[:100]
+            date_posted = comment.date_posted.strftime("%y-%m-%d %H:%M")
+            return JsonResponse({"content": comment.content,
+            "contentbrief": contentbrief,             
+            "date_posted": date_posted,             
+            }, status=200)
 
     def post(self, request, *args, **kwargs):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":

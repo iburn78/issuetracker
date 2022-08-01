@@ -1,6 +1,6 @@
 {% extends "board/base.html" %}
 {% block content %}
-<div class="container-fluid">
+<div class="container-xxl">
   <form method="POST">
     {% csrf_token %}
     <fieldset class ="form-group">
@@ -22,7 +22,7 @@
               </div>
             </a>
           </div>
-          <input type="button" class="btn btn-sm btn-outline-secondary mt-2 float-end" value="cancel" onClick="javascript:history.go(-1);">
+          <input type="button" class="btn btn-sm btn-outline-secondary mt-2 float-end" value="cancel" onclick="javascript:history.go(-1);">
           {% if card.post_set.count <= post_limit %}
           <button class="btn btn-sm btn-danger mt-2 me-1 float-end" type="submit">Delete</button>
           {% endif %}

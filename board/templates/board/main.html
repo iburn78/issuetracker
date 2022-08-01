@@ -2,11 +2,11 @@
 {% block content %}
 {% load static %}
 {% if user.is_authenticated %}
-<div class="container-fluid">
+<div class="container-fluid p-1">
   <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
-  <div class="row gy-2">
+  <div class="row m-0">
     {% for card in cards %}
-    <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+    <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
       <div class="card border-0">
         {% if card.image %}
         <img src="{{ card.image.url }}" class="card-img">
@@ -34,11 +34,11 @@
 <div id="divider-bar" class="my-3"></div>
 {% endif %}
 
-<div class="container-fluid">
+<div class="container-fluid p-1">
   <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
-  <div class="row gy-2">
+  <div class="row m-0">
     {% for card in public_cards %}
-    <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2">
+    <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
       <div class="card border-0">
         {% if card.image %}
         <img src="{{ card.image.url }}" class="card-img">

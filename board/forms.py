@@ -2,6 +2,7 @@ from email.policy import default
 from random import choice
 from django import forms
 from .models import Card, Post, Comment
+COMMENT_MAX_LENGTH = '1000'
 
 class Customclearable(forms.ClearableFileInput):
     template_name='board/custom_clearable_file.html'
@@ -52,6 +53,7 @@ class PostForm(forms.ModelForm):
             })
 
 class CommentForm(forms.ModelForm):
+
     class Meta: 
         model = Comment
         fields = ['content',]
@@ -59,7 +61,7 @@ class CommentForm(forms.ModelForm):
             'content': 'comment', 
         }
         widgets = {
-            'content': forms.Textarea(attrs={'rows':'2', 'placeholder':''}), 
+            'content': forms.Textarea(attrs={'rows':'2', 'placeholder':'', 'maxlength':COMMENT_MAX_LENGTH,}), 
         }
 
     def __init__(self, *args, **kwargs):

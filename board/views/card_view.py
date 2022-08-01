@@ -21,6 +21,9 @@ from ..tools import *
 import os
 from django.http import JsonResponse, HttpResponseRedirect
 
+def test(request):
+    return render(request, 'board/test.html')
+
 def about(request):
     return render(request, 'board/about.html')
 

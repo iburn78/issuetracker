@@ -219,6 +219,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['card'] = self.get_object().card
         context['update'] = True
         context['num_images'] = self.get_object().num_images
         context['th_image1'] = self.get_object().image1s

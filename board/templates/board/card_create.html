@@ -35,7 +35,7 @@
           {{ form.image_input }}
           <div class="my-2">
             <button class="btn btn-primary btn-sm float-end" type="submit">{{c_u}}</button>
-            <input type="button" class="me-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onClick="javascript:history.go(-1);">
+            <input type="button" class="me-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
             <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#colorModal">
               <b>Card color</b>
             </button>
@@ -131,13 +131,16 @@
 </div>
 
 <script>
-  document.getElementById("id_is_official").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("public_card_check_id").style.display = "none";
-    } else {
-      document.getElementById("public_card_check_id").style.display = "block";
-    }
-  })
+  let io_dom = document.getElementById("id_is_official"); 
+  if (io_dom != null) {
+    io_dom.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("public_card_check_id").style.display = "none";
+      } else {
+        document.getElementById("public_card_check_id").style.display = "block";
+      }
+    })
+  }
 </script>
 
 {% endblock content %}

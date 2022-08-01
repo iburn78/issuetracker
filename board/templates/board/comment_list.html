@@ -30,7 +30,15 @@
 
 <!-- delete collapse part end -->
 
-<div id="comment_{{comment.id}}_content" class=""><pre class="mt-1 mb-2 body-font fs-6">{{ comment.content }}</pre></div>
+<div id="comment_{{comment.id}}_content" class="">
+  {% if comment.rtr %}
+  <p class="m-0 mt-1 p-0 px-1 btn btn-sm btn-outline text-danger bg-yellow-100" onclick="rtr_target_show({{comment.id}}, {{comment.rtr.id}})">@ {{ comment.rtr.author }}</p>
+  <div class="mx-3 mb-1 text-muted" id="rtr_target_content{{comment.id}}"></div>
+
+
+  {% endif %}
+  <pre class="mt-1 mb-2 body-font fs-6">{{ comment.content }}</pre>
+</div>
 <div class="row m-0">
   <div class="col p-0 mb-2">
     <span id="vote_meter_comment{{comment.id}}">
@@ -56,7 +64,7 @@
     </a>
     {% else %}
     {% if user.is_authenticated %}
-    <a href="" onclick="reply_to_reply(event, {{comment.reply_to.id}}, '{{comment.author}}')" class="float-end text-muted p-0 m-0 me-2">
+    <a href="" onclick="reply_to_reply(event, {{comment.reply_to.id}}, '{{comment.author}}', {{comment.id}})" class="float-end text-muted p-0 m-0 me-2">
       <img src="{% static 'icons/reply.svg' %}" width="18" height="18"> reply
     </a>
     {% endif %}
@@ -67,14 +75,17 @@
 
 <!-- replies collapse part start -->
 
-<div class="collapse" id="comment_replies{{comment.id}}">
+<div class="collapse repliesCollapse" id="comment_replies{{comment.id}}">
   <div class="row p-1 m-0 border border-2 border-warning rounded mb-2">
     <div class="col p-0 m-0">
       <span class="emphasis-font small" id="repliescounter2_{{comment.id}}">{% if comment.comment_set.count > 0 %}{{comment.comment_set.count}}{% endif %} replies</span>
       <button id='close_replycollapse{{comment.id}}' type="button" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}" class="btn btn-close float-end"></button>
       <div id="comment_replies_list{{comment.id}}" class="m-0 p-0 mb-2"></div>
       {% if user.is_authenticated %}
-      <div class="m-0 p-0 mb-1"><span id="rtr_target{{comment.id}}" class="m-0 p-0 text-danger"></span></div>
+      <div class="m-0 p-0 mb-1">
+        <span id="rtr_target{{comment.id}}" class="m-0 p-0 text-danger"></span>
+        <span hidden id="rtr_target_id{{comment.id}}" class="m-0 p-0"></span>
+      </div>
       <form id="commentReplyForm{{comment.id}}" method="POST">
         {% csrf_token %}
         {{ form.content }}

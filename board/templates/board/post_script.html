@@ -176,8 +176,10 @@
     let commentForm = document.getElementById("commentReplyForm"+comment_id);
     let formData = new FormData(commentForm);
     let rtr_target = document.getElementById("rtr_target"+comment_id);
-    formData.append('rtr_target', rtr_target.innerHTML);
+    let rtr_target_id = document.getElementById("rtr_target_id"+comment_id);
+    formData.append('rtr_target_id', rtr_target_id.innerHTML);
     rtr_target.innerHTML='';
+    rtr_target_id.innerHTML='';
     commentForm.reset();
     request.send(formData);
   }; 
@@ -209,7 +211,7 @@
     `
     <form class="my-1">
       <textarea class="form-control" id="comment-edit-form_comment_id" rows="4"></textarea>
-      <button type="" class="btn btn-outline-secondary btn-sm mt-1 mb-2" onclick="comment_cancel(event, comment_id)">cancel</button>
+      <button type="" class="btn btn-outline-secondary btn-sm mt-1 mb-2" onclick="comment_edit_cancel(event, comment_id)">cancel</button>
       <button type="submit" class="btn btn-sm bg-yellow-300 mt-1 mb-2 float-end" onclick="comment_edit_confirm(event, comment_id)">confirm</button>
     </form>
     `.replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString()).replace('comment_id', comment_id.toString());
@@ -240,7 +242,7 @@
     request.send(formData);
   }
   
-  function comment_cancel(event, comment_id) {
+  function comment_edit_cancel(event, comment_id) {
     event.preventDefault();
     let request = new XMLHttpRequest();
     request.open("GET", "{% url 'comment-mgmt' 1000 %}".replace('1000', comment_id.toString()), true);
@@ -270,7 +272,7 @@
   }
  
   function close_opened_collapses(comment_id) {
-    let cols = document.querySelectorAll(".collapse");
+    let cols = document.querySelectorAll(".collapse.repliesCollapse");
     cols.forEach(c => {
       c_id = c.id.replace('comment_replies', '');
       if (c_id != comment_id.toString() && c.classList.contains('show')) {
@@ -279,10 +281,30 @@
     })
   }
 
-  function reply_to_reply(event, reply_to_id, comment_author) {
+  function reply_to_reply(event, reply_to_id, comment_author, comment_id) {
     event.preventDefault();
     document.getElementById("rtr_target"+reply_to_id).innerHTML = '@'+comment_author;
+    document.getElementById("rtr_target_id"+reply_to_id).innerHTML = comment_id;
     document.querySelector("#commentReplyForm"+reply_to_id+" #id_content").focus();
+  }
+
+  function rtr_target_show(comment_id, rtr_id) {
+    let tg = document.getElementById("rtr_target_content"+comment_id);
+    if (tg.innerHTML == "") {
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'comment-mgmt' 1000 %}".replace('1000', rtr_id.toString()), true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          let res = JSON.parse(this.responseText).contentbrief;
+          let date = JSON.parse(this.responseText).date_posted;
+          tg.innerHTML = res + " ("+date+") <button class='btn btn-sm btn-close' onclick='rtr_target_show("+comment_id+", "+rtr_id+")'></button>";
+        }; 
+      };
+      request.send();
+    }else{
+      tg.innerHTML = "";
+    }
   }
   
 </script>

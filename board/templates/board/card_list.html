@@ -2,32 +2,35 @@
 {% block content %}
 {% load static %}
 {% if user.is_authenticated %}
-<div class="container-fluid">
+<div class="container-fluid m-0 p-0">
   {% if card_select_for_new_post %}
-  <input type="button" class="btn btn-sm btn-outline-secondary float-end" value="cancel" onClick="javascript:history.go(-1);">
+  <input type="button" class="btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
   <p><b class="text-red-600">Choose a card for your new post</b></p>
   {% if not cards %}
-  {% if not public_cards and user.is_public_card_manager or not user_is_public_card_manager %}
   <div class="alert alert-danger" role="alert">
-    Create your card first <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}"></a>
+    Create your private card <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}"></a>
+  </div>
+  {% endif %}
+  {% if not public_cards and user.is_public_card_manager %}
+  <div class="alert alert-danger" role="alert">
+    Create public card <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}"></a>
   </div>
   {% endif %}
   {% endif %}
-  {% endif %}
-  <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
-  <div class="row gy-1">
+  <p class="emphasis-font px-1" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
+  <div class="row m-0 p-0">
     {% for card in cards %}
-    <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4">
+    <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
       <div class="card border-0">
-        <div class="row">
-          <div class="col-2 pe-1">
+        <div class="row m-0 mb-1 p-0">
+          <div class="col-2 m-0 p-0">
             {% if card.image %}
             <img src="{{ card.image.url }}" class="card-img-select">
             {% else %}
             <div class="card-img-select"></div>
             {% endif %}
           </div>
-          <div class="col-10 ps-0">
+          <div class="col-10 m-0 p-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
               <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
               <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
@@ -40,39 +43,33 @@
     {% endfor %}
   </div>
 </div>
-{% endif %}
-
-{% if user.is_authenticated %}
-{% if not card_select_for_new_post or user.is_public_card_manager %}
 <div id="divider-bar" class="my-2"></div>
 {% endif %}
-{% endif %}
 
-
-{% if not card_select_for_new_post or user.is_public_card_manager %}
-<div class="container-fluid">
-  <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
-  <div class="row gy-1">
+<div class="container-fluid p-0 m-0">
+  <p class="emphasis-font px-1" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
+  <div class="row m-0 p-0">
     {% for card in public_cards %}
-    <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4">
+    {% if not card_select_for_new_post or user.is_public_card_manager or not card.is_official %}
+    <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
       <div class="card border-0">
-        <div class="row">
-          <div class="col-2 pe-1">
+        <div class="row m-0 mb-1 p-0">
+          <div class="col-2 m-0 p-0">
             {% if card.image %}
             <img src="{{ card.image.url }}" class="card-img-select">
             {% else %}
             <div class="card-img-select"></div>
             {% endif %}
           </div>
-          <div class="col-10 ps-0">
+          <div class="col-10 m-0 p-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
               <span class="float-end" style="margin-right: -10px;">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
               {% if card.is_official %}
               <span class="float-end me-1" style="margin-right: -10px;"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
               {% endif %}
+              {% if user.is_authenticated and user.is_public_card_manager %}
               <span class="float-end" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
               <span class="float-end" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
-              {% if user.is_authenticated and user.is_public_card_manager %}
               {% endif %}
               <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
@@ -80,16 +77,16 @@
         </div>
       </div>
     </div>
+    {% endif %}
     {% endfor %}
   </div>
 </div>
-{% endif %}
 
 {% if card_select_for_new_post %}
 <script>
   document.addEventListener('click', e => {
     const origin = e.target.closest('a');
-    if (origin.id === "card_for_new_post") {
+    if (origin != null && origin.id === "card_for_new_post") {
       e.preventDefault();
       window.location.href = origin.href+'new_post/';
     };

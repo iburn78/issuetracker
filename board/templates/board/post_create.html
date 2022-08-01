@@ -69,7 +69,7 @@
       <button class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
         {% if update %}Update{% else %}Create{% endif %}
       </button>
-      <input type="button" class="btn btn-outline-secondary btn-sm mb-2" value="cancel" onClick="javascript:history.go(-1);">
+      <input type="button" class="btn btn-outline-secondary btn-sm mb-2" value="cancel" onclick="javascript:history.go(-1);">
     </fieldset>
   </form>
 </div>
@@ -96,68 +96,89 @@
   document.getElementById("clear-image6").addEventListener("click", function() {document.getElementById("id_image6_input").value = "";});
   document.getElementById("clear-image7").addEventListener("click", function() {document.getElementById("id_image7_input").value = "";});
   
-  document.getElementById("image1_input-clear_id").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("id_image1_input").value="";
-      document.getElementById("id_image1_input").disabled= true;
-    } else {
-      document.getElementById("id_image1_input").disabled= false;
-      document.getElementById("id_image1_input").value="";
-    }
-  })
-  document.getElementById("image2_input-clear_id").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("id_image2_input").value="";
-      document.getElementById("id_image2_input").disabled= true;
-    } else {
-      document.getElementById("id_image2_input").disabled= false;
-      document.getElementById("id_image2_input").value="";
-    }
-  })
-  document.getElementById("image3_input-clear_id").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("id_image3_input").value="";
-      document.getElementById("id_image3_input").disabled= true;
-    } else {
-      document.getElementById("id_image3_input").disabled= false;
-      document.getElementById("id_image3_input").value="";
-    }
-  })
-  document.getElementById("image4_input-clear_id").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("id_image4_input").value="";
-      document.getElementById("id_image4_input").disabled= true;
-    } else {
-      document.getElementById("id_image4_input").disabled= false;
-      document.getElementById("id_image4_input").value="";
-    }
-  })
-  document.getElementById("image5_input-clear_id").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("id_image5_input").value="";
-      document.getElementById("id_image5_input").disabled= true;
-    } else {
-      document.getElementById("id_image5_input").disabled= false;
-      document.getElementById("id_image5_input").value="";
-    }
-  })
-  document.getElementById("image6_input-clear_id").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("id_image6_input").value="";
-      document.getElementById("id_image6_input").disabled= true;
-    } else {
-      document.getElementById("id_image6_input").disabled= false;
-      document.getElementById("id_image6_input").value="";
-    }
-  })
-  document.getElementById("image7_input-clear_id").addEventListener('change', e => {
-    if (e.currentTarget.checked) {
-      document.getElementById("id_image7_input").value="";
-      document.getElementById("id_image7_input").disabled= true;
-    } else {
-      document.getElementById("id_image7_input").disabled= false;
-      document.getElementById("id_image7_input").value="";
-    }
-  })
+  let ii1 = document.getElementById("image1_input-clear_id");
+  if (ii1 != null){
+    ii1.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("id_image1_input").value="";
+        document.getElementById("id_image1_input").disabled= true;
+      } else {
+        document.getElementById("id_image1_input").disabled= false;
+        document.getElementById("id_image1_input").value="";
+      }
+    })
+  }
+  let ii2 = document.getElementById("image2_input-clear_id");
+  if (ii2 != null){
+    ii2.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("id_image2_input").value="";
+        document.getElementById("id_image2_input").disabled= true;
+      } else {
+        document.getElementById("id_image2_input").disabled= false;
+        document.getElementById("id_image2_input").value="";
+      }
+    })
+  }
+  let ii3 = document.getElementById("image3_input-clear_id");
+  if (ii3 != null){
+    ii3.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("id_image3_input").value="";
+        document.getElementById("id_image3_input").disabled= true;
+      } else {
+        document.getElementById("id_image3_input").disabled= false;
+        document.getElementById("id_image3_input").value="";
+      }
+    })
+  }
+  let ii4 = document.getElementById("image4_input-clear_id");
+  if (ii4 != null){
+    ii4.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("id_image4_input").value="";
+        document.getElementById("id_image4_input").disabled= true;
+      } else {
+        document.getElementById("id_image4_input").disabled= false;
+        document.getElementById("id_image4_input").value="";
+      }
+    })
+  }
+  let ii5 = document.getElementById("image5_input-clear_id");
+  if (ii5 != null){
+    ii5.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("id_image5_input").value="";
+        document.getElementById("id_image5_input").disabled= true;
+      } else {
+        document.getElementById("id_image5_input").disabled= false;
+        document.getElementById("id_image5_input").value="";
+      }
+    })
+  }
+  let ii6 = document.getElementById("image6_input-clear_id");
+  if (ii6 != null){
+    ii6.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("id_image6_input").value="";
+        document.getElementById("id_image6_input").disabled= true;
+      } else {
+        document.getElementById("id_image6_input").disabled= false;
+        document.getElementById("id_image6_input").value="";
+      }
+    })
+  }
+  let ii7 = document.getElementById("image7_input-clear_id");
+  if (ii7 != null){
+    ii7.addEventListener('change', e => {
+      if (e.currentTarget.checked) {
+        document.getElementById("id_image7_input").value="";
+        document.getElementById("id_image7_input").disabled= true;
+      } else {
+        document.getElementById("id_image7_input").disabled= false;
+        document.getElementById("id_image7_input").value="";
+      }
+    })
+  }
 </script>
 {% endblock content %}

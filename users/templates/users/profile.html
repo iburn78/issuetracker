@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% load static %}
-<div class="container-sm">
+<div class="container-xxl">
 	<div class="row">
 		<div class="col">
 			<legend class="border-bottom">Profile</legend>
@@ -54,7 +54,7 @@
 				{{ u_form }}
 				{{ p_form }}
 				<a class="mt-2 btn btn-outline-secondary btn-sm" href="{% url 'password_reset' %}">Reset Password</a>
-				<input type="button" class="mt-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onClick="javascript:history.go(-1);">
+				<input type="button" class="mt-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
 				<button class="mt-2 btn btn-primary btn-sm float-end me-1" type="submit">Update</button>
 			</fieldset>
 		</form>
