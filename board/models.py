@@ -148,7 +148,7 @@ class Post(models.Model):
         return super().delete(*args, **kwargs)
 
     def get_preview_text(self):
-        res = ' '.join(self.content[:150].split('\n')[:3])
+        res = ' '.join(self.content[:200].split('\n')[:3])
         return res
 
     def __str__(self):

@@ -9,8 +9,10 @@
         let dict = this.responseText;
         let fill_status = JSON.parse(dict).fill_status;
         let obj = JSON.parse(JSON.parse(dict).instance)[0].fields;
+        let fill_down = "{% static 'icons/down-arrow.svg' %}";
+        let fill_up = "{% static 'icons/up-arrow.svg' %}";
         let num_likes = obj.likes.length;
-        let num_likes_sen = num_likes + " " + "likes";
+        let num_likes_sen = `<img src='${fill_up}' width='17' height='17'> ` + num_likes;
         if (num_likes == 0){
           num_likes = "";
           num_likes_sen = ""
@@ -24,8 +26,6 @@
         if (likecounter != null ) {
           likecounter.innerHTML = num_likes_sen;
         };
-        let fill_down = "{% static 'icons/down-arrow.svg' %}";
-        let fill_up = "{% static 'icons/up-arrow.svg' %}";
         let size = 22;
         if(fill_status === "up"){
           fill_up = "{% static 'icons/up-arrow-fill.svg' %}";
@@ -92,16 +92,21 @@
         let num_allreplies = JSON.parse(this.responseText).allrepliescount;
         let num_comments = JSON.parse(this.responseText).commentscount;
         if (num_allreplies>0){
-          allrepliescounter.innerHTML = num_allreplies + " replies";
+          allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> ` + num_allreplies;
         }
         else{
           allrepliescounter.innerHTML = "";
         }
-        if (num_comments>0){
+        if (num_comments==1){
+          commentscounter.innerHTML = num_comments + " comment";
+        } else if (num_comments > 1){
           commentscounter.innerHTML = num_comments + " comments";
-        }
-        else{
+        } else {
+          {% if user.is_authenticated %}
           commentscounter.innerHTML = "leave a comment:";
+          {% else %}
+          commentscounter.innerHTML = "no comments";
+          {% endif %}
         }
       };
     };
@@ -119,18 +124,25 @@
         let repliescounter1 = document.getElementById('repliescounter1_'+comment_id);
         let repliescounter2 = document.getElementById('repliescounter2_'+comment_id);
         if (dict.allrepliescount>0){
-          allrepliescounter.innerHTML = dict.allrepliescount + " replies";
+          allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> ` + dict.allrepliescount;
         }
         else{
           allrepliescounter.innerHTML = "";
         }
-        if (dict.repliescount>0){
+        if (dict.repliescount==1){
+          repliescounter1.innerHTML = "(" + dict.repliescount + ")";
+          repliescounter2.innerHTML = dict.repliescount + " reply";
+        } else if (dict.repliescount>1){
           repliescounter1.innerHTML = "(" + dict.repliescount + ")";
           repliescounter2.innerHTML = dict.repliescount + " replies";
         }
         else{
           repliescounter1.innerHTML = "";
+          {% if user.is_authenticated %}
           repliescounter2.innerHTML = "reply to comment:";
+          {% else %}
+          repliescounter2.innerHTML = "no replies";
+          {% endif %}
         }
       };
     };

@@ -13,6 +13,7 @@
       <img src="{% static 'icons/person-circle.svg' %}" width="24" height="24">
       {% endif %}
       <b class="KR-font">{{ card.title }}</b>
+      <button type="button" class="float-end btn-close ms-1" onclick="javascript:history.back()"></button>
       {% if card.is_official and user.is_public_card_manager %}
       <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% elif not card.is_official and card.is_public %}
@@ -57,7 +58,7 @@
   
   <div class="row p-0 m-0">
     {% for post in posts %}
-    <div class="col-md-6 col-xl-4 col-xxl-3 p-0 m-0">
+    <div class="col-md-6 col-xl-4 col-xxl-3 p-0 pb-1 m-0">
       <div class="row m-0 p-0">
         {% if post.image1s %}
         <div class="col-4 m-0 p-1 pe-0">
@@ -131,9 +132,9 @@
             
             <div class="d-flex">
               {% if card.is_public %}
-              <span id="listpagecounter{{post.id}}" class="float-end me-2 small text-muted">{% if post.likes.count > 0 %}{{ post.likes.count }} likes{%endif%}</span>
+              <span id="listpagecounter{{post.id}}" class="float-end me-2 small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17"> {{ post.likes.count }}{%endif%}</span>
               {% endif %}
-              <span id="allrepliescounter{{post.id}}" class="float-end small text-muted">{% if post.comment_set.count > 0 %}{{ post.comment_set.count }} replies{%endif%}</span>
+              <span id="allrepliescounter{{post.id}}" class="float-end me-1 small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
             </div>
           </div>
           
@@ -206,10 +207,10 @@
     e.innerHTML = '<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>';
   });
   document.querySelectorAll("#modal_close_middle").forEach(e => {
-    e.innerHTML = '<a href="" class="text-muted small float-end" data-bs-dismiss="modal">close</a>';
+    e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a>';
   });
-  document.querySelectorAll("#modal_close_bottom").forEach(e => {
-    e.innerHTML = '<a href="" class="text-muted small float-end mt-2 mx-3" data-bs-dismiss="modal">close</a><br><br>';
-  });
+  // document.querySelectorAll("#modal_close_bottom").forEach(e => {
+  //   e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a><br><br>';
+  // });
   </script>
 {% endblock script %}

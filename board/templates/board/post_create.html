@@ -2,24 +2,24 @@
 {% block content %}
 {% load crispy_forms_tags %}
 {% load static %}
-<div class="container" style="background-color: {{ card.card_color }}">
-  <form method="POST" enctype="multipart/form-data" autocomplete="off">
+<div class="container-fluid p-0 m-0 bg-gray-200">
+  <div class="border-bottom m-0 p-1 py-1 h4" style="background-color: {{ card.card_color }}">
+    {% if update %}
+    Update post for <b>{{ card.title }}</b>
+    {% else %}
+    New post for <b>{{ card.title }}</b>
+    {% endif %}
+    {% if card.is_public %}
+    <span class="float-end">(<img src="{% static 'icons/people-fill.svg' %}" width="20" height="20">)</span>
+    {% if card.is_official %}
+    <span class="float-end me-1"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="24" height="24"></span>
+    {% endif %}
+    {% endif %}
+  </div>
+  <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off">
     {% csrf_token %}
     <fieldset>
-      <legend class="border-bottom mb-2">
-        {% if update %}
-        Update post for <b>{{ card.title }}</b>
-        {% else %}
-        New post for <b>{{ card.title }}</b>
-        {% endif %}
-        {% if card.is_public %}
-        <span class="float-end">(<img src="{% static 'icons/people-fill.svg' %}" width="20" height="20">)</span>
-          {% if card.is_official %}
-          <span class="float-end me-1"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="24" height="24"></span>
-          {% endif %}
-        {% endif %}
-      </legend>
-      <p class="m-0">Content*</p>
+      <p class="m-0 p-0">Content*</p>
       {{ form.content }}
       {% if num_images >= 1 %}<img src="{{ th_image1.url }}" alt="" class="post-img-update">{% endif %} 
       {% if num_images >= 2 %}<img src="{{ th_image2.url }}" alt="" class="post-img-update">{% endif %} 

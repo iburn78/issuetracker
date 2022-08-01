@@ -57,6 +57,29 @@ def vote(request):
         return JsonResponse({"instance": ser_instance, "fill_status": fill_status}, status=200)
     return JsonResponse({"result": "failure"}, status = 400)
 
+
+def postimageview(request, *args, **kwargs): 
+    template_name = "board/image_view.html"
+    post = get_object_or_404(Post, id=kwargs.get('pk'))
+    img_no = kwargs.get('img_no')
+    context = {}
+    target = ""
+    if img_no == 1: target = post.image1.url
+    elif img_no == 2: target = post.image2.url
+    elif img_no == 3: target = post.image3.url
+    elif img_no == 4: target = post.image4.url
+    elif img_no == 5: target = post.image5.url
+    elif img_no == 6: target = post.image6.url
+    elif img_no == 7: target = post.image7.url
+    else: 
+        raise PermissionDenied
+    context['image_url'] = target
+    if post.card.is_public or request.user == post.author:
+        return render(request, template_name, context)
+    else: 
+        raise PermissionDenied
+
+
 class PostCreateView(CreateView):
     model = Post
     form_class = PostForm

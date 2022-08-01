@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 {% if user.is_authenticated %}
-<div class="container-fluid p-1">
+<div class="container-fluid p-1 pt-2">
   <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
   <div class="row m-0">
     {% for card in cards %}
@@ -31,10 +31,10 @@
 {% endif %}
 
 {% if user.is_authenticated %}
-<div id="divider-bar" class="my-3"></div>
+<div id="divider-bar" class="my-2"></div>
 {% endif %}
 
-<div class="container-fluid p-1">
+<div class="container-fluid p-1 pt-2">
   <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
   <div class="row m-0">
     {% for card in public_cards %}

@@ -42,7 +42,7 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['content', 'tags', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
         widgets = {
-            'content': forms.Textarea(attrs={'rows':'4', 'placeholder':''}), 
+            'content': forms.Textarea(attrs={'rows':'12', 'placeholder':''}), 
         }
     
     def __init__(self, *args, **kwargs):

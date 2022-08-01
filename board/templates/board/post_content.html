@@ -68,7 +68,7 @@
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <a href="{{post.image1.url}}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
         </div>
         <div class="carousel-item">
           <a href="{{post.image2.url}}"><img src="{{ post.image2s.url }}" class="d-block w-100 rounded"></a>
@@ -153,14 +153,14 @@
     </span>
   </div>
 </div>
-<div class="row m-0">
-  <div class="col mt-1">
+<div class="row m-0 p-0">
+  <div class="col m-0 p-0">
     <span id="modal_close_middle"></span>
   </div>
 </div>
 
 <div class="row m-0 p-1">
-  <span id="commentscounter{{post.id}}" class="p-1 emphasis-font small">comments</span>
+  <span id="commentscounter{{post.id}}" class="p-1 emphasis-font small"></span>
   <div id="comments_list{{post.id}}" class="p-1 mt-1">
   </div>
   {% load crispy_forms_tags %}
@@ -175,5 +175,5 @@
   </div>
   {% endif %}
 </div>
-
 <span id="modal_close_bottom"></span>
+<br><br>

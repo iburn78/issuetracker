@@ -27,9 +27,5 @@ To implement:
 -------------
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
-- image close-up page revise
 - share button / retweet button (as in Quora)
 - make comment report button (refer to other sites)
-
-
-

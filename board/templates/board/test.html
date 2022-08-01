@@ -5,4 +5,29 @@
 <div class="container-lg">100% wide until large breakpoint</div>
 <div class="container-xl">100% wide until extra large breakpoint</div>
 <div class="container-xxl">100% wide until extra extra large breakpoint</div>
+<p><button id="mdn_test_btn">Share MDN!</button></p>
+<p class="result"></p>
 {% endblock content %}
+
+{% block script %}
+<script>
+  const shareData = {
+    title: 'MDN',
+    text: 'Learn web development on MDN!',
+    url: 'https://developer.mozilla.org'
+  }
+  
+  const btn = document.getElementById('mdn_test_btn');
+  const resultPara = document.querySelector('.result');
+  
+  // Share must be triggered by "user activation"
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.share(shareData)
+      resultPara.textContent = 'MDN shared successfully'
+    } catch(err) {
+      resultPara.textContent = `Error: ${err}`
+    }
+  });
+</script>
+{% endblock script %}
