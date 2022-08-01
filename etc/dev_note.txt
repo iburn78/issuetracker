@@ -27,5 +27,6 @@ To implement:
 -------------
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
-- share button / retweet button (as in Quora)
-- make comment report button (refer to other sites)
+- share button 
+- make comment report button 
+- in post_detail page, make a link to both (back, and to card)

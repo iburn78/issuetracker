@@ -318,6 +318,21 @@
       tg.innerHTML = "";
     }
   }
+
+  async function share_post(event, post_id, prev) {
+    event.preventDefault();
+    shareData = {
+      title: 'IssueTracker', 
+      text: prev,
+      url: 'https://issuetracker.info/post/'+post_id.toString(), 
+    };
+    try {
+      await navigator.share(shareData)
+      console.log('post shared successfully');
+    } catch(err) {
+      console.log(`error: ${err}`);
+    };
+  }
   
 </script>
 
