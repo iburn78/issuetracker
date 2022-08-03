@@ -1,9 +1,10 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404, render
 from django.core.exceptions import PermissionDenied
+from django.contrib.auth.mixins import LoginRequiredMixin 
 from django.views.generic import ListView
 from django.views import View
-from ..models import Post, Comment
+from ..models import Post, Comment, Report
 from ..forms import CommentForm
 from django.http import JsonResponse
 
@@ -155,3 +156,34 @@ class CommentMgmtView(View):
             else:
                 return JsonResponse({}, status=400)
     
+
+class ReportView(LoginRequiredMixin, ListView):
+    model = Report
+    template_name = 'board/reports.html'
+    context_object_name = 'reports'
+
+    def get(self, request, *args, **kwargs): 
+        if request.user.is_public_card_manager:
+            return super().get(request, *args, **kwargs)
+        else:
+            raise PermissionDenied
+
+    def post(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
+            if not request.user.is_authenticated:
+                return JsonResponse({}, status=400)
+
+            request_type = request.POST.get('request_type')
+            user_id = request.POST.get('user_id')
+            target_id = request.POST.get('target_id')
+            content = request.POST.get('report_content')
+            report = Report()
+            report.reporter_id = user_id
+            report.content = content
+
+            if request_type == 'post': 
+                report.post_id = target_id
+            elif request_type == 'comment': 
+                report.comment_id = target_id
+            report.save()
+            return JsonResponse({}, status=200)

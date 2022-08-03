@@ -342,5 +342,30 @@
     };
   }
   
+  function submit_report(event, user_id, target_id, request_type) {
+    event.preventDefault();
+    let tg = document.getElementById('reportcontent_'+request_type+target_id)
+    if (tg.value == "") {
+      tg.focus();
+      return;
+    }
+    else{
+      let request = new XMLHttpRequest();
+      request.open("POST", "{% url 'report' %}", true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          alert('report submitted');
+        }; 
+      };
+      let reportForm = document.getElementById("reportform_"+request_type+target_id);
+      let formData = new FormData(reportForm);
+      formData.append('user_id', user_id);
+      formData.append('target_id', target_id);
+      formData.append('request_type', request_type);
+      reportForm.reset();
+      request.send(formData);
+    }
+  }
 </script>
 

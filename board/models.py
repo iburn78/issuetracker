@@ -175,4 +175,18 @@ class Comment(models.Model):
         return self.author.username + ": " + self.content[:50]
 
 
+class Report(models.Model):
+    reporter = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, blank=True, null=True, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, blank=True, null=True, on_delete=models.CASCADE) 
+    date_reported = models.DateTimeField(default=timezone.now)
+    content = models.TextField()
+    note = models.TextField(blank = True)
+    is_active = models.BooleanField(default=True)
+
+
+    
+
+
+
 

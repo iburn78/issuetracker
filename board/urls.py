@@ -25,6 +25,7 @@ urlpatterns = [
     path('post_update/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/<int:pk>/<int:img_no>', postimageview, name='postimage-view'),
+
     path('favicon.ico', RedirectView.as_view(url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
     path(join('media', POST_UPLOADED_IMGS, '<str:file>'), PostMediaView.as_view(), name='media-view'),
     path(join('media', POST_UPLOADED_IMGS_RESIZED, '<str:file>'), PostMediaView.as_view(), name='media-view'),
@@ -39,4 +40,5 @@ urlpatterns = [
     path('api/comment/<int:pk>/', CommentMgmtView.as_view(), name='comment-mgmt'),
     path('api/comment/counter/', comment_counter, name='comment-counter'),
     path('api/reply/counter/', reply_counter, name='reply-counter'),
+    path('reports/', ReportView.as_view(), name = 'report'),
 ]

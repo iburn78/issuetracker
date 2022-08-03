@@ -1,0 +1,18 @@
+{% extends "board/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      {% for r in reports %}
+        {{r.reporter}}
+        {{r.post}}
+        {{r.comment}}
+        {{r.date_reported}}
+        {{r.content}}
+        {{r.is_active}}
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

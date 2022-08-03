@@ -29,4 +29,9 @@ To implement:
 - author / tag / mylikes search
 - make post, comment report button / may need an report model / admin page 
 - private post: move to public button (use people icon), share button (move and share)
-- how to classify many submit buttons when there are many form
+
+- long text without break won't wrap
+- image viewer does not work in public card post
+- report_view -> make a separate view / delete ... implement functions
+- implement comment reports
+- improve report submitted note.... 

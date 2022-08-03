@@ -59,6 +59,10 @@
               {% else %}
               <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'register' %}"><img src="{% static 'icons/person-plus-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">register</span></a>
               {% endif %}
+              {% if user.is_authenticated and user.is_public_card_manager %}
+              <hr>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'report' %}"><span class="nav-item small">manage reports</span></a>
+              {% endif %}
             </div>
           </li>
           <li class="nav-link"></li>
