@@ -10,7 +10,7 @@
   <script>
   render_comments({{post.id}}, 1);
   document.getElementById("modal_close_top").innerHTML = '<button type="button" class="float-end btn-close me-2" onclick="javascript:history.go(-1);"></button>';
-  document.getElementById("modal_close_middle").innerHTML = '<a href="javascript:history.back()" class="text-muted small float-end">close</a>';
+  document.getElementById("modal_close_middle").innerHTML = `<a href="{% url 'card-content' post.card.id %}" class="text-muted small float-end">back to card</a>`;
   // document.getElementById("modal_close_bottom").innerHTML = '<a href="javascript:history.back()" class="text-muted small float-end mt-2 mx-3">close</a><br><br>';
   </script>
 {% endblock script %}

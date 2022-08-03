@@ -27,6 +27,6 @@ To implement:
 -------------
 - keyword search (refer to previous implement)
 - author / tag / mylikes search
-- share button 
-- make comment report button 
-- in post_detail page, make a link to both (back, and to card)
+- make post, comment report button / may need an report model / admin page 
+- private post: move to public button (use people icon), share button (move and share)
+- how to classify many submit buttons when there are many form

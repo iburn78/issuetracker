@@ -4,6 +4,9 @@
 <div id="divider-bar-narrower"></div>
 <div class="bg-gray-100">
   <span class="KR-font">{{ comment.author }}</span>
+  {% if comment.post.author == comment.author %}
+  <img src="{% static 'icons/star.svg' %}" width="14", height="14">
+  {% endif %}
   <small class="float-end text-muted">{{ comment.date_posted|date:"y-m-d H:i" }}</small>
   {% if comment.author == user %}
   <a href="" class="me-3 float-end small text-muted" data-bs-toggle="collapse" data-bs-target="#delete_comment{{comment.id}}">del</a>

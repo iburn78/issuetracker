@@ -5,7 +5,7 @@
   <div class="col-7 p-0">
     <div class="clearfix">
       <img class="mt-1 ms-1 float-start user-image-small me-2" src="{{ post.author.profile.image.url }}">
-      <a class="" href="">{{ post.author }}</a><br>
+      <a class="text-dark fw-bold" href="">{{ post.author }}</a><br>
       <small class="text-muted">{{ post.date_posted|date:"M d, Y H:i" }}</small>
     </div>
   </div>
@@ -126,10 +126,13 @@
   {% endif %}
 </div>
 
-<div class="row m-0 mt-1 bg-yellow-100">
+<div class="row m-0 mt-1 bg-yellow-200">
   <div class="col p-1 m-0">
+    {% if post.card.is_public %}
+    <a href class="p-0 m-0 ms-2 me-1 float-end" data-bs-toggle="collapse" data-bs-target="#post_options{{post.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>
+    
+    
     <span id="vote_meter_post{{post.id}}">
-      {% if post.card.is_public %}
       {% if user.is_authenticated %}
       <span class="float-end me-1">{% if post.dislikes.count > 0 %}{{ post.dislikes.count }}{%endif%}</span>
       {% if user in post.dislikes.all %}
@@ -149,13 +152,26 @@
       <span class="float-end me-1">{% if post.likes.count > 0 %}{{ post.likes.count }}{%endif%}</span>
       <span class="p-0 m-0 float-end"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
       {% endif %}
-      {% endif %}
     </span>
-    {% if post.card.is_public %}
     <a href class="p-0 m-0 me-3 float-end" onclick="share_post(event, {{post.id}}, '{{post.get_preview_text|truncatechars:30}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
     {% endif %}
   </div>
 </div>
+
+<div class="row m-0">
+  <div class="collapse p-0" id="post_options{{post.id}}">
+    <div class="d-flex align-items-center justify-content-end">
+      <span class="me-2" onclick="">report</span>
+      <form method="POST" action="">
+        {% csrf_token %}
+        <input type="text" class="form-control" name="report_content" id="id_report_content">
+      </form>
+      <input type="submit" class="btn btn-sm btn-outline-danger me-2 my-1" value="confirm">
+      <button type="button" data-bs-toggle="collapse" data-bs-target="#post_options{{post.id}}" class="btn btn-sm btn-outline-dark me-1 my-1">no</button>
+    </div>
+  </div>
+</div>
+
 <div class="row m-0 p-0">
   <div class="col m-0 p-0">
     <span id="modal_close_middle"></span>

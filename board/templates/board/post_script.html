@@ -92,10 +92,14 @@
         let num_allreplies = JSON.parse(this.responseText).allrepliescount;
         let num_comments = JSON.parse(this.responseText).commentscount;
         if (num_allreplies>0){
-          allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> ` + num_allreplies;
+          if (allrepliescounter != null) {
+            allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> ` + num_allreplies;
+          }
         }
         else{
-          allrepliescounter.innerHTML = "";
+          if (allrepliescounter != null) {
+            allrepliescounter.innerHTML = "";
+          }
         }
         if (num_comments==1){
           commentscounter.innerHTML = num_comments + " comment";
@@ -124,10 +128,14 @@
         let repliescounter1 = document.getElementById('repliescounter1_'+comment_id);
         let repliescounter2 = document.getElementById('repliescounter2_'+comment_id);
         if (dict.allrepliescount>0){
-          allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> ` + dict.allrepliescount;
+          if (allrepliescounter != null) {
+            allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> ` + dict.allrepliescount;
+          }
         }
         else{
-          allrepliescounter.innerHTML = "";
+          if (allrepliescounter != null) {
+            allrepliescounter.innerHTML = "";
+          }
         }
         if (dict.repliescount==1){
           repliescounter1.innerHTML = "(" + dict.repliescount + ")";
