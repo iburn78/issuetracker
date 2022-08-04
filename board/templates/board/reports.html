@@ -4,14 +4,32 @@
 <div class="container-fluid">
   <div class="row">
     <div class="col">
-      {% for r in reports %}
-        {{r.reporter}}
-        {{r.post}}
-        {{r.comment}}
-        {{r.date_reported}}
-        {{r.content}}
-        {{r.is_active}}
-      {% endfor %}
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">reporter</th>
+            <th scope="col">type</th>
+            <th scope="col">target</th>
+            <th scope="col">date</th>
+            <th scope="col">content</th>
+            <th scope="col">active</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in reports %}
+          <tr>
+            <th scope="row">{{r.id}}</th>
+            <td>{{r.reporter}}</td>
+            <td>{{r.date_reported}}</td>
+            <td>{{r.content}}</td>
+            <td>{{r.post}}</td>
+            <td>{{r.comment}}</td>
+            <td>{{r.is_active}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

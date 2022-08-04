@@ -71,31 +71,31 @@
           <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
         </div>
         <div class="carousel-item">
-          <a href="{{post.image2.url}}"><img src="{{ post.image2s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'postimage-view' post.id 2 %}"><img src="{{ post.image2s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% if post.image3s %}
         <div class="carousel-item">
-          <a href="{{post.image3.url}}"><img src="{{ post.image3s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'postimage-view' post.id 3 %}"><img src="{{ post.image3s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image4s %}
         <div class="carousel-item">
-          <a href="{{post.image4.url}}"><img src="{{ post.image4s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'postimage-view' post.id 4 %}"><img src="{{ post.image4s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image5s %}
         <div class="carousel-item">
-          <a href="{{post.image5.url}}"><img src="{{ post.image5s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'postimage-view' post.id 5 %}"><img src="{{ post.image5s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image6s %}
         <div class="carousel-item">
-          <a href="{{post.image6.url}}"><img src="{{ post.image6s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'postimage-view' post.id 6 %}"><img src="{{ post.image6s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image7s %}
         <div class="carousel-item">
-          <a href="{{post.image7.url}}"><img src="{{ post.image7s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'postimage-view' post.id 7 %}"><img src="{{ post.image7s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
       </div>
@@ -114,7 +114,7 @@
   </div>
   {% elif post.image1s %}
   <div class="col-lg-6 p-0 mt-1">
-    <a href="{{post.image1.url}}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
+    <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
   <div class="col-lg-6 p-0">
     <p class="article-content m-2">{{ post.content }}</p>
@@ -158,21 +158,28 @@
   </div>
 </div>
 
+<!-- post options collapse part start -->
 <div class="collapse p-0" id="post_options{{post.id}}">
   {% if user.is_authenticated %}
-  <form method="POST" id="reportform_post{{post.id}}" onsubmit="submit_report(event, {{user.id}}, {{post.id}}, 'post')">
+  <form method="POST" id="reportform_post{{post.id}}" autocomplete="off" onsubmit="submit_report(event, {{user.id}}, {{post.id}}, 'post')">
     {% csrf_token %}
     <div class="row m-1 p-0 d-flex justify-content-end">
       <div class="col-6 m-0 p-0 me-1">
         <input type="text" class="form-control form-control-sm" placeholder="report issues" name="report_content" id="reportcontent_post{{post.id}}">
       </div>
       <div class="col-auto m-0 p-0">
-        <input type="submit" class="btn btn-sm btn-outline-danger" value="submit">
+        <input type="submit" class="btn btn-sm btn-outline-danger" value="submit" data-bs-toggle="collapse" data-bs-target="#post_options{{post.id}}">
       </div>
     </div>
   </form>
   {% endif %}
 </div>
+<div class="row m-0 p-0">
+  <div class="col m-0 p-0">
+    <span id="reportresult_post{{post.id}}" class="float-end mx-2 text-muted"></span>
+  </div>
+</div>
+<!-- post options collapse part end -->
 
 <div class="row m-0 p-0">
   <div class="col m-0 p-0">

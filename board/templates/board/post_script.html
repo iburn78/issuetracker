@@ -351,11 +351,11 @@
     }
     else{
       let request = new XMLHttpRequest();
-      request.open("POST", "{% url 'report' %}", true);
+      request.open("POST", "{% url 'reports' %}", true);
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          alert('report submitted');
+          document.getElementById('reportresult_'+request_type+target_id).innerText = 'report submitted to IssueTracker';
         }; 
       };
       let reportForm = document.getElementById("reportform_"+request_type+target_id);

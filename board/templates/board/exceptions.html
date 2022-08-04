@@ -1,0 +1,13 @@
+{% extends "board/base.html" %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+      {% for e in exceptions %}
+        {{e}}<br>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock content %}

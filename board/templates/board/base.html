@@ -47,7 +47,7 @@
           <a class="nav-item nav-link ms-2" href="{% url 'login' %}?next={{request.path}}"><img src="{% static 'icons/box-arrow-in-down.svg' %}" class="nav-item" width="22" height="22"> <span class="nav-item small">login</span></a>
           {% endif %}
           <li class="dropdown">
-            <a class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">
+            <a href class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">
               <img class="nav-item" src="{% static 'icons/intersect.svg' %}" width="22" height="22"> 
               <span class="nav-item small">more</span>
             </a>
@@ -59,12 +59,20 @@
               {% else %}
               <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'register' %}"><img src="{% static 'icons/person-plus-fill.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">register</span></a>
               {% endif %}
-              {% if user.is_authenticated and user.is_public_card_manager %}
-              <hr>
-              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'report' %}"><span class="nav-item small">manage reports</span></a>
-              {% endif %}
             </div>
           </li>
+          {% if user.is_authenticated and user.is_public_card_manager %}
+          <li class="dropdown">
+            <a href class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">
+              <img class="nav-item" src="{% static 'icons/nut.svg' %}" width="22" height="22"> 
+              <span class="nav-item small">admin</span>
+            </a>
+            <div class="dropdown-menu bg-blue-200">
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'reports' %}"><span class="nav-item small">manage reports</span></a>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'exceptions' %}"><span class="nav-item small">exceptions</span></a>
+            </div>
+          </li>
+          {% endif %}
           <li class="nav-link"></li>
           <form action='/' class="d-flex" method="POST" autocomplete="off">
             {% csrf_token %}

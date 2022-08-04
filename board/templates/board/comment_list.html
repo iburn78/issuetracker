@@ -44,6 +44,9 @@
 </div>
 <div class="row m-0">
   <div class="col p-0 mb-2">
+    {% if user.is_authenticated %}
+    <a href class="p-0 m-0 ms-2 me-1 float-end" data-bs-toggle="collapse" data-bs-target="#comment_options{{comment.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="18" height="18"></a>
+    {% endif %}
     <span id="vote_meter_comment{{comment.id}}">
       {% if comment.post.card.is_public %}
       <span class="float-end">{% if comment.dislikes.count > 0 %}{{ comment.dislikes.count }}{%endif%}</span>
@@ -75,6 +78,31 @@
   </div>
 </div>
 
+
+<!-- comment options collapse part start -->
+
+<div class="collapse p-0" id="comment_options{{comment.id}}">
+  {% if user.is_authenticated %}
+  <form method="POST" id="reportform_comment{{comment.id}}" autocomplete="off" onsubmit="submit_report(event, {{user.id}}, {{comment.id}}, 'comment')">
+    {% csrf_token %}
+    <div class="row m-1 p-0 d-flex justify-content-end">
+      <div class="col-6 m-0 p-0 me-1">
+        <input type="text" class="form-control form-control-sm" placeholder="report issues" name="report_content" id="reportcontent_comment{{comment.id}}">
+      </div>
+      <div class="col-auto m-0 p-0">
+        <input type="submit" class="btn btn-sm btn-outline-danger" value="submit" data-bs-toggle="collapse" data-bs-target="#comment_options{{comment.id}}">
+      </div>
+    </div>
+  </form>
+  {% endif %}
+</div>
+<div class="row m-0 p-0">
+  <div class="col m-0 p-0">
+    <span id="reportresult_comment{{comment.id}}" class="float-end mx-2 text-muted"></span>
+  </div>
+</div>
+
+<!-- comment options collapse part end -->
 
 <!-- replies collapse part start -->
 

@@ -2,6 +2,7 @@ from django.urls import path
 from .views.card_view import *
 from .views.post_view import *
 from .views.comment_view import *
+from .views.report_view import *
 from django.conf import settings
 from django.views.generic import RedirectView
 from .tools import *
@@ -40,5 +41,6 @@ urlpatterns = [
     path('api/comment/<int:pk>/', CommentMgmtView.as_view(), name='comment-mgmt'),
     path('api/comment/counter/', comment_counter, name='comment-counter'),
     path('api/reply/counter/', reply_counter, name='reply-counter'),
-    path('reports/', ReportView.as_view(), name = 'report'),
+    path('reports/', ReportView.as_view(), name = 'reports'),
+    path('exceptions/', exception_view, name = 'exceptions'),
 ]
