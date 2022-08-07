@@ -140,7 +140,7 @@
           
           <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
             <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
-            <p class="article-content text-dark mb-1">{{ post.get_preview_text }}</p>
+            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text }}</p>
           </a>
           <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}

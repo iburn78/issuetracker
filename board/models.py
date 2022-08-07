@@ -180,13 +180,13 @@ class Report(models.Model):
     post = models.ForeignKey(Post, blank=True, null=True, on_delete=models.CASCADE)
     comment = models.ForeignKey(Comment, blank=True, null=True, on_delete=models.CASCADE) 
     date_reported = models.DateTimeField(default=timezone.now)
-    content = models.TextField()
+    content = models.TextField(blank = True)
     note = models.TextField(blank = True)
-    is_active = models.BooleanField(default=True)
+    request_type = models.CharField(blank = True, max_length=100)
 
 
+def report_count(): 
+    return Report.objects.all().count()
     
-
-
 
 

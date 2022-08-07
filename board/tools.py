@@ -159,3 +159,9 @@ def exception_log(text):
     with open(os.path.join(logfilepath, 'exception_log.txt'), 'a') as logfile:
         now = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
         logfile.write(now + " " + text + "\n")
+
+
+def exception_count(): 
+    exp_file = os.path.join(settings.BASE_DIR, 'etc/exception_log.txt')
+    with open(exp_file) as exp_log:
+        return len(exp_log.readlines())

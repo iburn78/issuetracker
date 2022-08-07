@@ -26,6 +26,10 @@
       <a class="navbar-brand" href="/"><small><b>IssueTracker</b><i>-beta</i></small>
         {% if user.is_authenticated %}
         <span class="user-id-font ms-2">({{user.username}})</span>
+        {% if user.is_public_card_manager %}
+        <span id="mainbase_alert_area_rep" class="ms-1 fw-bold fs-6 text-danger"></span>
+        <span id="mainbase_alert_area_exp" class="ms-1 fw-bold fs-6 text-danger"></span>
+        {% endif %}
         {% endif %}
       </a>
       <button id="navbar-toggle-button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
@@ -68,8 +72,8 @@
               <span class="nav-item small">admin</span>
             </a>
             <div class="dropdown-menu bg-blue-200">
-              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'reports' %}"><span class="nav-item small">manage reports</span></a>
-              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'exceptions' %}"><span class="nav-item small">exceptions</span></a>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'reports' %}"><span class="nav-item small" id="mainbase_rep_count">no report</span></a>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'exceptions' %}"><span class="nav-item small" id="mainbase_exp_count">no exception</span></a>
             </div>
           </li>
           {% endif %}
@@ -82,7 +86,7 @@
       </div>
     </div>
   </nav>
-
+  
   <main role="main" class="my-1">
     <div class="container-fluid">
       {% if messages %}
@@ -103,5 +107,41 @@
   </footer>
   <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   
   {% block script %}{% endblock script %}
+  {% if user.is_authenticated and user.is_public_card_manager %}
+  <script>
+    function add_report_count() {
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'report-counter' %}?request_type=count", true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          let count = JSON.parse(this.responseText).report_count;
+          if (count >0) {
+            document.getElementById("mainbase_rep_count").innerText = "reports ("+count+")";
+            document.getElementById("mainbase_alert_area_rep").innerText = "REP";
+          }
+        }
+      };
+      request.send();
+    }
+    function add_exception_count() {
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'exception-counter' %}?request_type=count", true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          let count = JSON.parse(this.responseText).exception_count;
+          if (count >0) {
+            document.getElementById("mainbase_exp_count").innerText = "exceptions ("+count+")";
+            document.getElementById("mainbase_alert_area_exp").innerText = "EXP";
+          }
+        }
+      };
+      request.send();
+    }
+    add_report_count();
+    add_exception_count();
+  </script>
+  {% endif %} 
 </body> 
 </html>

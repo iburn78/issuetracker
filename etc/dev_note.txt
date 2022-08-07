@@ -4,6 +4,7 @@ USER TIER:
     * E.g., no limit in number of cards... 
     * E.g., right to write in any public cards... etc...
 - Public Card Manager: manages public cards / can delete comments, replies
+- Public Card Manager: manages reports / manage exceptions (exception handling may need to tranfer to staff/superuser)
 - Staff / Superuser: no specific privilage assigned
 
 - Official/Public card status cannot be changed (implemented)
@@ -29,9 +30,3 @@ To implement:
 - author / tag / mylikes search
 - make post, comment report button / may need an report model / admin page 
 - private post: move to public button (use people icon), share button (move and share)
-
-- long text without break won't wrap
-- image viewer does not work in public card post
-- report_view -> make a separate view / delete ... implement functions
-- implement comment reports
-- improve report submitted note.... 

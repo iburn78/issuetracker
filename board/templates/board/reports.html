@@ -1,19 +1,18 @@
 {% extends "board/base.html" %}
-
 {% block content %}
+{% load static %}
 <div class="container-fluid">
   <div class="row">
     <div class="col">
       <table class="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">reporter</th>
-            <th scope="col">type</th>
+            <th scope="col">id</th>
+            <th scope="col">user</th>
             <th scope="col">target</th>
             <th scope="col">date</th>
             <th scope="col">content</th>
-            <th scope="col">active</th>
+            <th scope="col">action</th>
           </tr>
         </thead>
         <tbody>
@@ -21,16 +20,118 @@
           <tr>
             <th scope="row">{{r.id}}</th>
             <td>{{r.reporter}}</td>
-            <td>{{r.date_reported}}</td>
+            <td>
+            {% if r.request_type == 'post' %}
+              <a href="{% url 'post-detail' r.post.id %}">p{{r.post.id}}</a>
+            {% elif r.comment.reply_to == None %}
+              <a href="{% url 'post-detail' r.post.id %}">p{{r.post.id}}</a>-c{{r.comment.id}}
+              <a href class="ms-2" data-bs-toggle="collapse" data-bs-target="#rbody{{r.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>
+            {% elif r.comment.rtr == None %}
+              <a href="{% url 'post-detail' r.post.id %}">p{{r.post.id}}</a>-c{{r.comment.reply_to.id}}-r{{ r.comment.id }}
+              <a href class="ms-2" data-bs-toggle="collapse" data-bs-target="#rbody{{r.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>
+            {% else %}
+              <a href="{% url 'post-detail' r.post.id %}">p{{r.post.id}}</a>-c{{r.comment.reply_to.id}}-r{{ r.comment.rtr.id }}-rtr{{ r.comment.id }}
+              <a href class="ms-2" data-bs-toggle="collapse" data-bs-target="#rbody{{r.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>
+            {% endif %}
+              <a class="float-end" href data-bs-toggle="modal" onclick="delete_target('{{r.request_type}}', {{r.post.id}}, {{r.comment.id}})" data-bs-target="#del_target_modal">del</a>
+            </td>
+            <td>{{r.date_reported |date:"M d, Y H:i" }}</td>
             <td>{{r.content}}</td>
-            <td>{{r.post}}</td>
-            <td>{{r.comment}}</td>
-            <td>{{r.is_active}}</td>
+            <td>
+              <a href data-bs-toggle="modal" onclick="delete_report({{r.id}})" data-bs-target="#del_target_modal">del rep</a>
+            </td>
           </tr>
           {% endfor %}
         </tbody>
       </table>
+      {% for r in reports %}
+      <div class="collapse m-0 p-0 mb-2" id="rbody{{r.id}}">
+        <div class="row">
+          <div class="col">
+            <p class="m-0 p-0 fw-bold">id #{{ r.id }}:<a href class="ms-2 btn btn-sm btn-close" data-bs-toggle="collapse" data-bs-target="#rbody{{r.id}}"></a></p> 
+            {% if r.comment.reply_to != None %}
+            <p class="m-0 p-0">{{r.comment.reply_to.id}}: {{r.comment.reply_to.content}}</p>
+            {% endif %}
+            {% if r.comment.rtr != None %}
+            <p class="m-0 p-0">{{r.comment.rtr.id}}: {{r.comment.rtr.content}}</p>
+            {% endif %}
+            <p class="m-0 p-0">{{r.comment.id}}: {{r.comment.content}}</p>
+            <p class="m-0 p-0">rep: {{r.content}}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+      <div class="modal" id="del_target_modal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body m-1 p-1">
+              <p id="dt_text"></p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">close</button>
+              <form action="{% url 'reports' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="dt_modal_ttype" name="ttype" value="">
+                <input type="hidden" id="dt_modal_tid" name="tid" value="">
+                <button type="submit" class="btn btn-sm btn-danger">confirm</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+
+<div class="row mt-3">
+  <div class="col d-flex justify-content-center align-items-center">
+    {% if is_paginated %}
+    {% if page_obj.has_previous %}
+    <a class="btn btn-outline-light mb-4 me-1" href="?page=1"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+    {% endif %}
+    
+    {% for num in page_obj.paginator.page_range %}
+    {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
+    <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+    {% elif page_obj.number == num %}
+    <a class="btn btn-outline-light text-dark mb-4 me-1" href="?page={{ num }}">{{ num }}</a>
+    {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
+    <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+    {% endif %}
+    {% endfor %}
+    
+    {% if page_obj.has_next %}
+    <a class="btn btn-outline-light mb-4 me-1" href="?page={{ page_obj.paginator.num_pages }}"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+    {% endif %}
+    {% endif %}
+  </div>
+</div>
+
 {% endblock content %}
+
+{% block script  %}
+<script>
+  function delete_target(rtype, pid, cid) {
+    let txt = document.getElementById("dt_text");
+    let ttype = document.getElementById("dt_modal_ttype");
+    let tid = document.getElementById("dt_modal_tid");
+    if (rtype == 'post') {
+      txt.innerHTML = "Delete " + rtype + "-" + pid + "?";
+      ttype.value = rtype;
+      tid.value = pid;
+    }else {
+      txt.innerHTML = "Delete " + rtype + "-" + cid + "?";
+      ttype.value = rtype;
+      tid.value = cid;
+    }
+  }
+  function delete_report(rid) {
+    let txt = document.getElementById("dt_text");
+    let ttype = document.getElementById("dt_modal_ttype");
+    let tid = document.getElementById("dt_modal_tid");
+    txt.innerHTML = "Delete report-" +rid+ "?";
+    ttype.value = 'report';
+    tid.value = rid;
+  }
+</script>
+{% endblock script %}

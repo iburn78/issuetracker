@@ -110,18 +110,18 @@
     </div>
   </div>
   <div class="col-lg-6 p-0">
-    <p class="article-content m-2">{{ post.content }}</p>
+    <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% elif post.image1s %}
   <div class="col-lg-6 p-0 mt-1">
     <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
   <div class="col-lg-6 p-0">
-    <p class="article-content m-2">{{ post.content }}</p>
+    <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% else %}
   <div class="col p-0">
-    <p class="article-content m-2">{{ post.content }}</p>
+    <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% endif %}
 </div>

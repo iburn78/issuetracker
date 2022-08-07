@@ -37,10 +37,8 @@
   {% if comment.rtr %}
   <p class="m-0 mt-1 p-0 px-1 btn btn-sm btn-outline text-danger bg-yellow-100" onclick="rtr_target_show({{comment.id}}, {{comment.rtr.id}})">@ {{ comment.rtr.author }}</p>
   <div class="mx-3 mb-1 text-muted" id="rtr_target_content{{comment.id}}"></div>
-
-
   {% endif %}
-  <pre class="mt-1 mb-2 body-font fs-6">{{ comment.content }}</pre>
+  <pre class="mt-1 mb-2 body-font fs-6 text-break">{{ comment.content }}</pre>
 </div>
 <div class="row m-0">
   <div class="col p-0 mb-2">

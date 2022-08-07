@@ -3,9 +3,21 @@
 {% block content %}
 <div class="container-fluid">
   <div class="row">
+    <div class="col d-flex align-items-center">
+      <p class="fw-bold">total {{ exceptions | length }} exceptions:</p>
+    </div>
+    <div class="col">
+      <form class="float-end" action="{% url 'exceptions' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="request_type" value="clear">
+        <button type="submit" class="btn btn-sm btn-danger">clear</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
     <div class="col">
       {% for e in exceptions %}
-        {{e}}<br>
+      {{e}}<br>
       {% endfor %}
     </div>
   </div>

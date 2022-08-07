@@ -2,7 +2,7 @@ from django.urls import path
 from .views.card_view import *
 from .views.post_view import *
 from .views.comment_view import *
-from .views.report_view import *
+from .views.admin_view import *
 from django.conf import settings
 from django.views.generic import RedirectView
 from .tools import *
@@ -26,6 +26,8 @@ urlpatterns = [
     path('post_update/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/<int:pk>/<int:img_no>', postimageview, name='postimage-view'),
+    path('reports/', ReportView.as_view(), name = 'reports'),
+    path('exceptions/', exception_view, name = 'exceptions'),
 
     path('favicon.ico', RedirectView.as_view(url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
     path(join('media', POST_UPLOADED_IMGS, '<str:file>'), PostMediaView.as_view(), name='media-view'),
@@ -41,6 +43,6 @@ urlpatterns = [
     path('api/comment/<int:pk>/', CommentMgmtView.as_view(), name='comment-mgmt'),
     path('api/comment/counter/', comment_counter, name='comment-counter'),
     path('api/reply/counter/', reply_counter, name='reply-counter'),
-    path('reports/', ReportView.as_view(), name = 'reports'),
-    path('exceptions/', exception_view, name = 'exceptions'),
+    path('api/report/counter', ReportView.as_view(), name = 'report-counter'),
+    path('api/exception/counter', exception_counter, name = 'exception-counter'),
 ]
