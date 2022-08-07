@@ -16,6 +16,7 @@ def random_user_img():
 class User(AbstractUser):
     is_VIP = models.BooleanField(default=False) # Not yet used... 
     is_public_card_manager = models.BooleanField(default=False)
+    is_in_private_mode = models.BooleanField(default=False)
 
 class Profile(models.Model): 
     user = models.OneToOneField(User, on_delete=models.CASCADE)

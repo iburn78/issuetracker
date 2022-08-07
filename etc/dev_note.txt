@@ -30,3 +30,5 @@ To implement:
 - author / tag / mylikes search
 - make post, comment report button / may need an report model / admin page 
 - private post: move to public button (use people icon), share button (move and share)
+- bottom part: logged in information and about/email etc... add explanation 
+- lots of things to sort out using private mode of user

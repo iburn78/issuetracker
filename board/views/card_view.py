@@ -27,9 +27,23 @@ def test(request):
 def about(request):
     return render(request, 'board/about.html')
 
+def user_mode_change(request):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
+        if not request.user.is_authenticated:
+            return JsonResponse({}, status=400)
+        to_mode = request.GET.get('to_mode')
+        if to_mode == "public":
+            request.user.is_in_private_mode = False
+        if to_mode == "private":
+            request.user.is_in_private_mode = True
+        request.user.save()
+        return JsonResponse({}, status=200)
+    else: 
+        return JsonResponse({}, status=400)
+
 class CardListView(ListView):
     model = Card
-    template_name = 'board/main.html'
+    template_name = 'board/main_public.html'
     context_object_name = 'cards'  # get_queryset result
     revisit = False
     card_list = False
@@ -66,7 +80,6 @@ class CardListView(ListView):
             search_word = request.POST.get('search_term')
             messages.info(self.request, f"Search Keyword {search_word} entered")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

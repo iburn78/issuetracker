@@ -14,6 +14,7 @@ urlpatterns = [
 
     path('', CardListView.as_view(revisit=False, card_list=True), name='main'),
     path('main/', CardListView.as_view(revisit=True, card_list=True), name='mainr'),
+    path('main/private/', CardListView.as_view(revisit=True, card_list=True, template_name='board/main_private.html'), name='mainp'),
     path('card_list/', CardListView.as_view(template_name="board/card_list.html", card_list=False), name='card-list'),
     path('card_select/', CardSelectView.as_view(), name='card-select'),
     path('about/', about, name='about'),
@@ -45,4 +46,5 @@ urlpatterns = [
     path('api/reply/counter/', reply_counter, name='reply-counter'),
     path('api/report/counter', ReportView.as_view(), name = 'report-counter'),
     path('api/exception/counter', exception_counter, name = 'exception-counter'),
+    path('api/user/modechange', user_mode_change, name = 'user-mode-change'),
 ]

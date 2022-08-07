@@ -1,38 +1,6 @@
 {% extends "board/base.html" %}
 {% block content %}
 {% load static %}
-{% if user.is_authenticated %}
-<div class="container-fluid p-1 pt-2">
-  <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> YOUR CARDS</p>
-  <div class="row m-0">
-    {% for card in cards %}
-    <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
-      <div class="card border-0">
-        {% if card.image %}
-        <img src="{{ card.image.url }}" class="card-img">
-        {% else %}
-        <div class="card-img"></div>
-        {% endif %}
-        <a href="{% url 'card-content' card.id %}">
-          <div class="card-body text-dark p-2" style="background-color: {{ card.card_color }};">
-            <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
-            <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
-            <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
-            <p class="card-text card-text-size">
-              {{ card.desc }}
-            </p>
-          </div>
-        </a>
-      </div>
-    </div>
-    {% endfor %}
-  </div>
-</div>
-{% endif %}
-
-{% if user.is_authenticated %}
-<div id="divider-bar" class="my-2"></div>
-{% endif %}
 
 <div class="container-fluid p-1 pt-2">
   <p class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>

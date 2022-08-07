@@ -1009,12 +1009,6 @@ main::after {
   margin-right: -4px;
 }
 
-.user-id-font {
-  font-family: 'Secular One', sans-serif;
-  color: #0a58ca;
-  font-size: medium;
-}
-
 .dropdown-menu > a:hover {
   background-image: none;
   background-color: #cfe2ff;

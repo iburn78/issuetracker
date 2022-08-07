@@ -21,25 +21,33 @@
   <title>IssueTracker</title>
 </head>
 <body class="d-flex flex-column h-100" onload="init()">
-  <nav class="navbar navbar-expand-lg navbar-light bg-blue-200 m-0 py-1">
+  <nav class="navbar navbar-expand-lg {% if user.is_in_private_mode %}navbar-dark bg-dark{% else %}navbar-light bg-blue-300{% endif %} m-0 py-1">
     <div class="container-fluid m-0 p-0 px-1">
-      <a class="navbar-brand" href="/"><small><b>IssueTracker</b><i>-beta</i></small>
-        {% if user.is_authenticated %}
-        <span class="user-id-font ms-2">({{user.username}})</span>
+      <div class="navbar-brand">
+        <span><small><b>IssueTracker</b><i>-beta</i></small></span>
         {% if user.is_public_card_manager %}
-        <span id="mainbase_alert_area_rep" class="ms-1 fw-bold fs-6 text-danger"></span>
-        <span id="mainbase_alert_area_exp" class="ms-1 fw-bold fs-6 text-danger"></span>
+        <span id="mainbase_alert_area_rep" class="ms-2 fw-bold fs-6 text-danger"></span>
+        <span id="mainbase_alert_area_exp" class="ms-2 fw-bold fs-6 text-danger"></span>
         {% endif %}
-        {% endif %}
-      </a>
+      </div>
       <button id="navbar-toggle-button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarToggle">
+        <!-- Navbar Left Side -->
         <div class="navbar-nav me-auto">
         </div>
         <!-- Navbar Right Side -->
         <div class="navbar-nav">
+          {% if user.is_authenticated %}
+          <div class="p-0 m-0 d-flex align-items-center">
+            {% if user.is_in_private_mode %}
+            <a href="{% url 'mainr' %}" class="nav-item fw-bold btn btn-outline bg-yellow-500 btn-sm" onclick="toggle_user_mode('public')">public cards</a>
+            {% else %}
+            <a href="{% url 'mainp' %}" class="nav-item btn btn-primary btn-sm" onclick="toggle_user_mode('private')">{{ user.username }} - my cards</a>
+            {% endif %}
+          </div>
+          {% endif %}
           {% if card_list %}
           <a class="nav-item nav-link ms-2" href="{% url 'card-list' %}"><img src="{% static 'icons/list-ul.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">list</span></a>
           {% else %}
@@ -109,6 +117,17 @@
   {% block script %}{% endblock script %}
   {% if user.is_authenticated and user.is_public_card_manager %}
   <script>
+    function toggle_user_mode(to_mode) {
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'user-mode-change' %}?to_mode="+to_mode, true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+        }
+      };
+      request.send();
+    }
+    
     function add_report_count() {
       let request = new XMLHttpRequest();
       request.open("GET", "{% url 'report-counter' %}?request_type=count", true);
