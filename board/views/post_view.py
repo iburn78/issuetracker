@@ -11,7 +11,6 @@ from django.views.generic import (
 )
 from django.views import View
 
-from users.models import User
 from ..models import Card, Post, Comment
 from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5

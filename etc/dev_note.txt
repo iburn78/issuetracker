@@ -32,3 +32,11 @@ To implement:
 - private post: move to public button (use people icon), share button (move and share)
 - bottom part: logged in information and about/email etc... add explanation 
 - lots of things to sort out using private mode of user
+- need to fix session!!!!! login-recommend
+
+<p>IssueTracker lets tracking of various issues that we face everyday. The focus is on &quot;I&quot; rather than &quot;others&quot;</p>
+<p>As we advance through stages of our lives, environment/job/interest/network changes, responsibilities/rights/duties change, knowledge/belief/way of thinking changes, and as a result, we come to think of variety of topics in different ways and let them pass through our minds rather than building them up on another</p>
+<p>IssueTracker is intended to help memorizing what &quot;the wise I in the past&quot; thought on various topics, help communicating with &quot;the wise I in the past&quot;, and help advancing &quot;the current I&quot; on current issues</p>
+<p>IssueTracker는 다양한 내 삶의 Issue들을 Tracking하는 공간입니다. “남&quot;보다는 &quot;나&quot;에게 초점이 맞추어져 있습니다.</p>
+<p>우리는 시간이 흐르면서 삶의 단계가 높아져 감에 따라, 환경/직업/관심/인간관계가 변하게 되고, 책임/권한/의무가 변하게 되고, 알고있는 것/믿고있는 것/생각하는 방식이 달라지게 되며, 수없이 많은 생각들을 하고 흘려 보내고 있습니다.</p>
+<p>IssueTracker는 과거의 현명한 나를 기록하는데 도움을 주고자 하고, 과거와 현재의 내가 상호소통 하는데, 그리고 현재의 내가 진보해 나가는데 도움을 주고자 하는 “나”를 위한 곳입니다.</p>

@@ -102,11 +102,11 @@ class MyLogoutView(LogoutView):
         if request.user.is_authenticated:
             return super().setup(request, *args, **kwargs)
         else:
-            return redirect('mainr')
+            return redirect('main')
 
     def get(self, request, *args, **kwargs):
         messages.success(self.request, "you have been logged-out")
-        return redirect('mainr')
+        return redirect('main')
 
 
 class MyPasswordResetView(PasswordResetView):
@@ -125,7 +125,7 @@ class MyPasswordResetDoneView(PasswordResetDoneView):
             messages.success(
                 self.request, "an email has been sent with instructions to reset your password")
             self.request.session['password_reset_requested'] = False
-            return redirect('mainr')
+            return redirect('main')
         else:
             raise PermissionDenied
 
@@ -141,6 +141,6 @@ class MyPasswordResetCompleteView(PasswordResetCompleteView):
         if self.request.session.get('password_reset_completed', False) == True:
             messages.success(self.request, "your password has been set")
             self.request.session['password_reset_completed'] = False
-            return redirect('mainr')
+            return redirect('main')
         else:
             raise PermissionDenied

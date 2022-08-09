@@ -12,9 +12,7 @@ from os.path import join
 urlpatterns = [
     path('test/', test, name='test'),
 
-    path('', CardListView.as_view(revisit=False, card_list=True), name='main'),
-    path('main/', CardListView.as_view(revisit=True, card_list=True), name='mainr'),
-    path('main/private/', CardListView.as_view(revisit=True, card_list=True, template_name='board/main_private.html'), name='mainp'),
+    path('', CardListView.as_view(card_list=True), name='main'),
     path('card_list/', CardListView.as_view(template_name="board/card_list.html", card_list=False), name='card-list'),
     path('card_select/', CardSelectView.as_view(), name='card-select'),
     path('about/', about, name='about'),

@@ -20,6 +20,7 @@ from django.views.static import serve
 from ..tools import *
 import os
 from django.http import JsonResponse, HttpResponseRedirect
+from django.core.exceptions import PermissionDenied
 
 def test(request):
     return render(request, 'board/test.html')
@@ -28,24 +29,16 @@ def about(request):
     return render(request, 'board/about.html')
 
 def user_mode_change(request):
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
-        if not request.user.is_authenticated:
-            return JsonResponse({}, status=400)
-        to_mode = request.GET.get('to_mode')
-        if to_mode == "public":
-            request.user.is_in_private_mode = False
-        if to_mode == "private":
-            request.user.is_in_private_mode = True
-        request.user.save()
-        return JsonResponse({}, status=200)
-    else: 
-        return JsonResponse({}, status=400)
+    if not request.user.is_authenticated:
+        return PermissionDenied
+    request.user.is_in_private_mode = not request.user.is_in_private_mode
+    request.user.save()
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 class CardListView(ListView):
     model = Card
-    template_name = 'board/main_public.html'
+    template_name = 'board/main.html'
     context_object_name = 'cards'  # get_queryset result
-    revisit = False
     card_list = False
 
     def post(self, request, *args, **kwargs):
@@ -92,10 +85,11 @@ class CardListView(ListView):
         if self.request.user.is_authenticated:
             return super().get_queryset().filter(owner=self.request.user).filter(is_public=False).order_by('-card_order')
         else:
-            if self.request.session.get('login_recommend', True) and not self.revisit:
+            if self.request.session.get('login_recommend', True):
                 messages.info(
                     self.request, "IssueTracker is best to use when logged in")
                 self.request.session['login_recommend'] = False
+            
             return super().get_queryset().none()
 
 

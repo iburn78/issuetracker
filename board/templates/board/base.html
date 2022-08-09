@@ -25,9 +25,12 @@
     <div class="container-fluid m-0 p-0 px-1">
       <div class="navbar-brand">
         <span><small><b>IssueTracker</b><i>-beta</i></small></span>
+        {% if user.is_in_private_mode %}
+        <span class="fw-bold fs-6 text-danger">private</span>
+        {% endif %}
         {% if user.is_public_card_manager %}
-        <span id="mainbase_alert_area_rep" class="ms-2 fw-bold fs-6 text-danger"></span>
-        <span id="mainbase_alert_area_exp" class="ms-2 fw-bold fs-6 text-danger"></span>
+        <span id="mainbase_alert_area_rep" class="fw-bold fs-6 text-danger"></span>
+        <span id="mainbase_alert_area_exp" class="fw-bold fs-6 text-danger"></span>
         {% endif %}
       </div>
       <button id="navbar-toggle-button" class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarToggle">
@@ -42,16 +45,16 @@
           {% if user.is_authenticated %}
           <div class="p-0 m-0 d-flex align-items-center">
             {% if user.is_in_private_mode %}
-            <a href="{% url 'mainr' %}" class="nav-item fw-bold btn btn-outline bg-yellow-500 btn-sm" onclick="toggle_user_mode('public')">public cards</a>
+            <a href="{% url 'user-mode-change' %}" class="nav-item fw-bold btn btn-outline bg-yellow-500 btn-sm">public cards</a>
             {% else %}
-            <a href="{% url 'mainp' %}" class="nav-item btn btn-primary btn-sm" onclick="toggle_user_mode('private')">{{ user.username }} - my cards</a>
+            <a href="{% url 'user-mode-change' %}" class="nav-item btn btn-primary btn-sm">{{ user.username }} - my cards</a>
             {% endif %}
           </div>
           {% endif %}
           {% if card_list %}
           <a class="nav-item nav-link ms-2" href="{% url 'card-list' %}"><img src="{% static 'icons/list-ul.svg' %}" class="nav-item" width="24" height="24"> <span class="nav-item small">list</span></a>
           {% else %}
-          <a class="nav-item nav-link ms-2" href="{% url 'mainr' %}"><img src="{% static 'icons/grid.svg' %}" class="nav-item" width="22" height="22"> <span class="nav-item small">cards</span></a>
+          <a class="nav-item nav-link ms-2" href="{% url 'main' %}"><img src="{% static 'icons/grid.svg' %}" class="nav-item" width="22" height="22"> <span class="nav-item small">cards</span></a>
           {% endif %}
           {% if user.is_authenticated %}
           <a class="nav-item nav-link ms-2" href="{% url 'logout' %}"><img src="{% static 'icons/box-arrow-up.svg' %}" class="nav-item" width="22" height="22"> <span class="nav-item small">logout</span></a>
@@ -99,7 +102,7 @@
     <div class="container-fluid">
       {% if messages %}
       {% for message in messages %}
-      <div class="alert alert-{{ message.tags }}">
+      <div class="alert alert-{{ message.tags }} m-2 p-2 px-4">
         {{ message }}
       </div>
       {% endfor %}
@@ -108,26 +111,16 @@
     </div>
     {% block content %}{% endblock content %}
   </main>
-  <footer class="footer mt-auto bg-blue-800 text-light">
+  <footer class="footer mt-auto bg-blue-900 text-light">
     <div class="container-fluid m-0 p-1">
-      <span class=""><a href="{% url 'about' %}" style="text-decoration: none; color: white;">about IssueTracker | </a><span class="small"> issuetree.tracker@gmail.com</span></span>
+      {{ user.username }}
+      <span class="float-end"><a href="{% url 'about' %}" style="text-decoration: none; color: white;">contact</a></span>
     </div>
   </footer>
   <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   
   {% block script %}{% endblock script %}
   {% if user.is_authenticated and user.is_public_card_manager %}
   <script>
-    function toggle_user_mode(to_mode) {
-      let request = new XMLHttpRequest();
-      request.open("GET", "{% url 'user-mode-change' %}?to_mode="+to_mode, true);
-      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      request.onreadystatechange = function() {
-        if(this.readyState === 4 && this.status === 200) {
-        }
-      };
-      request.send();
-    }
-    
     function add_report_count() {
       let request = new XMLHttpRequest();
       request.open("GET", "{% url 'report-counter' %}?request_type=count", true);
