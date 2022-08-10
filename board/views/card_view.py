@@ -39,7 +39,6 @@ class CardListView(ListView):
     model = Card
     template_name = 'board/main.html'
     context_object_name = 'cards'  # get_queryset result
-    card_list = False
 
     def post(self, request, *args, **kwargs):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
@@ -78,7 +77,6 @@ class CardListView(ListView):
         context = super().get_context_data(**kwargs)
         public_cards = Card.objects.filter(is_public=True).order_by('-card_order')
         context['public_cards'] = public_cards
-        context['card_list'] = self.card_list
         return context
 
     def get_queryset(self):

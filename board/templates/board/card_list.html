@@ -4,11 +4,11 @@
 {% if user.is_authenticated %}
 <div class="container-fluid m-0 p-0">
   {% if card_select_for_new_post %}
-  <input type="button" class="btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
-  <p><b class="text-red-600">Choose a card for your new post</b></p>
-  {% if not cards %}
-  <div class="alert alert-danger" role="alert">
-    Create your private card <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}"></a>
+  <input type="button" class="me-1 btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
+  <p><b class="text-red-600 ms-1">Choose a card for your new post</b></p>
+  {% if not cards and user.is_in_private_mode %}
+  <div class="alert alert-danger p-2 m-1" role="alert">
+    Create your private card first <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}" width="24" height="24"></a>
   </div>
   {% endif %}
   {% if not public_cards and user.is_public_card_manager %}
@@ -17,6 +17,7 @@
   </div>
   {% endif %}
   {% endif %}
+  {% if user.is_in_private_mode %}
   <p class="emphasis-font px-1" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> MY CARDS</p>
   <div class="row m-0 p-0">
     {% for card in cards %}
@@ -42,12 +43,20 @@
     </div>
     {% endfor %}
   </div>
+  {% endif %}
 </div>
-<div id="divider-bar" class="my-2"></div>
 {% endif %}
 
+{% if not user.is_in_private_mode %}
 <div class="container-fluid p-0 m-0">
-  <p class="emphasis-font px-1" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</p>
+  <div class="row m-0 p-1">
+    <div class="col m-0 p-0">
+      <span class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</span>
+      <span class="float-end">
+        <img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"> official
+      </span>
+    </div>
+  </div>
   <div class="row m-0 p-0">
     {% for card in public_cards %}
     {% if not card_select_for_new_post or user.is_public_card_manager or not card.is_official %}
@@ -81,6 +90,7 @@
     {% endfor %}
   </div>
 </div>
+{% endif %}
 
 {% if card_select_for_new_post %}
 <script>

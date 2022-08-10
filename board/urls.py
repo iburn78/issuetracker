@@ -12,8 +12,8 @@ from os.path import join
 urlpatterns = [
     path('test/', test, name='test'),
 
-    path('', CardListView.as_view(card_list=True), name='main'),
-    path('card_list/', CardListView.as_view(template_name="board/card_list.html", card_list=False), name='card-list'),
+    path('', CardListView.as_view(), name='main'),
+    path('card_list/', CardListView.as_view(template_name="board/card_list.html"), name='card-list'),
     path('card_select/', CardSelectView.as_view(), name='card-select'),
     path('about/', about, name='about'),
     path('new_card/', CardCreateView.as_view(), name='card-create'),
