@@ -17,7 +17,7 @@
 			<div class="media-body">
 				<h4 class="account-heading">{{user.username}}</h4>
 				<p class="emphasis-font text-red-700">Issuetracker CITIZEN
-					<a data-bs-toggle="collapse" data-bs-target="#collapseProfile" id="collapseToggle"><img src="{% static 'icons/signpost-2.svg' %}" width="20" height="20"></a>
+					<a data-bs-toggle="collapse" data-bs-target="#collapseProfile" id="collapseToggle"><img src="{% static 'icons/signpost-2.svg' %}" width="18" height="18"></a>
 				</p>
 				{% if user.is_VIP %}
 				<p class="emphasis-font text-red-700">VIP</p>
@@ -33,7 +33,7 @@
 				{% endif %}
 				<div class="collapse bg-yellow-100" id="collapseProfile">
 				{% if not user.is_VIP %}
-					<p class="p-0 m-0 ms-2 text-muted">achieve <span class="emphasis-font text-red-700">VIP</span> with more activities</p>
+					<p class="p-0 m-0 ms-2 text-muted">next level: <span class="emphasis-font text-red-700">VIP</span></p>
 				{% endif %}
 				{% if not user.is_public_card_manager %}
 					<p class="p-0 m-0 ms-2 text-muted">apply for <span class="emphasis-font text-red-700">PUBLIC CARD MANAGER</span> - contact admin</p>

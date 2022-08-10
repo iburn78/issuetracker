@@ -32,7 +32,6 @@ To implement:
 - private post: move to public button (use people icon), share button (move and share)
 - bottom part: logged in information and about/email etc... add explanation 
 - lots of things to sort out using private mode of user
-- need to fix session!!!!! login-recommend
 
 <p>IssueTracker lets tracking of various issues that we face everyday. The focus is on &quot;I&quot; rather than &quot;others&quot;</p>
 <p>As we advance through stages of our lives, environment/job/interest/network changes, responsibilities/rights/duties change, knowledge/belief/way of thinking changes, and as a result, we come to think of variety of topics in different ways and let them pass through our minds rather than building them up on another</p>

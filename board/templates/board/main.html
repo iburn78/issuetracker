@@ -31,10 +31,14 @@
 </div>
 {% else %}
 <div class="container-fluid p-1 pt-2">
-  <span class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</span>
-  <span class="float-end">
-    <img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"> official
-  </span>
+  <div class="row m-0 p-0">
+    <div class="col m-0 p-0">
+      <span class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</span>
+      <span class="float-end">
+        <img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"> official
+      </span>
+    </div>
+  </div>
   <div class="row m-0">
     {% for card in public_cards %}
     <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2 p-1">

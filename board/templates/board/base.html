@@ -21,12 +21,15 @@
   <title>IssueTracker</title>
 </head>
 <body class="d-flex flex-column h-100" onload="init()">
+  <!-- note below django template language in class -->
   <nav class="navbar navbar-expand-lg {% if user.is_in_private_mode %}navbar-dark bg-dark{% else %}navbar-light bg-blue-300{% endif %} m-0 py-1">
     <div class="container-fluid m-0 p-0 px-1">
       <div class="navbar-brand">
+        <a href="{% url 'main' %}" style="color: inherit;">
         <span><small><b>IssueTracker</b><i>-beta</i></small></span>
+        </a>
         {% if user.is_in_private_mode %}
-        <span class="fw-bold fs-6 text-danger">private</span>
+        <span class="ms-1 fw-bold fs-6 text-danger">private</span>
         {% endif %}
         {% if user.is_public_card_manager %}
         <span id="mainbase_alert_area_rep" class="fw-bold fs-6 text-danger"></span>
@@ -83,8 +86,8 @@
               <span class="nav-item small">admin</span>
             </a>
             <div class="dropdown-menu bg-blue-200">
-              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'reports' %}"><span class="nav-item small" id="mainbase_rep_count">no report</span></a>
-              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'exceptions' %}"><span class="nav-item small" id="mainbase_exp_count">no exception</span></a>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'reports' %}"><span class="nav-item small" id="mainbase_rep_count">reports</span></a>
+              <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'exceptions' %}"><span class="nav-item small" id="mainbase_exp_count">exceptions</span></a>
             </div>
           </li>
           {% endif %}
@@ -113,8 +116,23 @@
   </main>
   <footer class="footer mt-auto bg-blue-900 text-light">
     <div class="container-fluid m-0 p-1">
-      {{ user.username }}
-      <span class="float-end"><a href="{% url 'about' %}" style="text-decoration: none; color: white;">contact</a></span>
+			<span>
+				<span class="mx-1">{{user.username}}</span>
+        <span class="mx-1 emphasis-font text-red-600">Issuetracker CITIZEN</span>
+				{% if user.is_VIP %}
+				<span class="mx-1 emphasis-font text-red-600">VIP</span>
+				{% endif %}
+				{% if user.is_public_card_manager %}
+				<span class="mx-1 emphasis-font text-red-600">PUBLIC CARD MANAGER</span>
+				{% endif %}
+				{% if user.is_superuser %}
+				<span class="mx-1 emphasis-font text-red-600">SUPERUSER</span>
+				{% endif %}
+				{% if user.is_staff %}
+				<span class="mx-1 emphasis-font text-red-600">STAFF</span>
+				{% endif %}
+      </span>
+      <span class="float-end mx-1"><a href="{% url 'about' %}" style="text-decoration: none; color: white;">contact</a></span>
     </div>
   </footer>
   <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   

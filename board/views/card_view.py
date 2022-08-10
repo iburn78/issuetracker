@@ -85,13 +85,7 @@ class CardListView(ListView):
         if self.request.user.is_authenticated:
             return super().get_queryset().filter(owner=self.request.user).filter(is_public=False).order_by('-card_order')
         else:
-            if self.request.session.get('login_recommend', True):
-                messages.info(
-                    self.request, "IssueTracker is best to use when logged in")
-                self.request.session['login_recommend'] = False
-            
             return super().get_queryset().none()
-
 
 
 class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a new post
