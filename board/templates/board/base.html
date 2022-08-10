@@ -56,7 +56,7 @@
           </div>
           {% endif %}
           <div class="nav-item nav-link ms-2"> 
-            <a class="nav-item me-4" href="{% url 'main' %}" style="color:inherit;"><i class="nav-item bi bi-grid" width="22" height="22"></i><span class="nav-item small"> cards</span></a>
+            <a class="nav-item me-3" href="{% url 'main' %}" style="color:inherit;"><i class="nav-item bi bi-grid" width="22" height="22"></i><span class="nav-item small"> cards</span></a>
             <a class="nav-item" href="{% url 'card-list' %}" style="color:inherit;"><i class="nav-item bi bi-list-ul" width="22" height="22"></i><span class="nav-item small"> list</span></a>
           </div>
           {% if user.is_authenticated %}
@@ -70,7 +70,7 @@
               <span class="nav-item small"> more</span>
             </a>
             <!-- note below django template language in class -->
-            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800{% else %}navbar-light bg-blue-200{% endif %}">
+            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-blue-200{% endif %}">
               <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'card-create' %}"><i class="nav-item bi bi-textarea-resize" width="24" height="24"></i><span class="nav-item small"> new card</span></a>
               <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'card-select' %}"><i class="nav-item bi bi-pencil-square" width="24" height="24"></i><span class="nav-item small"> new post</span></a>
               {% if user.is_authenticated %}
@@ -87,7 +87,7 @@
               <span class="nav-item small"> admin</span>
             </a>
             <!-- note below django template language in class -->
-            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800{% else %}navbar-light bg-blue-200{% endif %}">
+            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-blue-200{% endif %}">
               <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'reports' %}"><span class="nav-item small" id="mainbase_rep_count">reports</span></a>
               <a class="dropdown-item nav-item nav-link ps-3" href="{% url 'exceptions' %}"><span class="nav-item small" id="mainbase_exp_count">exceptions</span></a>
             </div>

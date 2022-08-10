@@ -130,8 +130,6 @@
   <div class="col p-1 m-0">
     {% if post.card.is_public %}
     <a href class="p-0 m-0 ms-2 me-1 float-end" data-bs-toggle="collapse" data-bs-target="#post_options{{post.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>
-    
-    
     <span id="vote_meter_post{{post.id}}">
       {% if user.is_authenticated %}
       <span class="float-end me-1">{% if post.dislikes.count > 0 %}{{ post.dislikes.count }}{%endif%}</span>
@@ -154,6 +152,9 @@
       {% endif %}
     </span>
     <a href class="p-0 m-0 me-3 float-end" onclick="share_post(event, {{post.id}}, '{{post.get_preview_text|truncatechars:30}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
+    {% else %}
+      <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" onclick="">publish</a>
+      <a href="{% url 'card-select' %}?rt=move&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" onclick="">move</a>
     {% endif %}
   </div>
 </div>

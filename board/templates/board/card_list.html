@@ -2,10 +2,17 @@
 {% block content %}
 {% load static %}
 {% if user.is_authenticated %}
+
 <div class="container-fluid m-0 p-0">
   {% if card_select_for_new_post %}
   <input type="button" class="me-1 btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
+  {% if request_type == "publish" %}
+  <p><b class="text-red-600 ms-1">Choose a public card to pubilsh your post</b></p>
+  {% elif request_type == "move" %}
+  <p><b class="text-red-600 ms-1">Choose a private card to move your post</b></p>
+  {% else %}
   <p><b class="text-red-600 ms-1">Choose a card for your new post</b></p>
+  {% endif %}
   {% if not cards and user.is_in_private_mode %}
   <div class="alert alert-danger p-2 m-1" role="alert">
     Create your private card first <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}" width="24" height="24"></a>
@@ -15,9 +22,14 @@
   <div class="alert alert-danger" role="alert">
     Create public card <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}"></a>
   </div>
+  {% elif not public_cards and not user.is_public_card_manager %}
+  <div class="alert alert-danger" role="alert">
+    No public cards yet
+  </div>
   {% endif %}
   {% endif %}
-  {% if user.is_in_private_mode %}
+
+  {% if user.is_in_private_mode and request_type != "publish" %}
   <p class="emphasis-font px-1" style="margin-bottom: 1px;"><img src="{% static 'icons/person-circle.svg' %}" width="24" height="24"> MY CARDS</p>
   <div class="row m-0 p-0">
     {% for card in cards %}
@@ -35,7 +47,7 @@
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
               <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
               <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
-              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
+              <a href="{% url 'card-content' card.id %}" id="card_for_selection{{card.id}}" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>
         </div>
@@ -45,16 +57,21 @@
   </div>
   {% endif %}
 </div>
+
 {% endif %}
 
-{% if not user.is_in_private_mode %}
+{% if not user.is_in_private_mode or request_type == "publish" %}
 <div class="container-fluid p-0 m-0">
   <div class="row m-0 p-1">
     <div class="col m-0 p-0">
       <span class="emphasis-font" style="margin-bottom: 1px;"><img src="{% static 'icons/people-fill.svg' %}" width="24" height="24"> PUBLIC CARDS</span>
+
+      {% if not request_type or user.is_public_card_manager %}
       <span class="float-end">
         <img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"> official
       </span>
+      {% endif %}
+
     </div>
   </div>
   <div class="row m-0 p-0">
@@ -80,7 +97,7 @@
               <span class="float-end" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
               <span class="float-end" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
               {% endif %}
-              <a href="{% url 'card-content' card.id %}" id="card_for_new_post" class="card-title-select text-dark KR-font">{{ card.title }}</a>
+              <a href="{% url 'card-content' card.id %}" id="card_for_selection{{card.id}}" class="card-title-select text-dark KR-font">{{ card.title }}</a>
             </div>
           </div>
         </div>
@@ -96,12 +113,38 @@
 <script>
   document.addEventListener('click', e => {
     const origin = e.target.closest('a');
-    if (origin != null && origin.id === "card_for_new_post") {
+    if (origin != null && origin.id.startsWith("card_for_selection")) {
       e.preventDefault();
-      window.location.href = origin.href+'new_post/';
+      {% if card_select_for_new_post %}
+
+        {% if request_type == "publish" or request_type == "move" %}
+
+          let request = new XMLHttpRequest();
+          request.open("POST", "{% url 'post-mp-mgmt' %}"); 
+          request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          request.onreadystatechange = function() {
+            if(this.readyState === 4 && this.status === 200) {
+              let card_id = JSON.parse(this.responseText).card_id;
+              window.location.href = '{% url "main" %}'+'card/'+card_id;
+            };
+          };
+          let formData = new FormData();
+          formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+          formData.append('request_type', '{{request_type}}');
+          formData.append('target_pid', {{target_pid}});
+          formData.append('card_id', parseInt(origin.id.slice(18)));
+          request.send(formData);
+
+        {% else %}
+          window.location.href = origin.href+'new_post/';
+
+        {% endif %}
+
+      {% endif %}
+
     };
   });
-
+  
 </script>
 {% endif %}
 {% endblock content %}

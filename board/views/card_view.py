@@ -21,6 +21,7 @@ from ..tools import *
 import os
 from django.http import JsonResponse, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
+from django.utils import timezone
 
 def test(request):
     return render(request, 'board/test.html')
@@ -33,7 +34,7 @@ def user_mode_change(request):
         return PermissionDenied
     request.user.is_in_private_mode = not request.user.is_in_private_mode
     request.user.save()
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    return redirect('main')
 
 class CardListView(ListView):
     model = Card
@@ -72,11 +73,15 @@ class CardListView(ListView):
             search_word = request.POST.get('search_term')
             messages.info(self.request, f"Search Keyword {search_word} entered")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         public_cards = Card.objects.filter(is_public=True).order_by('-card_order')
         context['public_cards'] = public_cards
+
         return context
 
     def get_queryset(self):
@@ -86,21 +91,62 @@ class CardListView(ListView):
             return super().get_queryset().none()
 
 
-class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a new post
+class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a new post, and move and publish posts
     template_name = "board/card_list.html"
+    
+    def post(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
+            request_type = request.POST.get('request_type')
+            pid = request.POST.get('target_pid')
+            card_id = request.POST.get('card_id')
+            post = get_object_or_404(Post, id=pid)
+            card = get_object_or_404(Card, id=card_id)
+
+            if request_type == 'publish':
+                if card.is_public and not card.is_official:
+                    post.card = card
+                    post.date_posted = timezone.now() 
+                    post.save()
+                    request.user.is_in_private_mode = False
+                    request.user.save()
+                    messages.info(self.request, f"Post ({post.content[:10]}) moved to public card ({card.title[:10]}) - date posted updated")
+                    return JsonResponse({"card_id": post.card.id}, status=200)
+                else:
+                    return JsonResponse({}, status=400)
+            
+            elif request_type == 'move':
+                if card.owner == request.user and not card.is_public:
+                    if post.card == card: 
+                        messages.info(self.request, f"Post ({post.content[:10]}) stayed in the current private card ({card.title[:10]})")
+                    else: 
+                        post.card = card
+                        post.save()
+                        messages.info(self.request, f"Post ({post.content[:10]}) moved to private card ({card.title[:10]})")
+                    return JsonResponse({"card_id": post.card.id}, status=200)
+                else: 
+                    return JsonResponse({}, status=400)
+            else:
+                return JsonResponse({}, status=400)
+        else: 
+            return super().post(request, *args, **kwargs)
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['card_select_for_new_post'] = True
+
+        context['request_type'] = self.request.GET.get('rt')
+        context['target_pid'] = self.request.GET.get('pid')
+
         return context
+
 
 
 class CardCreateView(LoginRequiredMixin, CreateView):
     model = Card
     form_class = CardForm
     template_name = 'board/card_create.html'
-    def get(self, request, *args, **kwargs):
-        return super().get(self, *args, **kwargs)
 
     def form_valid(self, form):
         form.instance.owner = self.request.user

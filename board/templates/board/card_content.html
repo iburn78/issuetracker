@@ -13,7 +13,7 @@
       <img src="{% static 'icons/person-circle.svg' %}" width="24" height="24">
       {% endif %}
       <b class="KR-font">{{ card.title }}</b>
-      <button type="button" class="float-end btn-close ms-1" onclick="javascript:history.back()"></button>
+      <a href="{% url 'main' %}" type="button" class="float-end btn-close ms-1"></a>
       {% if card.is_official and user.is_public_card_manager %}
       <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% elif not card.is_official and card.is_public %}
