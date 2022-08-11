@@ -93,7 +93,7 @@
             </div>
           </li>
           {% endif %}
-          <form action='{% url "search-view" %}' class="d-flex" method="POST" autocomplete="off">
+          <form action='' class="d-flex" method="POST" autocomplete="off" onsubmit="inline_search(event)">
             {% csrf_token %}
             <input type='hidden' name="path" value="{{ request.path }}">
             <input class="nav-item form-control mt-1 mb-1" name="search_term" type="text" placeholder="search...">
@@ -116,7 +116,7 @@
     </div>
     {% block content %}{% endblock content %}
   </main>
-  <footer class="footer mt-auto bg-blue-900 text-light">
+  <footer class="footer mt-auto bg-gray-800 text-light">
     <div class="container-fluid m-0 p-1">
 			<span>
 				<span class="mx-1">{{user.username}}</span>
@@ -143,6 +143,23 @@
   {% block script %}{% endblock script %}
   {% if user.is_authenticated and user.is_public_card_manager %}
   <script>
+
+    function inline_search(e) {
+      e.preventDefault();
+      alert('hahaA'); 
+      let formData = new FormData(e.target);
+      alert(formData.get('path'));
+      let request = new XMLHttpRequest();
+      request.open("POST", "{% url 'search-view' %}", true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          
+        };
+      }
+      request.send(formData);
+    }
+
     function add_report_count() {
       let request = new XMLHttpRequest();
       request.open("GET", "{% url 'report-counter' %}?request_type=count", true);
