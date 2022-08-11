@@ -26,6 +26,7 @@ urlpatterns = [
     path('post_update/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
     path('post/<int:pk>/<int:img_no>', postimageview, name='postimage-view'),
+    path('search/', SearchView.as_view(), name = 'search-view'),
     path('reports/', ReportView.as_view(), name = 'reports'),
     path('exceptions/', exception_view, name = 'exceptions'),
 

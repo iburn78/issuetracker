@@ -93,8 +93,9 @@
             </div>
           </li>
           {% endif %}
-          <form action='/' class="d-flex" method="POST" autocomplete="off">
+          <form action='{% url "search-view" %}' class="d-flex" method="POST" autocomplete="off">
             {% csrf_token %}
+            <input type='hidden' name="path" value="{{ request.path }}">
             <input class="nav-item form-control mt-1 mb-1" name="search_term" type="text" placeholder="search...">
           </form>
         </div>
@@ -111,7 +112,7 @@
       </div>
       {% endfor %}
       {% endif %} 
-      <div id="announcement_area"></div>
+      <div id="search_result_area" class="bg-gray-100 m-0 p-0"></div>
     </div>
     {% block content %}{% endblock content %}
   </main>
@@ -120,7 +121,7 @@
 			<span>
 				<span class="mx-1">{{user.username}}</span>
 				{% if user.is_authenticated %}
-        <span class="mx-1 emphasis-font text-danger">Issuetracker CITIZEN</span>
+        <span class="mx-1 emphasis-font text-danger">IssueTracker CITIZEN</span>
 				{% endif %}
 				{% if user.is_VIP %}
 				<span class="mx-1 emphasis-font text-danger">VIP</span>

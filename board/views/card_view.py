@@ -70,8 +70,6 @@ class CardListView(ListView):
                 target_card_id = card_set[target_location].id
             return JsonResponse({"target_card_id": target_card_id}, status=200)
         else: 
-            search_word = request.POST.get('search_term')
-            messages.info(self.request, f"Search Keyword {search_word} entered")
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     
     def get(self, request, *args, **kwargs):
@@ -109,7 +107,7 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                     post.save()
                     request.user.is_in_private_mode = False
                     request.user.save()
-                    messages.info(self.request, f"Post ({post.content[:10]}) moved to public card ({card.title[:10]}) - date posted updated")
+                    messages.success(self.request, f"Post ({post.content[:10]}) moved to public card ({card.title[:10]}) - date posted updated")
                     return JsonResponse({"card_id": post.card.id}, status=200)
                 else:
                     return JsonResponse({}, status=400)
@@ -117,11 +115,11 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
             elif request_type == 'move':
                 if card.owner == request.user and not card.is_public:
                     if post.card == card: 
-                        messages.info(self.request, f"Post ({post.content[:10]}) stayed in the current private card ({card.title[:10]})")
+                        messages.success(self.request, f"Post ({post.content[:10]}) stayed in the current private card ({card.title[:10]})")
                     else: 
                         post.card = card
                         post.save()
-                        messages.info(self.request, f"Post ({post.content[:10]}) moved to private card ({card.title[:10]})")
+                        messages.success(self.request, f"Post ({post.content[:10]}) moved to private card ({card.title[:10]})")
                     return JsonResponse({"card_id": post.card.id}, status=200)
                 else: 
                     return JsonResponse({}, status=400)
@@ -275,3 +273,11 @@ class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
         if str(self.kwargs.get('file')).startswith(res):
             return True
         return False
+
+
+class SearchView(View): 
+    def post(self, request, *args, **kwargs):
+        search_word = request.POST.get('search_term')
+        path = request.POST.get('path')
+        messages.success(self.request, f"Search Keyword {search_word} entered")
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
