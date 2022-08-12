@@ -151,8 +151,7 @@
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          let path = JSON.parse(this.responseText).path;
-          console.log(path);
+          document.getElementById("search_result_area").innerHTML = JSON.parse(this.responseText).res;
         };
       }
       let formData = new FormData(e.target);

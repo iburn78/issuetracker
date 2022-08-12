@@ -276,36 +276,52 @@ class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
         return False
 
 
-class SearchView(ListView): 
-    template_name = 'board/search_res.html'
-    paginate_by = 3
+class SearchView(View): 
 
     def post(self, request, *args, **kwargs):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
             search_term = request.POST.get('search_term')
             path = resolve(request.POST.get('path'))
+            cid = path.kwargs['card_id']
             private = request.user.is_in_private_mode
             res = ""
-            res_tag = ""
-
             if path.url_name == "main" or path.url_name == "card-list":
                 res = Card.objects.filter(Q(title__icontains=search_term) | Q(desc__icontains=search_term)).distinct().order_by('-card_order')
-                print(res)
-
             elif path.url_name == "card-content":
-                cid = path.kwargs['card_id']
-                res = Post.objects.filter(card_id = cid).filter(Q(content__icontains=search_term)).distinct().order_by('-date_posted')
                 res_tag = Post.objects.filter(card_id = cid).filter(tags__name__icontains=search_term).distinct().order_by('-date_posted')
-                print(res)
-                print(res_tag)
-
+                res = SearchView_Post.as_view()(request).render().content.decode("utf-8") 
             elif path.url_name == "post-detail":
                 print(4)
-
             else:
                 print(5)
 
-
-            return JsonResponse({"path": path.url_name}, status=200)
+            return JsonResponse({"res": res}, status=200)
         else: 
             return super().post(request, *args, **kwargs)
+
+class SearchView_Card(ListView):
+    model = Card
+    paginate_by = 3
+    template_name = 'board/search_card.html'
+
+class SearchView_Post(ListView):
+    model = Post
+    paginate_by = 3
+    template_name = 'board/search_post.html'
+    context_object_name = 'posts'
+
+    def post(self, request, *args, **kwargs):
+        return self.get(request, *args, **kwargs)
+
+    def get_queryset(self):
+        search_term = self.request.POST.get('search_term')
+        path = resolve(self.request.POST.get('path'))
+        cid = path.kwargs['card_id']
+        return Post.objects.filter(card_id = cid).filter(Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+
+class SearchView_Tag(ListView):
+    model = Post
+
+class SearchView_User(ListView):
+    model = User
+    
