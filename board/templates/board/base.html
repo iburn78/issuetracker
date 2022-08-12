@@ -146,17 +146,16 @@
 
     function inline_search(e) {
       e.preventDefault();
-      alert('hahaA'); 
-      let formData = new FormData(e.target);
-      alert(formData.get('path'));
       let request = new XMLHttpRequest();
       request.open("POST", "{% url 'search-view' %}", true);
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          
+          let path = JSON.parse(this.responseText).path;
+          console.log(path);
         };
       }
+      let formData = new FormData(e.target);
       request.send(formData);
     }
 

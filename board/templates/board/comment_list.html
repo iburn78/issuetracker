@@ -42,7 +42,7 @@
 </div>
 <div class="row m-0">
   <div class="col p-0 mb-2">
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not user.is_in_private_mode %}
     <a href class="p-0 m-0 ms-2 me-1 float-end" data-bs-toggle="collapse" data-bs-target="#comment_options{{comment.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="18" height="18"></a>
     {% endif %}
     <span id="vote_meter_comment{{comment.id}}">
@@ -61,13 +61,13 @@
       {% endif %}
       {% endif %}
     </span>
-    {% if comment.reply_to == Null %}
+    {% if comment.reply_to == Null and not user.is_in_private_mode %}
     <a href="" onclick="render_replies({{comment.id}}, 1)" class="text-muted p-0 m-0" data-bs-toggle="collapse" data-bs-target="#comment_replies{{comment.id}}">
       <img src="{% static 'icons/reply.svg' %}" width="18" height="18"> replies
       <span id="repliescounter1_{{comment.id}}">{% if comment.comment_set.count > 0 %}({{comment.comment_set.count}}){% endif %}</span>
     </a>
     {% else %}
-    {% if user.is_authenticated %}
+    {% if user.is_authenticated and not user.is_in_private_mode %}
     <a href="" onclick="reply_to_reply(event, {{comment.reply_to.id}}, '{{comment.author}}', {{comment.id}})" class="float-end text-muted p-0 m-0 me-2">
       <img src="{% static 'icons/reply.svg' %}" width="18" height="18"> reply
     </a>

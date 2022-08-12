@@ -1,4 +1,3 @@
-from email.mime import base
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse, resolve
 from django.views.generic import (
@@ -22,6 +21,8 @@ import os
 from django.http import JsonResponse, HttpResponseRedirect
 from django.core.exceptions import PermissionDenied
 from django.utils import timezone
+from django.db.models import Q
+from django.core.paginator import Paginator
 
 def test(request):
     return render(request, 'board/test.html')
@@ -275,9 +276,36 @@ class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
         return False
 
 
-class SearchView(View): 
+class SearchView(ListView): 
+    template_name = 'board/search_res.html'
+    paginate_by = 3
+
     def post(self, request, *args, **kwargs):
-        search_word = request.POST.get('search_term')
-        path = request.POST.get('path')
-        messages.success(self.request, f"Search Keyword {search_word} entered")
-        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
+            search_term = request.POST.get('search_term')
+            path = resolve(request.POST.get('path'))
+            private = request.user.is_in_private_mode
+            res = ""
+            res_tag = ""
+
+            if path.url_name == "main" or path.url_name == "card-list":
+                res = Card.objects.filter(Q(title__icontains=search_term) | Q(desc__icontains=search_term)).distinct().order_by('-card_order')
+                print(res)
+
+            elif path.url_name == "card-content":
+                cid = path.kwargs['card_id']
+                res = Post.objects.filter(card_id = cid).filter(Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+                res_tag = Post.objects.filter(card_id = cid).filter(tags__name__icontains=search_term).distinct().order_by('-date_posted')
+                print(res)
+                print(res_tag)
+
+            elif path.url_name == "post-detail":
+                print(4)
+
+            else:
+                print(5)
+
+
+            return JsonResponse({"path": path.url_name}, status=200)
+        else: 
+            return super().post(request, *args, **kwargs)
