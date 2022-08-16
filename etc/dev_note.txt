@@ -1,31 +1,37 @@
-USER TIER: 
+User Tier Rules: 
+
 - Issuetracker Citizen: entry level user
-- VIP: no specific privilage assigned (need to be implemented)
-    * E.g., no limit in number of cards... 
-    * E.g., right to write in any public cards... etc...
-- Public Card Manager: manages public cards / can delete comments, replies
-- Public Card Manager: manages reports / manage exceptions (exception handling may need to tranfer to staff/superuser)
+
+- VIP: no specific privilage assigned 
+  * E.g., no limit in number of cards... 
+  * E.g., right to write in any public cards... etc...
+
+- Public Card Manager: 
+  * manages public cards / can delete comments, replies
+  * manages reports / manage exceptions 
+
 - Staff / Superuser: no specific privilage assigned
 
-- Official/Public card status cannot be changed (implemented)
+- Official/Public card status cannot be changed 
 
-- write posts (implemented)
-  - official cards: public card managers can write posts
-  - public cards: anybody 
-  - private cards: only owner can write posts
+- write posts 
+  * official cards: public card managers can write posts (all official cards are public)
+  * public cards: anybody 
+  * private cards: only owner can write posts
 
-- delete / edit posts (implemented)
-  - author can modify/delete own posts
-  - public/official cards: owner can also modify/delete post 
-  note: if a card is deleted, test_func() in post_view() is not called -> all posts are deleted regardless of authors
+- delete / edit posts 
+  * author can modify/delete own posts
+  * public/official cards: owner can also modify/delete post 
 
-- card order change (implemented)
-  - public card managers can change orders of cards
+- card order change 
+  * public card managers can change orders of public cards
 
 
--------------
-To implement:
--------------
-- keyword search (refer to previous implement)
-- author / tag / mylikes search
 
+
+Search related: 
+
+- likes search: search_word might or might not be provided -> mylikes page might be needed
+- author search: search authors with more than one public post
+- tag search: search tags with whole word match 
+- integrated search screen might need to be developed

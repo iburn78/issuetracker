@@ -1,9 +1,8 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse, resolve
 from django.views.generic import (
     ListView,
     CreateView,
-    DetailView,
     UpdateView,
     DeleteView,
 )
@@ -19,23 +18,7 @@ from django.views.static import serve
 from ..tools import *
 import os
 from django.http import JsonResponse, HttpResponseRedirect
-from django.core.exceptions import PermissionDenied
 from django.utils import timezone
-from django.db.models import Q
-from django.core.paginator import Paginator
-
-def test(request):
-    return render(request, 'board/test.html')
-
-def about(request):
-    return render(request, 'board/about.html')
-
-def user_mode_change(request):
-    if not request.user.is_authenticated:
-        return PermissionDenied
-    request.user.is_in_private_mode = not request.user.is_in_private_mode
-    request.user.save()
-    return redirect('main')
 
 class CardListView(ListView):
     model = Card
@@ -274,54 +257,3 @@ class CardMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
         if str(self.kwargs.get('file')).startswith(res):
             return True
         return False
-
-
-class SearchView(View): 
-
-    def post(self, request, *args, **kwargs):
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
-            search_term = request.POST.get('search_term')
-            path = resolve(request.POST.get('path'))
-            cid = path.kwargs['card_id']
-            private = request.user.is_in_private_mode
-            res = ""
-            if path.url_name == "main" or path.url_name == "card-list":
-                res = Card.objects.filter(Q(title__icontains=search_term) | Q(desc__icontains=search_term)).distinct().order_by('-card_order')
-            elif path.url_name == "card-content":
-                res_tag = Post.objects.filter(card_id = cid).filter(tags__name__icontains=search_term).distinct().order_by('-date_posted')
-                res = SearchView_Post.as_view()(request).render().content.decode("utf-8") 
-            elif path.url_name == "post-detail":
-                print(4)
-            else:
-                print(5)
-
-            return JsonResponse({"res": res}, status=200)
-        else: 
-            return super().post(request, *args, **kwargs)
-
-class SearchView_Card(ListView):
-    model = Card
-    paginate_by = 3
-    template_name = 'board/search_card.html'
-
-class SearchView_Post(ListView):
-    model = Post
-    paginate_by = 3
-    template_name = 'board/search_post.html'
-    context_object_name = 'posts'
-
-    def post(self, request, *args, **kwargs):
-        return self.get(request, *args, **kwargs)
-
-    def get_queryset(self):
-        search_term = self.request.POST.get('search_term')
-        path = resolve(self.request.POST.get('path'))
-        cid = path.kwargs['card_id']
-        return Post.objects.filter(card_id = cid).filter(Q(content__icontains=search_term)).distinct().order_by('-date_posted')
-
-class SearchView_Tag(ListView):
-    model = Post
-
-class SearchView_User(ListView):
-    model = User
-    

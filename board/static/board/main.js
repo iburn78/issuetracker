@@ -18,5 +18,3 @@ function menu_close(event) {
   }
 };
 
-
-

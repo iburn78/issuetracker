@@ -1,9 +1,7 @@
-from textwrap import fill
 from django.shortcuts import get_object_or_404, redirect, render
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
-    ListView,
     CreateView,
     DetailView,
     UpdateView,
@@ -19,43 +17,6 @@ from ..tools import post_image_resize, exception_log
 from django.urls import resolve
 from django.views.static import serve
 import os
-from django.http import JsonResponse
-from django.core import serializers
-
-def vote(request):
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
-        object_id = request.POST.get('object_id')
-        up_down = request.POST.get('up_down')
-        object_type = request.POST.get('object')
-        if object_type == 'post': 
-            object = get_object_or_404(Post, id=object_id)
-        elif object_type == 'comment':
-            object = get_object_or_404(Comment, id=object_id)
-        else: 
-            return JsonResponse({"result": "failure"}, status = 400)
-        fill_status = 'neither'
-        if up_down == 'up':
-            if object.likes.all().filter(id=request.user.id).exists():
-                object.likes.remove(request.user)
-            else:
-                object.likes.add(request.user)
-                fill_status = 'up'
-                if object.dislikes.all().filter(id=request.user.id).exists():
-                    object.dislikes.remove(request.user)
-        elif up_down == 'down':
-            if object.dislikes.all().filter(id=request.user.id).exists():
-                object.dislikes.remove(request.user)
-            else:
-                object.dislikes.add(request.user)
-                fill_status = 'down'
-                if object.likes.all().filter(id=request.user.id).exists():
-                    object.likes.remove(request.user)
-        else:
-            pass
-        ser_instance = serializers.serialize('json', [object])
-        return JsonResponse({"instance": ser_instance, "fill_status": fill_status}, status=200)
-    return JsonResponse({"result": "failure"}, status = 400)
-
 
 def postimageview(request, *args, **kwargs): 
     template_name = "board/image_view.html"

@@ -1,4 +1,5 @@
 from django.urls import path
+from .views.base_view import *
 from .views.card_view import *
 from .views.post_view import *
 from .views.comment_view import *
@@ -25,8 +26,7 @@ urlpatterns = [
     path('post_delete/<int:pk>/', PostDeleteView.as_view(), name='post-delete'),
     path('post_update/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
     path('post/<int:pk>/', PostDetailView.as_view(), name='post-detail'),
-    path('post/<int:pk>/<int:img_no>', postimageview, name='postimage-view'),
-    path('search/', SearchView.as_view(), name = 'search-view'),
+    path('post/<int:pk>/<int:img_no>/', postimageview, name='postimage-view'),
     path('reports/', ReportView.as_view(), name = 'reports'),
     path('exceptions/', exception_view, name = 'exceptions'),
 
@@ -45,7 +45,14 @@ urlpatterns = [
     path('api/comment/<int:pk>/', CommentMgmtView.as_view(), name='comment-mgmt'),
     path('api/comment/counter/', comment_counter, name='comment-counter'),
     path('api/reply/counter/', reply_counter, name='reply-counter'),
-    path('api/report/counter', ReportView.as_view(), name = 'report-counter'),
-    path('api/exception/counter', exception_counter, name = 'exception-counter'),
-    path('api/user/modechange', user_mode_change, name = 'user-mode-change'),
+    path('api/report/counter/', ReportView.as_view(), name = 'report-counter'),
+    path('api/exception/counter/', exception_counter, name = 'exception-counter'),
+    path('api/user/modechange/', user_mode_change, name = 'user-mode-change'),
+
+    path('api/search/path/', search_path, name = 'search-path'),
+    path('api/search/card/', SearchView_Card.as_view(), name = 'search-card'),
+    path('api/search/post/', SearchView_Post.as_view(), name = 'search-post'),
+    path('api/search/tag/', SearchView_Tag.as_view(), name = 'search-tag'),
+    path('api/search/mylikes/', SearchView_MyLikes.as_view(), name = 'search-mylikes'),
+    path('api/search/author/', SearchView_Author.as_view(), name = 'search-author'),
 ]

@@ -26,7 +26,7 @@
     <div class="container-fluid m-0 p-0 px-1">
       <div class="navbar-brand">
         <a href="{% url 'main' %}" style="color: inherit;">
-        <span><small><b>IssueTracker</b><i>-beta</i></small></span>
+          <span><small><b>IssueTracker</b><i>-beta</i></small></span>
         </a>
         {% if user.is_in_private_mode %}
         <span class="ms-1 fw-bold fs-6 text-danger">private</span>
@@ -93,7 +93,7 @@
             </div>
           </li>
           {% endif %}
-          <form action='' class="d-flex" method="POST" autocomplete="off" onsubmit="inline_search(event)">
+          <form action='' class="d-flex" method="POST" autocomplete="off" onsubmit="inline_search(event, 1)">
             {% csrf_token %}
             <input type='hidden' name="path" value="{{ request.path }}">
             <input class="nav-item form-control mt-1 mb-1" name="search_term" type="text" placeholder="search...">
@@ -112,52 +112,167 @@
       </div>
       {% endfor %}
       {% endif %} 
-      <div id="search_result_area" class="bg-gray-100 m-0 p-0"></div>
+      <div id="search_card_res" class="bg-gray-100 m-0 p-0"></div>
+      <div id="search_post_res" class="bg-gray-100 m-0 p-0"></div>
+      <div id="search_tag_res" class="bg-gray-100 m-0 p-0"></div>
+      <div id="search_mylikes_res" class="bg-gray-100 m-0 p-0"></div>
+      <div id="search_author_res" class="bg-gray-100 m-0 p-0"></div>
     </div>
     {% block content %}{% endblock content %}
   </main>
   <footer class="footer mt-auto bg-gray-800 text-light">
     <div class="container-fluid m-0 p-1">
-			<span>
-				<span class="mx-1">{{user.username}}</span>
-				{% if user.is_authenticated %}
+      <span>
+        <span class="mx-1">{{user.username}}</span>
+        {% if user.is_authenticated %}
         <span class="mx-1 emphasis-font text-danger">IssueTracker CITIZEN</span>
-				{% endif %}
-				{% if user.is_VIP %}
-				<span class="mx-1 emphasis-font text-danger">VIP</span>
-				{% endif %}
-				{% if user.is_public_card_manager %}
-				<span class="mx-1 emphasis-font text-danger">PUBLIC CARD MANAGER</span>
-				{% endif %}
-				{% if user.is_superuser %}
-				<span class="mx-1 emphasis-font text-danger">SUPERUSER</span>
-				{% endif %}
-				{% if user.is_staff %}
-				<span class="mx-1 emphasis-font text-danger">STAFF</span>
-				{% endif %}
+        {% endif %}
+        {% if user.is_VIP %}
+        <span class="mx-1 emphasis-font text-danger">VIP</span>
+        {% endif %}
+        {% if user.is_public_card_manager %}
+        <span class="mx-1 emphasis-font text-danger">PUBLIC CARD MANAGER</span>
+        {% endif %}
+        {% if user.is_superuser %}
+        <span class="mx-1 emphasis-font text-danger">SUPERUSER</span>
+        {% endif %}
+        {% if user.is_staff %}
+        <span class="mx-1 emphasis-font text-danger">STAFF</span>
+        {% endif %}
       </span>
       <span class="float-end mx-1"><a href="{% url 'about' %}" style="text-decoration: none; color: white;">contact</a></span>
     </div>
   </footer>
   <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   
   {% block script %}{% endblock script %}
-  {% if user.is_authenticated and user.is_public_card_manager %}
-  <script>
 
+  <script>
     function inline_search(e) {
       e.preventDefault();
+      var _opened = document.getElementById("navbarToggle").classList.contains("show");
+      if (_opened) {
+        document.getElementById("navbar-toggle-button").click();
+      }
+      let formData = new FormData(e.target);
+      e.target.reset();
       let request = new XMLHttpRequest();
-      request.open("POST", "{% url 'search-view' %}", true);
+      request.open("POST", "{% url 'search-path' %}", true);
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          document.getElementById("search_result_area").innerHTML = JSON.parse(this.responseText).res;
+          url_name = JSON.parse(this.responseText).url_name;
+          if (url_name == 'card-content') {
+            cid = JSON.parse(this.responseText).cid;
+            search_post(formData.get('search_term'), cid);
+            search_tag(formData.get('search_term'), cid); 
+            search_mylikes(formData.get('search_term'), cid); 
+            search_author(formData.get('search_term')); 
+          } else if (url_name == 'main' || url_name == 'card-list') {
+            search_card(formData.get('search_term')); 
+            search_post(formData.get('search_term'), ''); 
+            search_tag(formData.get('search_term'), ''); 
+            search_mylikes(formData.get('search_term'), ''); 
+            search_author(formData.get('search_term')); 
+          } else {
+            document.getElementById("search_post_res").innerHTML = "move to search page?";
+          }
         };
-      }
-      let formData = new FormData(e.target);
+      }; 
       request.send(formData);
     }
 
+    function search_card(search_term, page = null) {
+      param = "?search_term=" + encodeURIComponent(search_term);
+      if (page != null) {
+        param += "&page="+page; 
+      }
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'search-card' %}"+param, true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          document.getElementById("search_card_res").innerHTML = JSON.parse(this.responseText).res;
+        };
+      }; 
+      request.send();
+    }
+
+    function search_post(search_term, cid = '', page = null) {
+      param = "?search_term=" + encodeURIComponent(search_term);
+      if (cid != '') {
+        param += "&cid="+encodeURIComponent(cid);
+      }
+      if (page != null) {
+        param += "&page="+page; 
+      }
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'search-post' %}"+param, true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          document.getElementById("search_post_res").innerHTML = JSON.parse(this.responseText).res;
+        };
+      }; 
+      request.send();
+    }
+
+    function search_tag(search_term, cid = '', page = null) {
+      param = "?search_term=" + encodeURIComponent(search_term);
+      if (cid != '') {
+        param += "&cid="+encodeURIComponent(cid);
+      }
+      if (page != null) {
+        param += "&page="+page; 
+      }
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'search-tag' %}"+param, true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          document.getElementById("search_tag_res").innerHTML = JSON.parse(this.responseText).res;
+        };
+      }; 
+      request.send();
+    }
+
+    function search_mylikes(search_term, cid = '', page = null) {
+      param = "?search_term=" + encodeURIComponent(search_term);
+      if (cid != '') {
+        param += "&cid="+encodeURIComponent(cid);
+      }
+      if (page != null) {
+        param += "&page="+page; 
+      }
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'search-mylikes' %}"+param, true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          document.getElementById("search_mylikes_res").innerHTML = JSON.parse(this.responseText).res;
+        };
+      }; 
+      request.send();
+    }
+
+    function search_author(search_term, page = null) {
+      param = "?search_term=" + encodeURIComponent(search_term);
+      if (page != null) {
+        param += "&page="+page; 
+      }
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'search-author' %}"+param, true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          document.getElementById("search_author_res").innerHTML = JSON.parse(this.responseText).res;
+        };
+      }; 
+      request.send();
+    }
+  </script>
+
+  {% if user.is_authenticated and user.is_public_card_manager %}
+  <script>
     function add_report_count() {
       let request = new XMLHttpRequest();
       request.open("GET", "{% url 'report-counter' %}?request_type=count", true);
@@ -192,5 +307,6 @@
     add_exception_count();
   </script>
   {% endif %} 
+  
 </body> 
 </html>
