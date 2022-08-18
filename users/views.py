@@ -1,4 +1,3 @@
-from logging import exception
 from django.shortcuts import render, redirect
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
@@ -97,15 +96,9 @@ class MyLoginView(LoginView):
 
 
 class MyLogoutView(LogoutView):
-    def setup(self, request, *args, **kwargs):
-        if request.user.is_authenticated:
-            return super().setup(request, *args, **kwargs)
-        else:
-            return redirect('main')
-
-    def get(self, request, *args, **kwargs):
-        messages.success(self.request, "you have been logged-out")
-        return redirect('main')
+    def post(self, request, *args, **kwargs):
+        messages.success(request, "you have been logged-out")
+        return super().post(request, *args, **kwargs)
 
 
 class MyPasswordResetView(PasswordResetView):

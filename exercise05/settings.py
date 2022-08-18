@@ -144,6 +144,7 @@ MEDIA_URL = '/media/'
 # Custom Django auth settings
 AUTH_USER_MODEL = 'users.User'
 LOGIN_REDIRECT_URL = 'main'
+LOGOUT_REDIRECT_URL = 'main'
 LOGIN_URL = 'login'
 
 

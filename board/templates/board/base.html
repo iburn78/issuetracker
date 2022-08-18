@@ -60,7 +60,11 @@
             <a class="nav-item" href="{% url 'card-list' %}" style="color:inherit;"><i class="nav-item bi bi-list-ul" width="22" height="22"></i><span class="nav-item small"> list</span></a>
           </div>
           {% if user.is_authenticated %}
-          <a class="nav-item nav-link ms-2" href="{% url 'logout' %}"><i class="nav-item bi bi-box-arrow-up" width="22" height="22"></i><span class="nav-item small"> logout</span></a>
+          <form class="nav-item nav-link ms-2" id="logout-form" method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <i class="nav-item bi bi-box-arrow-up" width="22" height="22"></i>
+            <button type="submit" class="nav-item small m-0 p-0" style="border:none; background:none; color:inherit"> logout</button>
+          </form>
           {% else %}
           <a class="nav-item nav-link ms-2" href="{% url 'login' %}?next={{request.path}}"><i class="nav-item bi bi-box-arrow-in-down" width="22" height="22"></i><span class="nav-item small"> login</span></a>
           {% endif %}
@@ -147,7 +151,7 @@
   </footer>
   <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   
   {% block script %}{% endblock script %}
-
+  
   <script>
     function inline_search(e) {
       e.preventDefault();
@@ -189,7 +193,7 @@
       }; 
       request.send(formData);
     }
-
+    
     function search_card(search_term, page = null) {
       param = "?search_term=" + encodeURIComponent(search_term);
       if (page != null) {
@@ -205,7 +209,7 @@
       }; 
       request.send();
     }
-
+    
     function search_post(search_model, search_term, cid = '', page = null) {
       param = "?search_model=" + search_model + "&search_term=" + encodeURIComponent(search_term);
       if (cid != '') {
@@ -224,7 +228,7 @@
       }; 
       request.send();
     }
-
+    
     function search_author(search_term, page = null) {
       param = "?search_term=" + encodeURIComponent(search_term);
       if (page != null) {
@@ -241,7 +245,7 @@
       request.send();
     }
   </script>
-
+  
   {% if user.is_authenticated and user.is_public_card_manager %}
   <script>
     function add_report_count() {
