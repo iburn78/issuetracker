@@ -136,6 +136,9 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         new_card = form.save(commit=False)
         new_card.save()
         form.save_m2m()
+        if self.request.user.is_authenticated:
+            self.request.user.is_in_private_mode = not new_card.is_public
+            self.request.user.save()
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):

@@ -29,6 +29,7 @@ urlpatterns = [
     path('post/<int:pk>/<int:img_no>/', postimageview, name='postimage-view'),
     path('reports/', ReportView.as_view(), name = 'reports'),
     path('exceptions/', exception_view, name = 'exceptions'),
+    path('mylikes/', SeaerchView_MyLikes.as_view(), name = 'mylikes'),
 
     path('favicon.ico', RedirectView.as_view(url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
     path(join('media', POST_UPLOADED_IMGS, '<str:file>'), PostMediaView.as_view(), name='media-view'),
@@ -52,7 +53,5 @@ urlpatterns = [
     path('api/search/path/', search_path, name = 'search-path'),
     path('api/search/card/', SearchView_Card.as_view(), name = 'search-card'),
     path('api/search/post/', SearchView_Post.as_view(), name = 'search-post'),
-    path('api/search/tag/', SearchView_Tag.as_view(), name = 'search-tag'),
-    path('api/search/mylikes/', SearchView_MyLikes.as_view(), name = 'search-mylikes'),
     path('api/search/author/', SearchView_Author.as_view(), name = 'search-author'),
 ]

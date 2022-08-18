@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Count
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 def test(request):
     return render(request, 'board/test.html')
@@ -92,79 +93,92 @@ class SearchView_Post(ListView):
     model = Post
     paginate_by = 3
     template_name = 'board/search_post.html'
-    context_object_name = 'posts'
+    context_object_name = 'objects'
 
     def get(self, request, *args, **kwargs):
         res = super().get(request, *args, **kwargs).render().content.decode("utf-8")
         return JsonResponse({"res": res}, status=200)
-
+    
     def get_queryset(self):
+        search_model = self.request.GET.get('search_model')
         search_term = self.request.GET.get('search_term')
         cid = self.request.GET.get('cid')
-        if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
-            if cid == None:
-                return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
-            else: 
-                return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
-        else: 
-            if cid == None:
-                return Post.objects.filter(Q(card__is_public=True) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
-            else: 
-                return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
 
-    
+        if search_model == "post":
+            if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+                if cid == None:
+                    return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+                else: 
+                    return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+            else: 
+                if cid == None:
+                    return Post.objects.filter(Q(card__is_public=True) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+                else: 
+                    return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+
+        elif search_model == "mylikes":
+            if self.request.user.is_authenticated and not self.request.user.is_in_private_mode: 
+                pset = self.request.user.liked_post_set
+                if cid == None: 
+                    return pset.filter(content__icontains = search_term).distinct().order_by('-date_posted')
+                else: 
+                    return pset.filter(card_id = cid).filter(content__icontains = search_term).distinct().order_by('-date_posted')
+            else: 
+                return Post.objects.none()
+
+        elif search_model == "taggedpost":
+            if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+                if cid == None:
+                    return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+                else:
+                    return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+            else: 
+                if cid == None:
+                    return Post.objects.filter(Q(card__is_public=True)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+                else:
+                    return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+
+        elif search_model == "tag":
+            self.paginate_by = 10
+            if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+                if cid == None:
+                    return Post.tags.filter(Q(post__author=self.request.user) & Q(post__card__is_public=False)).filter(Q(name__icontains=search_term)).distinct().order_by('name')
+                else:
+                    return Post.tags.filter(Q(post__card_id = cid) & Q(post__author=self.request.user) & Q(post__card__is_public=False)).filter(Q(name__icontains=search_term)).distinct().order_by('name')
+            else: 
+                if cid == None:
+                    return Post.tags.filter(Q(post__card__is_public=True)).filter(Q(name__icontains=search_term)).distinct().order_by('name')
+                else:
+                    return Post.tags.filter(Q(post__card_id = cid) & Q(post__card__is_public=True)).filter(Q(name__icontains=search_term)).distinct().order_by('name')
+        
+        else:
+            return Post.objects.none()
+
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        search_model = self.request.GET.get('search_model')
+        context['search_model'] = search_model
         context['search_term'] = self.request.GET.get('search_term')
         cid = self.request.GET.get('cid')
         if cid != None:
             context['cid'] = cid
         else: 
             context['cid'] = ''
-        context['target_model'] = "post"
         return context
 
-class SearchView_Tag(SearchView_Post):
+class SeaerchView_MyLikes(LoginRequiredMixin, ListView):
+    model = Post
+    paginate_by = 3
+    template_name = 'board/search_mylikes.html'
+    context_object_name = 'posts'
+    
     def get_queryset(self):
-        search_term = self.request.GET.get('search_term')
-        cid = self.request.GET.get('cid')
         if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
-            if cid == None:
-                return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False) & Q(tags__name=search_term)).distinct().order_by('-date_posted')
-            else: 
-                return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False) & Q(tags__name=search_term)).distinct().order_by('-date_posted')
-        else: 
-            if cid == None:
-                return Post.objects.filter(Q(card__is_public=True) & Q(tags__name=search_term)).distinct().order_by('-date_posted')
-            else: 
-                return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True) & Q(tags__name=search_term)).distinct().order_by('-date_posted')
+            self.request.user.is_in_private_mode = False
+            self.request.user.save()
+        return self.request.user.liked_post_set.distinct().order_by('-date_posted')
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['target_model'] = "tag"
-        return context
-
-class SearchView_MyLikes(SearchView_Post):
-    def get_queryset(self):
-        if self.request.user.is_authenticated and not self.request.user.is_in_private_mode: 
-            pset = self.request.user.liked_post_set
-            search_term = self.request.GET.get('search_term')
-            cid = self.request.GET.get('cid')
-            if search_term == None and cid == None: 
-                return pset.all().distinct().order_by('-date_posted')
-            elif search_term == None and cid != None: 
-                return pset.filter(card_id = cid).distinct().order_by('-date_posted')
-            elif search_term != None and cid == None: 
-                return pset.filter(content__icontains = search_term).distinct().order_by('-date_posted')
-            else: 
-                return pset.filter(card_id = cid).filter(content__icontains = search_term).distinct().order_by('-date_posted')
-        else: 
-            return Post.objects.none()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['target_model'] = "mylikes"
-        return context
 
 class SearchView_Author(ListView):
     model = User

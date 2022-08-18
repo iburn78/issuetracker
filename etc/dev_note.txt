@@ -30,8 +30,10 @@ User Tier Rules:
 
 
 Search related: 
-
 - likes search: search_word might or might not be provided -> mylikes page might be needed
 - author search: search authors with more than one public post
-- tag search: search tags with whole word match 
-- integrated search screen might need to be developed
+- taggedpost search: search tags with whole word match 
+
+
+
+

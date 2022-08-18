@@ -1,37 +1,44 @@
-{% if posts %}
+{% if objects %}
 {% load static %}
 <div>
-  {{ target_model }}: 
-  {% for post in posts %}
+  {{ search_model }}: 
+  {% if search_model == 'tag' %}
+  {% for tag in objects %}
+  <a href="" class="ms-1 badge bg-yellow-300 text-dark">#{{ tag }}</a>
+  {% endfor %}
+  {% else %}
+  {% for post in objects %}
   <p class="m-0 p-0">
     {{ post.id }}
     {{ post.content | truncatechars:30 }}
     {{ post.author }}
   </p>
   {% endfor %}
+  {% endif %}
 </div>
 
 {% if is_paginated %}
 <div class="row mt-3">
   <div class="col d-flex justify-content-center align-items-center">
     {% if page_obj.has_previous %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_{{target_model}}('{{search_term}}', '{{cid}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
     
     {% for num in page_obj.paginator.page_range %}
     {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_{{target_model}}('{{search_term}}', '{{cid}}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
     {% elif page_obj.number == num %}
-    <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="search_{{target_model}}('{{search_term}}', '{{cid}}', {{ num }})">{{ num }}</a>
+    <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ num }})">{{ num }}</a>
     {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_{{target_model}}('{{search_term}}', '{{cid}}',  {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}',  {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
     {% endif %}
     {% endfor %}
     
     {% if page_obj.has_next %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_{{target_model}}('{{search_term}}', '{{cid}}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
   </div>
 </div>
 {% endif %}
+
 {% endif %}

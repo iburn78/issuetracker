@@ -7,7 +7,6 @@ from users.forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm
 from django.core.mail import send_mail
 import datetime
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, LogoutView
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from users.models import User
 from PIL import Image, ImageOps
