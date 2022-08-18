@@ -19,7 +19,7 @@
   </div>
   {% endif %}
   {% if not public_cards and user.is_public_card_manager %}
-  <div class="alert alert-danger" role="alert">
+  <div class="alert alert-danger m-1 p-2" role="alert">
     Create public card <a href="{% url 'card-create' %}"><img src="{% static 'icons/textarea-resize.svg' %}"></a>
   </div>
   {% elif not public_cards and not user.is_public_card_manager %}
