@@ -75,13 +75,13 @@
             </a>
             <!-- note below django template language in class -->
             <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-blue-200{% endif %}">
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3" href="{% url 'card-create' %}"><i class="nav-item bi bi-textarea-resize" width="24" height="24"></i><span class="nav-item small"> new card</span></ul>
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3" href="{% url 'card-select' %}"><i class="nav-item bi bi-pencil-square" width="24" height="24"></i><span class="nav-item small"> new post</span></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-create' %}"><i class="nav-item bi bi-textarea-resize" width="24" height="24"></i><span class="nav-item small"> new card</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-select' %}"><i class="nav-item bi bi-pencil-square" width="24" height="24"></i><span class="nav-item small"> new post</span></a></ul>
               {% if user.is_authenticated %}
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3" href="{% url 'profile' %}"><i class="nav-item bi bi-person-lines-fill" width="24" height="24"></i><span class="nav-item small"> profile</span></ul>
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3" href="{% url 'mylikes' %}"><i class="nav-item bi bi-shift" width="24" height="24"></i><span class="nav-item small"> my likes</span></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'profile' %}"><i class="nav-item bi bi-person-lines-fill" width="24" height="24"></i><span class="nav-item small"> profile</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'mylikes' %}"><i class="nav-item bi bi-shift" width="24" height="24"></i><span class="nav-item small"> my likes</span></a></ul>
               {% else %}
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3" href="{% url 'register' %}"><i class="nav-item bi bi-person-plus-fill" width="24" height="24"></i><span class="nav-item small"> register</span></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'register' %}"><i class="nav-item bi bi-person-plus-fill" width="24" height="24"></i><span class="nav-item small"> register</span></a></ul>
               {% endif %}
             </div>
           </li>
@@ -93,8 +93,8 @@
             </a>
             <!-- note below django template language in class -->
             <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-blue-200{% endif %}">
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3" href="{% url 'reports' %}"><span class="nav-item small" id="mainbase_rep_count">reports</span></ul>
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3" href="{% url 'exceptions' %}"><span class="nav-item small" id="mainbase_exp_count">exceptions</span></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'reports' %}"><span class="nav-item small" id="mainbase_rep_count">reports</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'exceptions' %}"><span class="nav-item small" id="mainbase_exp_count">exceptions</span></a></ul>
             </div>
           </li>
           {% endif %}
