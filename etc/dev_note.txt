@@ -1,39 +1,42 @@
 User Tier Rules: 
-
 - Issuetracker Citizen: entry level user
-
 - VIP: no specific privilage assigned 
   * E.g., no limit in number of cards... 
   * E.g., right to write in any public cards... etc...
-
 - Public Card Manager: 
   * manages public cards / can delete comments, replies
   * manages reports / manage exceptions 
-
 - Staff / Superuser: no specific privilage assigned
-
 - Official/Public card status cannot be changed 
-
 - write posts 
   * official cards: public card managers can write posts (all official cards are public)
   * public cards: anybody 
   * private cards: only owner can write posts
-
 - delete / edit posts 
   * author can modify/delete own posts
   * public/official cards: owner can also modify/delete post 
-
 - card order change 
   * public card managers can change orders of public cards
 
 
+Image defaluts/Image managements: 
+- media/default_imgs: default images for cards
+- media/default_users: default images for users
+- delete objects through django-admin or bulk-operation will not call delete() method in models: pictures will not be automatically deleted -> delete one by one using shell, or there are other methods such as using signals
 
 
 Search related: 
-- likes search: search_word might or might not be provided -> mylikes page might be needed
 - author search: search authors with more than one public post
 - taggedpost search: search tags with whole word match 
 
 
+Upgrades
+- python 3.8 or 3.9 
+- pip upgrade to 22
+- django version 4.1 
+- bootstrap version 5.2
+- other versions - pip freeze
 
 
+To fix
+- give some time until registration done

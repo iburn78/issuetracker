@@ -63,7 +63,7 @@ def card_image_resize(form):
     else:
         name = form.instance.image.name
         try:
-            if form.instance.image != form.cleaned_data['image_input']: 
+            if os.path.basename(os.path.dirname(name)) != CARD_DEFAULT_IMAGES:
                 form.instance.image.delete()
         except:
             text = "Exception in delete cared image - card_image_resize: " + name

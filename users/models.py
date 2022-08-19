@@ -18,6 +18,10 @@ class User(AbstractUser):
     is_public_card_manager = models.BooleanField(default=False)
     is_in_private_mode = models.BooleanField(default=False)
 
+    def delete(self, *args, **kwargs):
+        self.profile.delete()
+        return super().delete(*args, **kwargs)
+
 class Profile(models.Model): 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     image = models.ImageField(default=random_user_img, upload_to=PROFILE_PICS)
