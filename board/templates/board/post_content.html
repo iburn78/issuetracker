@@ -5,7 +5,7 @@
   <div class="col-7 p-0">
     <div class="clearfix">
       <img class="mt-1 ms-1 float-start user-image-small me-2" src="{{ post.author.profile.image.url }}">
-      <a class="text-dark fw-bold" href="">{{ post.author }}</a><br>
+      <a class="text-dark fw-bold" href="{% url 'author-posts' post.author.id %}">{{ post.author }}</a><br>
       <small class="text-muted">{{ post.date_posted|date:"M d, Y H:i" }}</small>
     </div>
   </div>
@@ -39,7 +39,7 @@
 <div class="row m-0">
   <div class="col my-1 pe-1">
     {% for tag in post.tags.all %}
-    <a href="" class="float-end ms-1 badge bg-gray-200 text-dark">#{{ tag }}</a>
+    <a href="{% url 'tag-posts' tag.id %}" class="float-end ms-1 badge bg-gray-200 text-dark">#{{ tag }}</a>
     {% endfor %}
   </div>
 </div>

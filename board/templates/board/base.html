@@ -119,15 +119,15 @@
       {% endfor %}
       {% endif %} 
       {% block search_form %}{% endblock search_form %}
-      <div id="search_card_res" class="bg-gray-100 mx-1 my-2"></div>
-      <div id="search_post_res" class="bg-gray-100 mx-1 my-2"></div>
-      <div id="search_taggedpost_res" class="bg-gray-100 mx-1 my-2"></div>
-      <div id="search_tag_res" class="bg-gray-100 mx-1 my-2"></div>
-      <div id="search_author_res" class="bg-gray-100 mx-1 my-2"></div>
-      <div id="search_no_result" style="display:none;" class="bg-gray-100 m-2 text-muted">no search result...</div>
-      <div id="search_clear_button" style="display:none;" class="ms-1 my-2">
-        <div class="d-flex justify-content-end"><div class="p-1 btn btn-outline-secondary btn-sm m-1 mb-2" onclick="clear_search()">clear search result</div></div>
-        <hr class="m-0 me-1 p-0">
+      <div id="search_card_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div id="search_post_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div id="search_taggedpost_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div id="search_tag_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div id="search_author_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div id="search_no_result" style="display:none;" class="bg-gray-100 m-1 text-muted">no search result...</div>
+      <div id="search_clear_button" style="display:none;" class="">
+        <div class="d-flex justify-content-end"><div class="btn btn-outline-secondary btn-sm p-1 me-1 mb-1" onclick="clear_search()">clear search result</div></div>
+        <hr class="m-0 mx-1 p-0">
       </div>
     </div>
     {% block content %}{% endblock content %}

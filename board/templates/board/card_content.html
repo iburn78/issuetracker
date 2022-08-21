@@ -122,103 +122,99 @@
             </div>
           </div>
         </div>
-        <div class="col-8 m-0 p-1">
-          {% else %}
-          <div class="col m-0 p-1">  <!-- Another div element inserted due to the logic: reindent lines in vscode might not work properly -->
-            {% endif %}
-            <div class="d-flex justify-content-between">
-              <div class="d-flex">
-                {% if card.is_public %}
-                <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a>
-                {% endif %}
-                <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
-                  <div class="text-gray-500 small"> 
-                    {{ post.date_posted|date:"M d" }} 
-                  </div>
-                </a>
-              </div>
-              
-              <div class="d-flex">
-                {% if card.is_public %}
-                <span id="listpagecounter{{post.id}}" class="float-end me-2 small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17"> {{ post.likes.count }}{%endif%}</span>
-                {% endif %}
-                <span id="allrepliescounter{{post.id}}" class="float-end me-1 small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
-              </div>
+        {% endif %}
+        <div class="col{% if post.image1s %}-8{% endif %} m-0 p-1"> 
+          <div class="d-flex justify-content-between">
+            <div class="d-flex">
+              {% if card.is_public %}
+              <a class="me-2 text-dark" href="{% url 'author-posts' post.author.id %}?cid={{card.id}}"><b>{{ post.author }}</b></a>
+              {% endif %}
+              <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+                <div class="text-gray-500 small"> 
+                  {{ post.date_posted|date:"M d" }} 
+                </div>
+              </a>
             </div>
             
-            <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
-              <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
-              <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text }}</p>
-            </a>
-            <div class="col float-end m-0 p-1">
-              {% for tag in post.tags.all %}
-              <a href="" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
-              {% endfor %}
+            <div class="d-flex">
+              {% if card.is_public %}
+              <span id="listpagecounter{{post.id}}" class="float-end me-2 small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17"> {{ post.likes.count }}{%endif%}</span>
+              {% endif %}
+              <span id="allrepliescounter{{post.id}}" class="float-end me-1 small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
+            </div>
+          </div>
+          
+          <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+            <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
+            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text }}</p>
+          </a>
+          <div class="col float-end m-0 p-1">
+            {% for tag in post.tags.all %}
+            <a href="{% url 'tag-posts' tag.id %}?cid={{card.id}}" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+      
+      <!-- Modal page start -->
+      
+      <div class="modal fade" id="collapsePost{{post.id}}" tabindex="-1">
+        <div class="modal-dialog modal-fullscreen">
+          <div class="modal-content">
+            <div class="modal-body">
+              {% include 'board/post_content.html' %}
             </div>
           </div>
         </div>
-        
-        <!-- Modal page start -->
-        
-        <div class="modal fade" id="collapsePost{{post.id}}" tabindex="-1">
-          <div class="modal-dialog modal-fullscreen">
-            <div class="modal-content">
-              <div class="modal-body">
-                {% include 'board/post_content.html' %}
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <!-- Modal page end -->
-        
       </div>
-      {% endfor %}
+      
+      <!-- Modal page end -->
+      
     </div>
-    
-    
-    <div class="row mt-3">
-      <div class="col d-flex justify-content-center align-items-center">
-        {% if is_paginated %}
-        {% if page_obj.has_previous %}
-        <a class="btn btn-outline-light mb-4 me-1" href="?page=1"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
-        {% endif %}
-        
-        {% for num in page_obj.paginator.page_range %}
-        {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
-        <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
-        {% elif page_obj.number == num %}
-        <a class="btn btn-outline-light text-dark mb-4 me-1" href="?page={{ num }}">{{ num }}</a>
-        {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
-        <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
-        {% endif %}
-        {% endfor %}
-        
-        {% if page_obj.has_next %}
-        <a class="btn btn-outline-light mb-4 me-1" href="?page={{ page_obj.paginator.num_pages }}"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
-        {% endif %}
-        {% endif %}
-      </div>
-    </div>
+    {% endfor %}
   </div>
   
   
-  {% endblock content %}
-  
-  {% block script %}
-  {% include 'board/post_script.html' %}
-  <script>
-    {% for post in posts %}
-    render_comments({{post.id}}, 1);
-    {% endfor %}
-    document.querySelectorAll("#modal_close_top").forEach(e => {
-      e.innerHTML = '<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>';
-    });
-    document.querySelectorAll("#modal_close_middle").forEach(e => {
-      e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a>';
-    });
-    // document.querySelectorAll("#modal_close_bottom").forEach(e => {
-      //   e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a><br><br>';
-      // });
-    </script>
-    {% endblock script %}
+  <div class="row mt-3">
+    <div class="col d-flex justify-content-center align-items-center">
+      {% if is_paginated %}
+      {% if page_obj.has_previous %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page=1"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+      {% endif %}
+      
+      {% for num in page_obj.paginator.page_range %}
+      {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+      {% elif page_obj.number == num %}
+      <a class="btn btn-outline-light text-dark mb-4 me-1" href="?page={{ num }}">{{ num }}</a>
+      {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+      {% endif %}
+      {% endfor %}
+      
+      {% if page_obj.has_next %}
+      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ page_obj.paginator.num_pages }}"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script %}
+{% include 'board/post_script.html' %}
+<script>
+  {% for post in posts %}
+  render_comments({{post.id}}, 1);
+  {% endfor %}
+  document.querySelectorAll("#modal_close_top").forEach(e => {
+    e.innerHTML = '<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>';
+  });
+  document.querySelectorAll("#modal_close_middle").forEach(e => {
+    e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a>';
+  });
+  // document.querySelectorAll("#modal_close_bottom").forEach(e => {
+    //   e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a><br><br>';
+    // });
+  </script>
+  {% endblock script %}

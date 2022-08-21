@@ -3,16 +3,16 @@
 <div class="container-fluid m-0 p-0">
   
   {% if search_model == 'post' %}
-  <p class="ms-1 mt-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in posts {% if cid == '' %}of {% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}of this card{% endif %}:</p>
+  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in posts of <span class="fw-bold text-danger">{% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}</span>:</p>
   {% elif search_model == 'taggedpost' %}
-  <p class="ms-1 mt-1 mb-1">posts with tag <span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in {% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}:</p>
+  <p class="m-1">posts with tag <span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in <span class="fw-bold text-danger">{% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}</span>:</p>
   {% elif search_model == 'tag' %}
-  <p class="ms-1 mt-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in tags {% if cid == '' %}in {% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}in this card{% endif %}:</p>
+  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in tags in <span class="fw-bold text-danger">{% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}</span>:</p>
   {% endif %}
 
   {% if search_model == 'tag' %}
   {% for tag in objects %}
-  <a href="" class="ms-1 mb-1 badge bg-yellow-300 text-dark">#{{ tag }}</a>
+  <a href="{% url 'tag-posts' tag.id %}{% if cid != '' %}?cid={{cid}}{% endif %}" class="ms-1 mb-1 badge bg-yellow-300 text-dark">#{{ tag }}</a>
   {% endfor %}
 
   {% else %}
@@ -29,7 +29,7 @@
           <div class="d-flex justify-content-between">
             <div class="d-flex">
               {% if post.card.is_public %}
-              <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a>
+              <a class="me-2 text-dark" href="{% url 'author-posts' post.author.id %}{% if cid != '' %}?cid={{cid}}{% endif %}"><b>{{ post.author }}</b></a>
               {% endif %}
               <a href="{% url 'post-detail' post.id %}">
                 <div class="text-gray-500 small"> 
@@ -52,7 +52,7 @@
           </a>
           <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}
-            <a href="" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
+            <a href="{% url 'tag-posts' tag.id %}{% if cid != '' %}?cid={{cid}}{% endif %}" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
             {% endfor %}
           </div>
         </div>

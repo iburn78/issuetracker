@@ -98,9 +98,9 @@ class SearchView_Card(ListView):
     def get_queryset(self):
         search_term = self.request.GET.get('search_term')
         if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
-            return Card.objects.filter(Q(owner=self.request.user) & Q(is_public=False) & (Q(title__icontains=search_term) | Q(desc__icontains=search_term))).distinct().order_by('-date_created')
+            return Card.objects.filter(Q(owner=self.request.user) & Q(is_public=False) & (Q(title__icontains=search_term) | Q(desc__icontains=search_term))).distinct().order_by('-card_order')
         else: 
-            return Card.objects.filter(Q(is_public=True) & (Q(title__icontains=search_term) | Q(desc__icontains=search_term))).distinct().order_by('-date_created')
+            return Card.objects.filter(Q(is_public=True) & (Q(title__icontains=search_term) | Q(desc__icontains=search_term))).distinct().order_by('-card_order')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -187,19 +187,6 @@ class SearchView_Post(ListView):
         return context
 
 
-class SeaerchView_MyLikes(LoginRequiredMixin, ListView):
-    model = Post
-    paginate_by = 20
-    template_name = 'board/search_mylikes.html'
-    context_object_name = 'posts'
-    
-    def get_queryset(self):
-        if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
-            self.request.user.is_in_private_mode = False
-            self.request.user.save()
-        return self.request.user.liked_post_set.distinct().order_by('-date_posted')
-
-
 class SearchView_Author(ListView):
     model = User
     paginate_by = 10
@@ -235,4 +222,102 @@ class SearchView_Author(ListView):
             for u in qs:
                 num_post[u.id] = u.post_set.filter(Q(card__is_public=True)).count()
         context['num_post'] = num_post
+        return context
+
+
+class SearchView_MyLikes(LoginRequiredMixin, ListView):
+    model = Post
+    paginate_by = 20
+    template_name = 'board/post_list.html'
+    context_object_name = 'posts'
+    
+    def get_queryset(self):
+        if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+            self.request.user.is_in_private_mode = False
+            self.request.user.save()
+        return self.request.user.liked_post_set.distinct().order_by('-date_posted')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['search_target'] = 'mylikes'
+        return context
+
+
+class SearchView_AuthorPosts(ListView):
+    model = Post
+    paginate_by = 20
+    template_name = 'board/post_list.html'
+    context_object_name = 'posts'
+    
+    def get_queryset(self):
+        aid = self.kwargs.get('pk')
+        cid = self.request.GET.get('cid')
+        if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+            self.request.user.is_in_private_mode = False
+            self.request.user.save()
+        if cid != None and cid != '':
+            return User.objects.filter(id=aid).get().post_set.filter(Q(card__is_public=True) & Q(card_id=cid)).distinct().order_by('-date_posted')
+        else: 
+            return User.objects.filter(id=aid).get().post_set.filter(card__is_public=True).distinct().order_by('-date_posted')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        aid = self.kwargs.get('pk')
+        cid = self.request.GET.get('cid')
+        if cid != None and cid != '':
+            context['cid'] = cid
+            context['scope'] = Card.objects.get(id=cid)
+        else: 
+            context['scope'] = 'public cards'
+        context['search_target'] = 'authorposts'
+        context['authorname'] = User.objects.filter(id=aid).get().username
+        return context
+
+
+class SearchView_TagPosts(ListView):
+    model = Post
+    paginate_by = 20
+    template_name = 'board/post_list.html'
+    context_object_name = 'posts'
+    
+    def get_queryset(self):
+        tid = self.kwargs.get('pk')
+        cid = self.request.GET.get('cid')
+        if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+            if cid == None or cid=='':
+                return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__id=tid)).distinct().order_by('-date_posted')
+            else:
+                return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__id=tid)).distinct().order_by('-date_posted')
+        else: 
+            if cid == None or cid=='':
+                return Post.objects.filter(Q(card__is_public=True)).filter(Q(tags__id=tid)).distinct().order_by('-date_posted')
+            else:
+                return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True)).filter(Q(tags__id=tid)).distinct().order_by('-date_posted')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tid = self.kwargs.get('pk')
+        cid = self.request.GET.get('cid')
+        if cid != None and cid != '':
+            context['cid'] = cid
+            card = Card.objects.get(id=cid)
+            if card.is_public: 
+                if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+                    self.request.user.is_in_private_mode = False
+                    self.request.user.save()
+            else:
+                if card.owner == self.request.user:
+                    if self.request.user.is_authenticated and not self.request.user.is_in_private_mode:
+                        self.request.user.is_in_private_mode = True
+                        self.request.user.save()
+                else: 
+                    raise PermissionDenied
+            context['scope'] = Card.objects.get(id=cid).title
+        else: 
+            if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
+                context['scope'] = 'my cards'
+            else:
+                context['scope'] = 'public cards'
+        context['search_target'] = 'tagposts'
+        context['tagname'] = Post.tags.get(id=tid)
         return context
