@@ -790,7 +790,7 @@
   color: #212529 !important;
 }
 
-.card {
+.card.animated {
   position: relative;
   -webkit-animation: card-load 0.3s ease-out;
           animation: card-load 0.3s ease-out;
