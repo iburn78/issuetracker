@@ -1,7 +1,8 @@
 {% if cards %}
 {% load static %}
 <div class="container-fluid m-0 p-0">
-  <p class="ms-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in <span class="fw-bold text-danger">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</span>:</p>
+  <p class="ms-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in <span class="fw-bold text-danger">
+    <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a></span>:</p>
   <div class="row m-0 p-0">
     {% for card in cards %}
     <div class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
@@ -9,7 +10,9 @@
         <div class="row m-0 mb-1 p-0">
           <div class="col-2 m-0 p-0">
             {% if card.image %}
+            <a href="{% url 'card-content' card.id %}" class="card border-0">
             <img src="{{ card.image.url }}" class="card-img-select">
+            </a>
             {% else %}
             <div class="card-img-select"></div>
             {% endif %}

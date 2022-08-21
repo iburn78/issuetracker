@@ -1,7 +1,8 @@
 {% if authors %}
 {% load static %}
 <div>
-  <p class="ms-1 mt-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in username {% if cid == '' %} in <span class="fw-bold text-danger">public cards</span>{% else %} in <span class="fw-bold text-danger">this card</span>{% endif %}:</p>
+  <p class="ms-1 mt-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in username {% if cid == '' %} in 
+    <span class="fw-bold text-danger"><a href="{% url 'main' %}" style="color:inherit;">public cards</a></span>{% else %} in <span class="fw-bold text-danger"><a href="{% url 'card-content' cid %}" style="color:inherit;">this card</a></span>{% endif %}:</p>
   {% for author in authors %}
   <a href="{% url 'author-posts' author.id %}{% if cid != '' %}?cid={{cid}}{% endif %}" class="ms-1 mb-1 me-1 text-dark">{{ author.username }}</a>({{num_post|get_item:author.id}})
   {% endfor %}

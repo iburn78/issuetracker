@@ -3,11 +3,29 @@
 <div class="container-fluid m-0 p-0">
   
   {% if search_model == 'post' %}
-  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in posts of <span class="fw-bold text-danger">{% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}</span>:</p>
+  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in posts of <span class="fw-bold text-danger">
+    {% if cid == '' %}
+    <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a>
+    {% else %}
+    <a href="{% url 'card-content' cid %}" style="color:inherit;">this card</a>
+    {% endif %}
+  </span>:</p>
   {% elif search_model == 'taggedpost' %}
-  <p class="m-1">posts with tag <span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in <span class="fw-bold text-danger">{% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}</span>:</p>
+  <p class="m-1">posts with tag <span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in <span class="fw-bold text-danger">
+    {% if cid == '' %}
+    <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a>
+    {% else %}
+    <a href="{% url 'card-content' cid %}" style="color:inherit;">this card</a>
+    {% endif %}
+  </span>:</p>
   {% elif search_model == 'tag' %}
-  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in tags in <span class="fw-bold text-danger">{% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}</span>:</p>
+  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in tags in <span class="fw-bold text-danger">
+    {% if cid == '' %}
+    <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a>
+    {% else %}
+    <a href="{% url 'card-content' cid %}" style="color:inherit;">this card</a>
+    {% endif %}
+  </span>:</p>
   {% endif %}
 
   {% if search_model == 'tag' %}
@@ -21,11 +39,13 @@
     <div class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
       <div class="row m-0 p-0">
         {% if post.image1s %}
-        <div class="col-2 m-0 p-1 pe-0">
+        <div class="col-4 m-0 p-1 pe-0">
+          <a href="{% url 'post-detail' post.id %}">
           <img class="img-fluid post-list-image" src="{{ post.image1s.url }}">
+          </a>
         </div>
         {% endif %}
-        <div class="col{% if post.image1s %}-10{% endif %} m-0 p-1"> 
+        <div class="col{% if post.image1s %}-8{% endif %} m-0 p-1"> 
           <div class="d-flex justify-content-between">
             <div class="d-flex">
               {% if post.card.is_public %}

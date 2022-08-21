@@ -8,21 +8,21 @@
   <span class="m-1"><span class="fw-bold">my liked posts:</span></span>
   {% elif search_target == 'authorposts' %}
   <span class="m-1">posts of <span class="fw-bold">{{ authorname }}</span> 
-  {% if cid %} 
-     in card - <span class="fw-bold text-danger">{{scope}}</span>
-  {% else %} 
-    in <span class="fw-bold text-danger">{{scope}}</span>
-  {% endif %}
+    {% if cid %} 
+      in card - <span class="fw-bold text-danger"><a href="{% url 'card-content' cid %}" style="color:inherit;">{{scope}}</a></span>
+    {% else %} 
+      in <span class="fw-bold text-danger"><a href="{% url 'main' %}" style="color:inherit;">{{scope}}</a></span>
+    {% endif %}
   </span>
   {% elif search_target == 'tagposts' %}
   <span class="m-1">posts with tag <span class="fw-bold">{{ tagname }}</span> 
-  {% if cid %} 
-     in card - <span class="fw-bolder text-danger">{{scope}}</span>
-  {% else %} 
-    in <span class="fw-bold text-danger">{{scope}}</span>
-  {% endif %}
-  {% endif %}
+    {% if cid %} 
+      in card - <span class="fw-bolder text-danger"><a href="{% url 'card-content' cid %}" style="color:inherit;">{{scope}}</a></span>
+    {% else %} 
+      in <span class="fw-bold text-danger"><a href="{% url 'main' %}" style="color:inherit;">{{scope}}</a></span>
+    {% endif %}
   </span>
+  {% endif %}
   <button class="btn btn-close float-end me-1" onclick="javascript:history.go(-1);"></button>
   </div>
   </div>
@@ -33,7 +33,9 @@
       <div class="row m-0 p-0 mt-2">
         {% if post.image1s %}
         <div class="col-4 m-0 p-0 pe-0">
+          <a href="{% url 'post-detail' post.id %}">
           <img class="img-fluid post-list-image" src="{{ post.image1s.url }}">
+          </a>
         </div>
         {% endif %}
         <div class="col{% if post.image1s %}-8{% endif %} m-0 p-1"> 

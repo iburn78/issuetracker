@@ -18,17 +18,14 @@ User Tier Rules:
 - card order change 
   * public card managers can change orders of public cards
 
-
 Image defaluts/Image managements: 
 - media/default_imgs: default images for cards
 - media/default_users: default images for users
 - delete objects through django-admin or bulk-operation will not call delete() method in models: pictures will not be automatically deleted -> delete one by one using shell, or there are other methods such as using signals
 
-
 Search related: 
 - author search: search authors with more than one public post
 - taggedpost search: search tags with whole word match 
-
 
 Upgrades
 - python 3.8 or 3.9 
@@ -36,9 +33,3 @@ Upgrades
 - django version 4.1 
 - bootstrap version 5.2
 - other versions - pip freeze
-
-
-
-to-do
-- author search 
-- tag search : tags are in posts and in searches (find "" in *.htmls, no '' (checked))
