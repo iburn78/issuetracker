@@ -1,35 +1,56 @@
 {% if cards %}
 {% load static %}
-<div>
-  card: 
-  {% for card in cards %}
-  <p class="m-0 p-0">
-    {{ card.id }}
-    {{ card.title | truncatechars:30 }}
-    {{ card.owner }}
-  </p>
-  {% endfor %}
+<div class="container-fluid m-0 p-0">
+  <p class="ms-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in {% if user.is_in_private_mode %}my{% else %}public{% endif %} cards:</p>
+  <div class="row m-0 p-0">
+    {% for card in cards %}
+    <div class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
+      <div class="card border-0">
+        <div class="row m-0 mb-1 p-0">
+          <div class="col-2 m-0 p-0">
+            {% if card.image %}
+            <img src="{{ card.image.url }}" class="card-img-select">
+            {% else %}
+            <div class="card-img-select"></div>
+            {% endif %}
+          </div>
+          <div class="col-10 m-0 p-0">
+            <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+              {% if card.is_public %}
+              <span class="float-end" style="margin-right: -10px;">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
+              {% endif %}
+              {% if card.is_official %}
+              <span class="float-end me-1" style="margin-right: -10px;"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
+              {% endif %}
+              <a href="{% url 'card-content' card.id %}" id="card_for_selection{{card.id}}" class="card-title-select text-dark KR-font">{{ card.title }}</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
 </div>
 
 {% if is_paginated %}
-<div class="row mt-3">
+<div class="row">
   <div class="col d-flex justify-content-center align-items-center">
     {% if page_obj.has_previous %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_card('{{search_term}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_card('{{search_term}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
     
     {% for num in page_obj.paginator.page_range %}
     {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_card('{{search_term}}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_card('{{search_term}}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
     {% elif page_obj.number == num %}
-    <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="search_card('{{search_term}}', {{ num }})">{{ num }}</a>
+    <a class="btn btn-outline-light text-dark mb-1 me-1" onclick="search_card('{{search_term}}', {{ num }})">{{ num }}</a>
     {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_card('{{search_term}}', {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_card('{{search_term}}', {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
     {% endif %}
     {% endfor %}
     
     {% if page_obj.has_next %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_card('{{search_term}}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_card('{{search_term}}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
   </div>
 </div>

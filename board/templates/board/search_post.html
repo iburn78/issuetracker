@@ -1,41 +1,87 @@
 {% if objects %}
 {% load static %}
-<div>
-  {{ search_model }}: 
+<div class="container-fluid m-0 p-0">
+  
+  {% if search_model == 'post' %}
+  <p class="ms-1 mt-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in posts {% if cid == '' %}of {% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}of this card{% endif %}:</p>
+  {% elif search_model == 'taggedpost' %}
+  <p class="ms-1 mt-1 mb-1">posts with tag <span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in {% if cid == '' %}{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}this card{% endif %}:</p>
+  {% elif search_model == 'tag' %}
+  <p class="ms-1 mt-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in tags {% if cid == '' %}in {% if user.is_in_private_mode %}my{% else %}public{% endif %} cards{% else %}in this card{% endif %}:</p>
+  {% endif %}
+
   {% if search_model == 'tag' %}
   {% for tag in objects %}
-  <a href="" class="ms-1 badge bg-yellow-300 text-dark">#{{ tag }}</a>
+  <a href="" class="ms-1 mb-1 badge bg-yellow-300 text-dark">#{{ tag }}</a>
   {% endfor %}
+
   {% else %}
-  {% for post in objects %}
-  <p class="m-0 p-0">
-    {{ post.id }}
-    {{ post.content | truncatechars:30 }}
-    {{ post.author }}
-  </p>
-  {% endfor %}
+  <div class="row m-0 p-0">
+    {% for post in objects %}
+    <div class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
+      <div class="row m-0 p-0">
+        {% if post.image1s %}
+        <div class="col-2 m-0 p-1 pe-0">
+          <img class="img-fluid post-list-image" src="{{ post.image1s.url }}">
+        </div>
+        {% endif %}
+        <div class="col{% if post.image1s %}-10{% endif %} m-0 p-1"> 
+          <div class="d-flex justify-content-between">
+            <div class="d-flex">
+              {% if post.card.is_public %}
+              <a class="me-2 text-dark" href=""><b>{{ post.author }}</b></a>
+              {% endif %}
+              <a href="{% url 'post-detail' post.id %}">
+                <div class="text-gray-500 small"> 
+                  {{ post.date_posted|date:"M d" }} 
+                </div>
+              </a>
+            </div>
+            
+            <div class="d-flex">
+              {% if post.card.is_public %}
+              <span id="listpagecounter{{post.id}}" class="float-end me-2 small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17"> {{ post.likes.count }}{%endif%}</span>
+              {% endif %}
+              <span id="allrepliescounter{{post.id}}" class="float-end me-1 small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
+            </div>
+          </div>
+          
+          <a href="{% url 'post-detail' post.id %}">
+            <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
+            <p class="article-content text-dark mb-1 text-break">{{ post.content | truncatechars:50 }}</p>
+          </a>
+          <div class="col float-end m-0 p-1">
+            {% for tag in post.tags.all %}
+            <a href="" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
   {% endif %}
 </div>
 
 {% if is_paginated %}
-<div class="row mt-3">
+<div class="row">
   <div class="col d-flex justify-content-center align-items-center">
     {% if page_obj.has_previous %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
     
     {% for num in page_obj.paginator.page_range %}
     {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
     {% elif page_obj.number == num %}
-    <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ num }})">{{ num }}</a>
+    <a class="btn btn-outline-light text-dark mb-1 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ num }})">{{ num }}</a>
     {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}',  {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}',  {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
     {% endif %}
     {% endfor %}
     
     {% if page_obj.has_next %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_post('{{search_model}}', '{{search_term}}', '{{cid}}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
   </div>
 </div>

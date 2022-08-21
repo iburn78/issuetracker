@@ -22,7 +22,7 @@
 </head>
 <body class="d-flex flex-column h-100" onload="init()">
   <!-- note below django template language in class -->
-  <nav class="navbar navbar-expand-lg {% if user.is_in_private_mode %}navbar-dark bg-dark{% else %}navbar-light bg-blue-300{% endif %} m-0 py-1">
+  <nav class="navbar navbar-expand-lg {% if user.is_in_private_mode %}navbar-dark bg-dark{% else %}navbar-light bg-gray-400{% endif %} m-0 py-1">
     <div class="container-fluid m-0 p-0 px-1">
       <div class="navbar-brand">
         <a href="{% url 'main' %}" style="color: inherit;">
@@ -74,7 +74,7 @@
               <span class="nav-item small"> more</span>
             </a>
             <!-- note below django template language in class -->
-            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-blue-200{% endif %}">
+            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-gray-300{% endif %}">
               <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-create' %}"><i class="nav-item bi bi-textarea-resize" width="24" height="24"></i><span class="nav-item small"> new card</span></a></ul>
               <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-select' %}"><i class="nav-item bi bi-pencil-square" width="24" height="24"></i><span class="nav-item small"> new post</span></a></ul>
               {% if user.is_authenticated %}
@@ -83,6 +83,7 @@
               {% else %}
               <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'register' %}"><i class="nav-item bi bi-person-plus-fill" width="24" height="24"></i><span class="nav-item small"> register</span></a></ul>
               {% endif %}
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'search' %}"><i class="nav-item bi bi-search" width="24" height="24"></i><span class="nav-item small"> search</span></a></ul>
             </div>
           </li>
           {% if user.is_authenticated and user.is_public_card_manager %}
@@ -92,13 +93,13 @@
               <span class="nav-item small"> admin</span>
             </a>
             <!-- note below django template language in class -->
-            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-blue-200{% endif %}">
+            <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-gray-300{% endif %}">
               <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'reports' %}"><span class="nav-item small" id="mainbase_rep_count">reports</span></a></ul>
               <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'exceptions' %}"><span class="nav-item small" id="mainbase_exp_count">exceptions</span></a></ul>
             </div>
           </li>
           {% endif %}
-          <form action='' class="d-flex" method="POST" autocomplete="off" onsubmit="inline_search(event, 1)">
+          <form action='' class="d-flex" method="POST" autocomplete="off" onsubmit="inline_search(event)">
             {% csrf_token %}
             <input type='hidden' name="path" value="{{ request.path }}">
             <input class="nav-item form-control mt-1 mb-1" name="search_term" id="inline_search_form" type="text" placeholder="search...">
@@ -117,12 +118,17 @@
       </div>
       {% endfor %}
       {% endif %} 
-      <div id="search_card_res" class="bg-gray-100 m-0 p-0"></div>
-      <div id="search_post_res" class="bg-gray-100 m-0 p-0"></div>
-      <div id="search_taggedpost_res" class="bg-gray-100 m-0 p-0"></div>
-      <div id="search_tag_res" class="bg-gray-100 m-0 p-0"></div>
-      <div id="search_mylikes_res" class="bg-gray-100 m-0 p-0"></div>
-      <div id="search_author_res" class="bg-gray-100 m-0 p-0"></div>
+      {% block search_form %}{% endblock search_form %}
+      <div id="search_card_res" class="bg-gray-100 mx-1 my-2"></div>
+      <div id="search_post_res" class="bg-gray-100 mx-1 my-2"></div>
+      <div id="search_taggedpost_res" class="bg-gray-100 mx-1 my-2"></div>
+      <div id="search_tag_res" class="bg-gray-100 mx-1 my-2"></div>
+      <div id="search_author_res" class="bg-gray-100 mx-1 my-2"></div>
+      <div id="search_no_result" style="display:none;" class="bg-gray-100 m-2 text-muted">no search result...</div>
+      <div id="search_clear_button" style="display:none;" class="ms-1 my-2">
+        <div class="d-flex justify-content-end"><div class="p-1 btn btn-outline-secondary btn-sm m-1 mb-2" onclick="clear_search()">clear search result</div></div>
+        <hr class="m-0 me-1 p-0">
+      </div>
     </div>
     {% block content %}{% endblock content %}
   </main>
@@ -150,11 +156,21 @@
     </div>
   </footer>
   <script type="text/javascript" src="{% static 'board/main.js' %}"></script>   
-  {% block script %}{% endblock script %}
   
   <script>
+    function clear_search(){
+      document.getElementById("search_card_res").innerHTML="";
+      document.getElementById("search_post_res").innerHTML="";
+      document.getElementById("search_taggedpost_res").innerHTML="";
+      document.getElementById("search_tag_res").innerHTML="";
+      document.getElementById("search_author_res").innerHTML=""; 
+      document.getElementById("search_no_result").style.display = 'none';
+      document.getElementById("search_clear_button").style.display = 'none';
+    }
+    
     function inline_search(e) {
       e.preventDefault();
+      clear_search();
       sform = document.getElementById("inline_search_form")
       if (sform.value == "") {
         sform.focus();
@@ -166,6 +182,10 @@
       }
       let formData = new FormData(e.target);
       e.target.reset();
+      search_request(formData);
+    }
+
+    function search_request(formData) {
       let request = new XMLHttpRequest();
       request.open("POST", "{% url 'search-path' %}", true);
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -173,25 +193,32 @@
         if(this.readyState === 4 && this.status === 200) {
           url_name = JSON.parse(this.responseText).url_name;
           if (url_name == 'card-content') {
+            document.getElementById("search_no_result").style.display = 'block';
+            document.getElementById("search_clear_button").style.display = 'block';
             cid = JSON.parse(this.responseText).cid;
             search_post('post', formData.get('search_term'), cid);
-            search_post('mylikes', formData.get('search_term'), cid);
             search_post('taggedpost', formData.get('search_term'), cid);
             search_post('tag', formData.get('search_term'), cid);
-            search_author(formData.get('search_term')); 
+            search_author(formData.get('search_term'), cid); 
           } else if (url_name == 'main' || url_name == 'card-list') {
+            document.getElementById("search_no_result").style.display = 'block';
+            document.getElementById("search_clear_button").style.display = 'block';
             search_card(formData.get('search_term')); 
             search_post('post', formData.get('search_term'), '');
-            search_post('mylikes', formData.get('search_term'), '');
             search_post('taggedpost', formData.get('search_term'), '');
             search_post('tag', formData.get('search_term'), '');
-            search_author(formData.get('search_term')); 
+            search_author(formData.get('search_term'), ''); 
           } else {
-            document.getElementById("search_post_res").innerHTML = "move to search page?";
+            search_all(formData.get('search_term')); 
           }
         };
       }; 
       request.send(formData);
+    }
+    
+    function search_all(search_term) {
+      param = "?search_term=" + encodeURIComponent(search_term);
+      window.location.href="{% url 'search' %}"+param;
     }
     
     function search_card(search_term, page = null) {
@@ -204,7 +231,11 @@
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          document.getElementById("search_card_res").innerHTML = JSON.parse(this.responseText).res;
+          count = JSON.parse(this.responseText).count;
+          if (count > 0) {
+            document.getElementById("search_card_res").innerHTML = JSON.parse(this.responseText).res;
+            document.getElementById("search_no_result").style.display = 'none';
+          };
         };
       }; 
       request.send();
@@ -223,14 +254,21 @@
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          document.getElementById("search_"+search_model+"_res").innerHTML = JSON.parse(this.responseText).res;
+          count = JSON.parse(this.responseText).count;
+          if (count > 0) {
+            document.getElementById("search_"+search_model+"_res").innerHTML = JSON.parse(this.responseText).res;
+            document.getElementById("search_no_result").style.display = 'none';
+          };
         };
       }; 
       request.send();
     }
     
-    function search_author(search_term, page = null) {
+    function search_author(search_term, cid='', page = null) {
       param = "?search_term=" + encodeURIComponent(search_term);
+      if (cid != '') {
+        param += "&cid="+encodeURIComponent(cid);
+      }
       if (page != null) {
         param += "&page="+page; 
       }
@@ -239,7 +277,11 @@
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          document.getElementById("search_author_res").innerHTML = JSON.parse(this.responseText).res;
+          count = JSON.parse(this.responseText).count;
+          if (count > 0) {
+            document.getElementById("search_author_res").innerHTML = JSON.parse(this.responseText).res;
+            document.getElementById("search_no_result").style.display = 'none';
+          };
         };
       }; 
       request.send();
@@ -280,8 +322,10 @@
     }
     add_report_count();
     add_exception_count();
+    
   </script>
   {% endif %} 
+  {% block script %}{% endblock script %}
   
 </body> 
 </html>

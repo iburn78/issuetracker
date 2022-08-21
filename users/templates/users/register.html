@@ -1,9 +1,11 @@
 {% extends "board/base.html" %}
 {% load crispy_forms_tags %}
+{% load static %}
 {% block content %}
 <div class="container-xxl">
-	<div class="content-section">
-		<form method="POST" autocomplete='off'>
+	<div id="notice_area"></div>
+	<div class="content-section" id="register_form_dispaly">
+		<form method="POST" autocomplete='off' onsubmit="holdon(event)" id="register_form">
 			{% csrf_token %}
 			<fieldset class ="form-group">
 				<legend class="border-bottom mb-4">Join Today</legend>
@@ -11,6 +13,7 @@
 			</fieldset>
 			<div class="from-group">
 				<button class="btn btn-primary mb-2" type="submit">Sign Up</button>
+				<button class="float-end btn btn-outine mb-2" type="reset">clear</button>
 			</div>
 		</form>
 		<div class="border-top pt-3">
@@ -21,3 +24,19 @@
 	</div>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script>
+	function holdon(e) {
+		var form = document.getElementById("register_form_dispaly");
+		form.style.display = 'none';
+		document.getElementById("notice_area").innerHTML = 
+		`
+		<div class="m-2">being processed...</div>
+		<div class="progress m-2">
+  		<div class="progress-bar w-100 progress-bar-striped progress-bar-animated" role="progressbar"></div>
+		</div>
+		`
+	}; 
+</script>
+{% endblock script %}

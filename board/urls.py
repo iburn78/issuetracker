@@ -30,6 +30,7 @@ urlpatterns = [
     path('reports/', ReportView.as_view(), name = 'reports'),
     path('exceptions/', exception_view, name = 'exceptions'),
     path('mylikes/', SeaerchView_MyLikes.as_view(), name = 'mylikes'),
+    path('search/', search, name = 'search'),
 
     path('favicon.ico', RedirectView.as_view(url=settings.STATIC_URL+'board/IssueTracker_Logo.png')),
     path(join('media', POST_UPLOADED_IMGS, '<str:file>'), PostMediaView.as_view(), name='media-view'),

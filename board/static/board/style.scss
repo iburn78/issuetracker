@@ -121,7 +121,7 @@ $grid-breakpoints: (
   }
 }
 
-.card {
+.card.animated {
   position: relative;
   animation: card-load 0.3s ease-out;
 }

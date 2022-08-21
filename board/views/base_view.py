@@ -9,12 +9,17 @@ from django.core import serializers
 from django.core.exceptions import PermissionDenied
 from django.db.models import Q, Count
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.template.defaulttags import register
 
 def test(request):
     return render(request, 'board/test.html')
 
 def about(request):
     return render(request, 'board/about.html')
+
+@register.filter
+def get_item(dictionary, key):
+    return dictionary.get(key)
 
 def user_mode_change(request):
     if not request.user.is_authenticated:
@@ -58,6 +63,18 @@ def vote(request):
     return JsonResponse({"result": "failure"}, status = 400)
 
 
+def search(request):
+    context = {}
+    search_term = request.GET.get('search_term') 
+    if search_term != None:
+        context['search_term'] = search_term
+        context['search_requested'] = 'requested'
+    else: 
+        context['search_term'] = ''
+        context['search_requested'] = 'not'
+    return render(request, 'board/search.html', context)
+
+
 def search_path(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
         path = resolve(request.POST.get('path'))
@@ -67,15 +84,16 @@ def search_path(request):
         else: 
             return JsonResponse({"url_name": path.url_name,}, status=200)
 
+
 class SearchView_Card(ListView):
     model = Card
-    paginate_by = 3
+    paginate_by = 4
     template_name = 'board/search_card.html'
     context_object_name = 'cards'
 
     def get(self, request, *args, **kwargs):
         res = super().get(request, *args, **kwargs).render().content.decode("utf-8")
-        return JsonResponse({"res": res}, status=200)
+        return JsonResponse({"res": res, "count": len(self.get_queryset())}, status=200)
 
     def get_queryset(self):
         search_term = self.request.GET.get('search_term')
@@ -89,15 +107,16 @@ class SearchView_Card(ListView):
         context['search_term'] = self.request.GET.get('search_term')
         return context
 
+
 class SearchView_Post(ListView):
     model = Post
-    paginate_by = 3
+    paginate_by = 6
     template_name = 'board/search_post.html'
     context_object_name = 'objects'
 
     def get(self, request, *args, **kwargs):
         res = super().get(request, *args, **kwargs).render().content.decode("utf-8")
-        return JsonResponse({"res": res}, status=200)
+        return JsonResponse({"res": res, "count": len(self.get_queryset())}, status=200)
     
     def get_queryset(self):
         search_model = self.request.GET.get('search_model')
@@ -139,7 +158,7 @@ class SearchView_Post(ListView):
                     return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
 
         elif search_model == "tag":
-            self.paginate_by = 10
+            self.paginate_by = 15
             if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
                 if cid == None:
                     return Post.tags.filter(Q(post__author=self.request.user) & Q(post__card__is_public=False)).filter(Q(name__icontains=search_term)).distinct().order_by('name')
@@ -167,9 +186,10 @@ class SearchView_Post(ListView):
             context['cid'] = ''
         return context
 
+
 class SeaerchView_MyLikes(LoginRequiredMixin, ListView):
     model = Post
-    paginate_by = 3
+    paginate_by = 20
     template_name = 'board/search_mylikes.html'
     context_object_name = 'posts'
     
@@ -182,19 +202,37 @@ class SeaerchView_MyLikes(LoginRequiredMixin, ListView):
 
 class SearchView_Author(ListView):
     model = User
-    paginate_by = 3
+    paginate_by = 10
     template_name = 'board/search_author.html'
     context_object_name = 'authors'
 
     def get(self, request, *args, **kwargs):
         res = super().get(request, *args, **kwargs).render().content.decode("utf-8")
-        return JsonResponse({"res": res}, status=200)
+        return JsonResponse({"res": res, "count": len(self.get_queryset())}, status=200)
 
     def get_queryset(self):
+        if self.request.user.is_in_private_mode: 
+            return User.objects.none()
         search_term = self.request.GET.get('search_term')
-        return User.objects.annotate(num_posts=Count('post', filter=Q(post__card__is_public=True))).filter(Q(username__icontains=search_term) & Q(num_posts__gt=0)).distinct().order_by('username')
+        cid = self.request.GET.get('cid')
+        if cid != None:
+            return User.objects.annotate(num_posts=Count('post', filter=(Q(post__card__is_public=True) & Q(post__card_id=cid)))).filter(Q(username__icontains=search_term) & Q(num_posts__gt=0)).distinct().order_by('username')
+        else: 
+            return User.objects.annotate(num_posts=Count('post', filter=Q(post__card__is_public=True))).filter(Q(username__icontains=search_term) & Q(num_posts__gt=0)).distinct().order_by('username')
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['search_term'] = self.request.GET.get('search_term')
+        cid = self.request.GET.get('cid')
+        qs = self.get_queryset()
+        num_post = {}
+        if cid != None:
+            context['cid'] = cid
+            for u in qs:
+                num_post[u.id] = u.post_set.filter(Q(card_id=cid) & Q(card__is_public=True)).count()
+        else: 
+            context['cid'] = ''
+            for u in qs:
+                num_post[u.id] = u.post_set.filter(Q(card__is_public=True)).count()
+        context['num_post'] = num_post
         return context

@@ -1,0 +1,46 @@
+{% extends "board/base.html" %}
+{% block search_form %}
+<div class="container-fluid m-0 p-1">
+    <form action='' class="d-flex m-0 p-0" method="POST" autocomplete="off" onsubmit="search_page_submit(event)">
+      {% csrf_token %}
+      <input type='hidden' name="path" value="{{ request.path }}">
+      <div class="input-group">
+        <input class="form-control my-1" name="search_term" id="search_page_input" type="text" placeholder="search...">
+        <button class="ms-1 mt-1 mb-1 btn btn-primary" type="submit">submit</button>
+        <button class="ms-1 mt-1 mb-1 btn btn-outline-secondary" type="reset">clear</button>
+      </div>
+    </form>
+</div>
+{% endblock search_form %}
+{% block content %}
+{% endblock content %}
+
+{% block script %}
+<script>
+  function search_page_submit(e) {
+    e.preventDefault();
+    clear_search();
+    spinput = document.getElementById("search_page_input")
+    if (spinput.value == "") {
+      spinput.focus();
+      return;
+    }
+    search_all(spinput.value);
+  }
+  
+  function search_page_search(requested, search_term) {
+    if (requested == 'requested') {
+      document.getElementById("search_no_result").style.display = 'block';
+      document.getElementById("search_clear_button").style.display = 'block';
+      search_card(search_term); 
+      search_post('post', search_term, '');
+      search_post('taggedpost', search_term, '');
+      search_post('tag', search_term, '');
+      search_author(search_term, ''); 
+    };
+  }
+  
+  search_page_search('{{search_requested}}', '{{search_term}}')
+</script>
+{% endblock script %}
+

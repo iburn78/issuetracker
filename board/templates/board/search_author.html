@@ -1,36 +1,31 @@
 {% if authors %}
 {% load static %}
 <div>
-  author: (ones who have at least one public post)
+  <p class="ms-1 mt-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in username {% if cid == '' %} with posts in public cards{% else %} with posts in this card{% endif %}:</p>
   {% for author in authors %}
-  <p class="m-0 p-0">
-    {{ author.id }}
-    {{ author.username }}
-    {{ author.card_set.count }}
-    {{ author.post_set.count }}
-  </p>
+  <a href="" class="ms-1 mb-1 me-1 text-dark">{{ author.username }}</a>({{num_post|get_item:author.id}})
   {% endfor %}
 </div>
 
 {% if is_paginated %}
-<div class="row mt-3">
+<div class="row">
   <div class="col d-flex justify-content-center align-items-center">
     {% if page_obj.has_previous %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_author('{{search_term}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_author('{{search_term}}', '{{ cid }}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
     
     {% for num in page_obj.paginator.page_range %}
     {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_author('{{search_term}}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_author('{{search_term}}', '{{ cid }}', {{ num }})"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
     {% elif page_obj.number == num %}
-    <a class="btn btn-outline-light text-dark mb-4 me-1" onclick="search_author('{{search_term}}', {{ num }})">{{ num }}</a>
+    <a class="btn btn-outline-light text-dark mb-1 me-1" onclick="search_author('{{search_term}}', '{{ cid }}', {{ num }})">{{ num }}</a>
     {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_author('{{search_term}}', {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_author('{{search_term}}', '{{ cid }}', {{ num }})"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
     {% endif %}
     {% endfor %}
     
     {% if page_obj.has_next %}
-    <a class="btn btn-outline-light mb-4 me-1" onclick="search_author('{{search_term}}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+    <a class="btn btn-outline-light mb-1 me-1" onclick="search_author('{{search_term}}', '{{ cid }}', {{ page_obj.paginator.num_pages }})"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
     {% endif %}
   </div>
 </div>

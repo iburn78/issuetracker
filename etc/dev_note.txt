@@ -38,5 +38,7 @@ Upgrades
 - other versions - pip freeze
 
 
-To fix
-- give some time until registration done
+
+to-do
+- author search 
+- tag search : tags are in posts and in searches (find "" in *.htmls, no '' (checked))
