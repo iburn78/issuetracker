@@ -60,8 +60,7 @@
     {% if not posts %}
     <div class="col m-1 p-0">
       <div class="alert alert-primary m-0 p-2">
-        No post yet - create post 
-        <a class="ms-2 text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
+        create first post - <a class="ms-2 text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       </div>
     </div>
     {% endif %}
