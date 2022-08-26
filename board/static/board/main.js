@@ -1,7 +1,11 @@
+const [entry] = performance.getEntriesByType("navigation");
+if (entry["type"] === "back_forward")
+    location.reload();
+
 function init() {
   document.body.addEventListener('click', menu_close, true);
 };
-
+    
 function menu_close(event) {
   var _opened = document.getElementById("navbarToggle").classList.contains("show");
   if (_opened === true && event.target.classList.contains("nav-item") === false ) {

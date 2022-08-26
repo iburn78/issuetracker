@@ -184,7 +184,7 @@
       e.target.reset();
       search_request(formData);
     }
-
+    
     function search_request(formData) {
       let request = new XMLHttpRequest();
       request.open("POST", "{% url 'search-path' %}", true);
