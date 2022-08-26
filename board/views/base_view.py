@@ -148,14 +148,14 @@ class SearchView_Post(ListView):
         elif search_model == "taggedpost":
             if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
                 if cid == None:
-                    return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__name__iexact=search_term)).distinct().order_by('-date_posted')
                 else:
-                    return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False)).filter(Q(tags__name__iexact=search_term)).distinct().order_by('-date_posted')
             else: 
                 if cid == None:
-                    return Post.objects.filter(Q(card__is_public=True)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(card__is_public=True)).filter(Q(tags__name__iexact=search_term)).distinct().order_by('-date_posted')
                 else:
-                    return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True)).filter(Q(tags__name=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True)).filter(Q(tags__name__iexact=search_term)).distinct().order_by('-date_posted')
 
         elif search_model == "tag":
             self.paginate_by = 15
