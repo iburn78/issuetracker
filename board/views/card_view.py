@@ -193,6 +193,8 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         card_image_resize(form)
         newcard = form.save(commit=False)
+        if form.cleaned_data['toggle_official']:
+            newcard.is_official = not newcard.is_official
         newcard.save()
         form.save_m2m()
         return super().form_valid(form)

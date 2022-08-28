@@ -16,13 +16,16 @@
           {% if c_u == "Create" %}
           <p id="public_card_check_id" class="m-0">{{ form.is_public }} <b class="small">make this public</b></p>
           <p class="m-0">{{ form.is_official }} <b class="small">make this public and official</b></p>
+          <div hidden>{{ form.toggle_official }}</div>
           {% else %}
-          <p hidden>{{ form.is_public }} {{ form.is_official }}</p>
-          {% if card.is_public %}
+          <div hidden>{{ form.is_public }} {{ form.is_official }}</div>
+          {% if card.is_public and card.is_official %}
           <p class="emphasis-font text-red-700 m-0">PUBLIC CARD</p>
-          {% endif %}
-          {% if card.is_official %}
           <p class="emphasis-font text-red-700 m-0">OFFICIAL CARD</p>
+          <p class="m-0">{{ form.toggle_official }} <b class="small">make this NON official</b></p>
+          {% elif card.is_public %}
+          <p class="emphasis-font text-red-700 m-0">PUBLIC CARD</p>
+          <p class="m-0">{{ form.toggle_official }} <b class="small">make this official</b></p>
           {% endif %}
           {% endif %}
           {% endif %}

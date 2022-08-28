@@ -45,7 +45,7 @@
 </div>
 <div class="row m-0">
   {% if post.image1s and post.image2s %}
-  <div class="col-lg-6 mt-1 p-0">
+  <div class="col-xl-8 mt-1 p-0">
     <div id="carousel_indicators{{post.id}}" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="0" class="active"></button>
@@ -109,14 +109,14 @@
       </button>
     </div>
   </div>
-  <div class="col-lg-6 p-0">
+  <div class="col-xl-4 p-0">
     <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% elif post.image1s %}
-  <div class="col-lg-6 p-0 mt-1">
+  <div class="col-xl-8 p-0 mt-1">
     <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
-  <div class="col-lg-6 p-0">
+  <div class="col-xl-4 p-0">
     <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% else %}

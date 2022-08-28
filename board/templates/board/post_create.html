@@ -16,7 +16,7 @@
     {% endif %}
     {% endif %}
   </div>
-  <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off">
+  <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off" onsubmit="holdon(event)">
     {% csrf_token %}
     <fieldset>
       <p class="m-0 p-0">Content*</p>
@@ -66,9 +66,11 @@
       <p class="m-0">Tags</p>
       <p>{{ form.tags }}</p>
       <p id="clear-image1"></p>
-      <button class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
-        {% if update %}Update{% else %}Create{% endif %}
-      </button>
+      <div id="holdon_area">
+        <button id="post-cu-button" class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
+          {% if update %}Update{% else %}Create{% endif %}
+        </button>
+      </div>
       <input type="button" class="btn btn-outline-secondary btn-sm mb-2" value="cancel" onclick="javascript:history.go(-1);">
     </fieldset>
   </form>
@@ -180,5 +182,42 @@
       }
     })
   }
+  
+  function holdon(e) {
+    let sbutton = document.getElementById("post-cu-button");
+    sbutton.style.display = 'none';
+    submit1();
+  }; 
+  
+  function submit1() {
+    document.getElementById("holdon_area").innerHTML = 
+    `
+      <div class="mb-2 me-1 float-end">
+        ..
+      </div>
+    `
+    setTimeout(submit2, 500);
+  }
+  
+  function submit2() {
+    document.getElementById("holdon_area").innerHTML = 
+    `
+      <div class="mb-2 me-1 float-end">
+        ....
+      </div>
+    `
+    setTimeout(submit3, 500);
+  }
+
+  function submit3() {
+    document.getElementById("holdon_area").innerHTML = 
+    `
+      <div class="mb-2 me-1 float-end">
+        ......
+      </div>
+    `
+    setTimeout(submit1, 500);
+  }
+  
 </script>
 {% endblock content %}
