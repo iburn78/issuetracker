@@ -2,7 +2,7 @@
 {% block content %}
 {% load crispy_forms_tags %}
 <div id="card-create-container" class="container-xxl p-0 bg-gray-100">
-  <form method="POST" enctype="multipart/form-data" autocomplete="off">
+  <form method="POST" enctype="multipart/form-data" autocomplete="off" onsubmit="holdon(event)">
     {% csrf_token %}
     <fieldset>
       <div class="row m-0 p-0">
@@ -37,8 +37,8 @@
           <input type="hidden" name="default_img" value="{{ form.instance.image }}">
           {{ form.image_input }}
           <div class="my-2">
-            <button class="btn btn-primary btn-sm float-end" type="submit">{{c_u}}</button>
-            <input type="button" class="me-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
+            <button id="card-cu-button" class="ms-2 btn btn-primary btn-sm float-end" type="submit">{{c_u}}</button>
+            <input id="card-cancel-button" type="button" class="btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
             <button type="button" id="card-color-button" class="btn btn-outline-secondary text-dark btn-sm" style="background-color: {{ bg_color }}" data-bs-toggle="modal" data-bs-target="#colorModal">
               <b>Card color</b>
             </button>
@@ -162,5 +162,10 @@
       bootstrap.Modal.getInstance(document.getElementById('colorModal')).hide();
     }); 
   });
+  
+  function holdon(e) {
+    document.getElementById("card-cu-button").style.display = 'none';
+    document.getElementById("card-cancel-button").style.display = 'none';
+  }; 
 </script>
 {% endblock script %}
