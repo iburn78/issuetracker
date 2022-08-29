@@ -1,9 +1,50 @@
 {% extends "board/base.html" %}
+
+{% block style %}
+<style>
+  .carousel{
+  max-width: 100%;
+  position: relative;
+  height: auto;
+}
+
+img{
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  transition: 0.3s opacity ease-in-out;
+}
+</style>
+{% endblock style %}
+
 {% block content %}
+<div class="carousel">
+  <img class="mySlides" src="https://source.unsplash.com/random">
+  <img class="mySlides" src="https://source.unsplash.com/random/?cat">
+  <img class="mySlides" src="https://source.unsplash.com/random/?dog">
+</div>
 {% endblock content %}
 
 {% block script %}
 <script>
+  var myIndex = 0;
+carousel();
+
+function carousel() {
+  var i;
+  var x = document.getElementsByClassName("mySlides");
+  for (i = 0; i < x.length; i++) {
+    x[i].style.opacity = 0;
+  }
+  myIndex++;
+  if (myIndex > x.length) {
+    myIndex = 1
+  }
+  x[myIndex - 1].style.opacity = 1;
+  setTimeout(carousel, 1000); // Change image every 3 seconds
+}
 </script>
 {% endblock script %}
 
