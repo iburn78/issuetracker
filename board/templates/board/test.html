@@ -8,26 +8,54 @@
     height: auto;
   }
   
-  img{
+  /* img{
     width: 100%;
     position: absolute;
     left: 0;
     top: 0;
     display: block;
     transition: 0.3s opacity ease-in-out;
-  }
+  } */
 </style>
 {% endblock style %}
 
 {% block content %}
 
-
-<input type="file" name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
-<img id="image-preview" src="" style="width:100%" class="" alt="placeholder">
+<input type="file" multiple="multiple" name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
 
 <div class="row">
   <div class="col">
     <div id="drop-area" class="bg-yellow-100 p-4">drop-area</div>
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    1
+    <img id="image-preview0" src="" class="w-25 img-thumbnail">
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    2
+    <img id="image-preview1" src="" class="w-25 img-thumbnail">
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    3
+    <img id="image-preview2" src="" class="w-25 img-thumbnail">
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    4
+    <img id="image-preview3" src="" class="w-25 img-thumbnail">
+  </div>
+</div>
+<div class="row">
+  <div class="col">
+    5
+    <img id="image-preview4" src="" class="w-25 img-thumbnail  ">
   </div>
 </div>
 
@@ -55,21 +83,22 @@
     event.stopPropagation();
     event.preventDefault();
     const fileList = event.dataTransfer.files;
-    console.log(fileList);
-    console.log(fileList[0]);
     updatePreview(event.dataTransfer, 'image-preview');
   });
-
+  
   function updatePreview(input, target) {
-    let file = input.files[0];
-    let reader = new FileReader();
-    
-    reader.readAsDataURL(file);
-    reader.onload = function () {
-      let img = document.getElementById(target);
-      // can also use "this.result"
-      img.src = reader.result;
-    }
+    const files = input.files;
+    const arr = Array.from(files);
+    arr.forEach((file, index) => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = function () {
+        console.log(target+index);
+        let img = document.getElementById(target+index);
+        // can also use "this.result"
+        img.src = reader.result;
+      }
+    })
   }
   var myIndex = 0;
   // carousel();
