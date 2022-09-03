@@ -23,7 +23,13 @@
 
 
 <input type="file" name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
-<img id="image-preview" src="" style="width:400px" class="" alt="placeholder">
+<img id="image-preview" src="" style="width:100%" class="" alt="placeholder">
+
+<div class="row">
+  <div class="col">
+    <div id="drop-area" class="bg-yellow-100 p-4">drop-area</div>
+  </div>
+</div>
 
 <!-- <div class="carousel">
   <img class="mySlides" src="https://source.unsplash.com/random">
@@ -32,12 +38,28 @@
 </div> -->
 
 
-
-
 {% endblock content %}
 
 {% block script %}
 <script>
+  const dropArea = document.getElementById('drop-area');
+  
+  dropArea.addEventListener('dragover', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    // Style the drag-and-drop as a "copy file" operation.
+    event.dataTransfer.dropEffect = 'copy';
+  });
+  
+  dropArea.addEventListener('drop', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    const fileList = event.dataTransfer.files;
+    console.log(fileList);
+    console.log(fileList[0]);
+    updatePreview(event.dataTransfer, 'image-preview');
+  });
+
   function updatePreview(input, target) {
     let file = input.files[0];
     let reader = new FileReader();
