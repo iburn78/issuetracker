@@ -146,7 +146,7 @@ def post_image_resize(post) -> None:
         with Image.open(images[i].file) as img:
             ft = img.format
             img = img.crop(croparea[i])
-            img = image_resize(POST_IMG_MAXSIZE, img)
+            # img = image_resize(POST_IMG_MAXSIZE, img)
             res = ImageOps.exif_transpose(img)
             res.save(img_io, format=ft)
             th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
