@@ -81,14 +81,13 @@ class PostCreateView(CreateView):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
-        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s,
-            form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
+
         form.instance.author = self.request.user
         form.instance.card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         new_post = form.save(commit=False)
         new_post.save()
         form.save_m2m()
-        # post_image_resize(new_post)
+        post_image_resize(new_post)
         return redirect(self.get_success_url())
 
     def get_success_url(self) -> str:
@@ -178,14 +177,12 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
-        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s,
-            form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
 
         form.instance.author = self.get_object().author
         rev_post = form.save(commit=False)
         rev_post.save()
         form.save_m2m()
-        # post_image_resize(rev_post)
+        post_image_resize(rev_post)
         
         redirect_url = redirect(self.get_success_url())
         if rev_post.content == '' and rev_post.num_images == 0:
