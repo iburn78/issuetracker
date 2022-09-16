@@ -36,7 +36,7 @@
 </div>
 
 {% if is_paginated %}
-<div class="row">
+<div class="row m-0 p-0">
   <div class="col d-flex justify-content-center align-items-center">
     {% if page_obj.has_previous %}
     <a class="btn btn-outline-light mb-1 me-1" onclick="search_card('{{search_term}}', 1)"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
