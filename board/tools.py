@@ -27,7 +27,9 @@ POST_MAX_COUNT_TO_DELETE_A_CARD = 10
 
 
 def image_resize(maxsize, img: Image) -> Image:
+    exception_log('resize_11111')
     w, h = img.size
+    exception_log('resize_22222'+str(w)+'///'+str(h))
     if w <= h:
         if h <= maxsize:
             res = img
@@ -42,6 +44,7 @@ def image_resize(maxsize, img: Image) -> Image:
             wr = maxsize
             hr = round(h/w*maxsize)
             res = img.resize((wr, hr))
+    exception_log('resize_33333')
     return res
 
 
