@@ -79,18 +79,18 @@ class PostCreateView(CreateView):
         form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
-        # [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
-        #     form.instance.image5, form.instance.image6, form.instance.image7] = images
+        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
+            form.instance.image5, form.instance.image6, form.instance.image7] = images
 
-        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s,
-            form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
+        # [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s,
+        #     form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
 
         form.instance.author = self.request.user
         form.instance.card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         new_post = form.save(commit=False)
         new_post.save()
         form.save_m2m()
-        # post_image_resize(new_post)
+        post_image_resize(new_post)
         return redirect(self.get_success_url())
 
     def get_success_url(self) -> str:
@@ -107,49 +107,6 @@ class PostCreateView(CreateView):
     def get_initial(self):
         initial = super().get_initial()
         return initial
-
-class PostDetailView(DetailView): 
-    model = Post
-    template_name = 'board/post_detail.html'
-    form_class = CommentForm
-    context_object_name = 'comments'
-
-    def get(self, request, *args, **kwargs):
-        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        if post.card.is_public:
-            return super().get(request, *args, **kwargs)
-        else:
-            if not self.request.user.is_authenticated:
-                return redirect('login')
-            else:
-                if self.request.user == post.card.owner:
-                    return super().get(request, *args, **kwargs)
-                else:
-                    raise PermissionDenied
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
-        context['post'] = post
-        context['form'] = self.form_class()
-        return context
-
-
-class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
-    model = Post
-    success_url = '/'
-
-    def test_func(self):
-        post = self.get_object()
-        if self.request.user == post.card.owner or self.request.user == post.author:
-            return True
-        return False
-
-    def post(self, request, *args, **kwargs):
-        card_id = self.get_object().card.id
-        self.success_url = f'/card/{card_id}'
-        return super().post(request, *args, **kwargs)
-
 
 class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Post
@@ -178,17 +135,17 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
-        # [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
-        #     form.instance.image5, form.instance.image6, form.instance.image7] = images
+        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
+            form.instance.image5, form.instance.image6, form.instance.image7] = images
 
-        [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s,
-            form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
+        # [form.instance.image1s, form.instance.image2s, form.instance.image3s, form.instance.image4s,
+        #    form.instance.image5s, form.instance.image6s, form.instance.image7s] = images
 
         form.instance.author = self.get_object().author
         rev_post = form.save(commit=False)
         rev_post.save()
         form.save_m2m()
-        # post_image_resize(rev_post)
+        post_image_resize(rev_post)
         
         redirect_url = redirect(self.get_success_url())
         if rev_post.content == '' and rev_post.num_images == 0:
@@ -231,6 +188,49 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         initial['image6_input'] = self.object.image6
         initial['image7_input'] = self.object.image7
         return initial
+
+
+class PostDetailView(DetailView): 
+    model = Post
+    template_name = 'board/post_detail.html'
+    form_class = CommentForm
+    context_object_name = 'comments'
+
+    def get(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        if post.card.is_public:
+            return super().get(request, *args, **kwargs)
+        else:
+            if not self.request.user.is_authenticated:
+                return redirect('login')
+            else:
+                if self.request.user == post.card.owner:
+                    return super().get(request, *args, **kwargs)
+                else:
+                    raise PermissionDenied
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        context['post'] = post
+        context['form'] = self.form_class()
+        return context
+
+
+class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = Post
+    success_url = '/'
+
+    def test_func(self):
+        post = self.get_object()
+        if self.request.user == post.card.owner or self.request.user == post.author:
+            return True
+        return False
+
+    def post(self, request, *args, **kwargs):
+        card_id = self.get_object().card.id
+        self.success_url = f'/card/{card_id}'
+        return super().post(request, *args, **kwargs)
 
 
 class PostMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
