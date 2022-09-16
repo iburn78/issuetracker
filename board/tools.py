@@ -36,6 +36,7 @@ def image_resize(maxsize, img: Image) -> Image:
         else:
             wr = round(w/h*maxsize)
             hr = maxsize
+            exception_log('resize_***********1-'+str(wr)+'///'+str(hr))
             res = img.resize((wr, hr))
     else:
         if w <= maxsize:
@@ -43,6 +44,7 @@ def image_resize(maxsize, img: Image) -> Image:
         else:
             wr = maxsize
             hr = round(h/w*maxsize)
+            exception_log('resize_***********2-'+str(wr)+'///'+str(hr))
             res = img.resize((wr, hr))
     exception_log('resize_33333')
     return res
@@ -193,16 +195,16 @@ def post_image_resize(post) -> None:
         if ar >= h/w:
             exception_log('---------77777')
             if exif[i]:
-                croparea.append((0, (w-h/ar)/2, h, (w+h/ar)/2))  # transpose
+                croparea.append((0, round((w-h/ar)/2), h, round((w+h/ar)/2)))  # transpose
             else:
-                croparea.append(((w-h/ar)/2, 0, (w+h/ar)/2, h))
+                croparea.append((round((w-h/ar)/2), 0, round((w+h/ar)/2), h))
             exception_log('---------88888')
         else:
             exception_log('---------99999')
             if exif[i]:
-                croparea.append(((h-w*ar)/2, 0, (h+w*ar)/2, w))  # transpose
+                croparea.append((round((h-w*ar)/2), 0, round((h+w*ar)/2), w))  # transpose
             else:
-                croparea.append((0, (h-w*ar)/2, w, (h+w*ar)/2))
+                croparea.append((0, round((h-w*ar)/2), w, round((h+w*ar)/2)))
             exception_log('---------00000')
 
     for i in range(0, post.num_images):
@@ -213,6 +215,8 @@ def post_image_resize(post) -> None:
             exception_log('---------ccccc')
             ft = img.format
             exception_log('---------ddddd')
+            exception_log('---------croparea+'+str(croparea[i][0])+' '+str(croparea[i][1])+' '+str(croparea[i][2])+' '+str(croparea[i][3]))
+
             img = img.crop(croparea[i])
             exception_log('66666')
             img = image_resize(POST_IMG_MAXSIZE, img)
