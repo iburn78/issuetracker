@@ -46,31 +46,41 @@ def image_resize(maxsize, img: Image) -> Image:
 
 
 def image_reorientation(img, exif): 
+    exception_log('exif00000')
     if exif == 1: 
         pass
+        exception_log('exif11111')
     elif exif == 2:
         # img = img.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         img = img.transpose(0)
+        exception_log('exif22222')
     elif exif == 3:
         # img = img.transpose(Image.Transpose.ROTATE_180)
         img = img.transpose(3)
+        exception_log('exif33333')
     elif exif == 4:
         # img = img.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
         img = img.transpose(1)
+        exception_log('exif44444')
     elif exif == 5:
         # img = img.transpose(Image.Transpose.ROTATE_270).transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         img = img.transpose(4).transpose(0)
+        exception_log('exif55555')
     elif exif == 6:
         # img = img.transpose(Image.Transpose.ROTATE_270)
         img = img.transpose(4)
+        exception_log('exif66666')
     elif exif == 7:
         # img = img.transpose(Image.Transpose.ROTATE_90).transpose(Image.Transpose.FLIP_LEFT_RIGHT)
         img = img.transpose(2).transpose(0)
+        exception_log('exif77777')
     elif exif == 8:
         # img = img.transpose(Image.Transpose.ROTATE_90)
         img = img.transpose(2)
+        exception_log('exif88888')
     else:
         exception_log('Exception in image_reorientation')
+    exception_log('exif99999')
     return img
 
 
@@ -116,12 +126,15 @@ def card_image_resize(form):
 
 
 def post_image_resize(post) -> None:
+    exception_log('11111')
     images = [post.image1, post.image2, post.image3, post.image4, post.image5, post.image6, post.image7]
     th_images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s]
     for i in range(0, 7):
         try:
+            exception_log('22222')
             if th_images[i].name != "":
                 th_images[i].delete()
+            exception_log('33333')
         except:
             text = "Exception in delete images - def post_image_resize: " + \
                 th_images[i].name
@@ -140,7 +153,9 @@ def post_image_resize(post) -> None:
         with Image.open(images[i].file) as img:
             orientation = 1
             try:
+                exception_log('44444')
                 orientation = int(img.getexif()[IMG_ORIENTATION])
+                exception_log('55555')
             except:
                 orientation = 1
             exif_orientation.append(orientation)
@@ -183,10 +198,15 @@ def post_image_resize(post) -> None:
         with Image.open(images[i].file) as img:
             ft = img.format
             img = img.crop(croparea[i])
+            exception_log('66666')
             img = image_resize(POST_IMG_MAXSIZE, img)
+            exception_log('77777')
             res = image_reorientation(img, exif_orientation[i])
+            exception_log('88888')
             res.save(img_io, format=ft)
+            exception_log('99999')
             th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
+            exception_log('00000')
             res.close()
 
 
