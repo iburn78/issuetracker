@@ -169,9 +169,12 @@ def post_image_resize(post) -> None:
             ha.append(h)
             hh.append(h*h)
             wh.append(w*h)
+            exception_log('---------11111')
 
     try:
+        exception_log('---------22222')
         ar = float(sum(hh)/sum(wh))
+        exception_log('---------33333')
     except:
         text = "Exception in ar calc. - def post_image_resize: " + \
             th_images[i].name
@@ -180,23 +183,33 @@ def post_image_resize(post) -> None:
 
     croparea = []
     for i in range(0, post.num_images):
+        exception_log('---------44444')
         w = wa[i]
         h = ha[i]
+        exception_log('---------66666')
         if ar >= h/w:
+            exception_log('---------77777')
             if exif[i]:
                 croparea.append((0, (w-h/ar)/2, h, (w+h/ar)/2))  # transpose
             else:
                 croparea.append(((w-h/ar)/2, 0, (w+h/ar)/2, h))
+            exception_log('---------88888')
         else:
+            exception_log('---------99999')
             if exif[i]:
                 croparea.append(((h-w*ar)/2, 0, (h+w*ar)/2, w))  # transpose
             else:
                 croparea.append((0, (h-w*ar)/2, w, (h+w*ar)/2))
+            exception_log('---------00000')
 
     for i in range(0, post.num_images):
+        exception_log('---------aaaaa')
         img_io = BytesIO()
+        exception_log('---------bbbbb')
         with Image.open(images[i].file) as img:
+            exception_log('---------ccccc')
             ft = img.format
+            exception_log('---------ddddd')
             img = img.crop(croparea[i])
             exception_log('66666')
             img = image_resize(POST_IMG_MAXSIZE, img)
