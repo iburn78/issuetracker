@@ -59,10 +59,9 @@ def profile(request):
                     img_io = BytesIO()
                     ft = img.format
                     img = image_resize(PROFILE_PIC_MAXSIZE, img)
-                    res = ImageOps.exif_transpose(img)
-                    res.save(img_io, format=ft)
+                    img = ImageOps.exif_transpose(img)
+                    img.save(img_io, format=ft)
                     p_form.instance.image.save(os.path.basename(p_form.cleaned_data['picture'].name), ContentFile(img_io.getvalue()))
-                    res.close()
             p_form.save()
             messages.success(request, 'your account has been updated')
             return redirect('profile')

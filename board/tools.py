@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageOps
 from django.conf import settings
 import os
 from os.path import join as pj
@@ -45,35 +45,6 @@ def image_resize(maxsize, img: Image) -> Image:
     return res
 
 
-def image_reorientation(img, exif): 
-    if exif == 1: 
-        pass
-    elif exif == 2:
-        # img = img.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        img = img.transpose(0)
-    elif exif == 3:
-        # img = img.transpose(Image.Transpose.ROTATE_180)
-        img = img.transpose(3)
-    elif exif == 4:
-        # img = img.transpose(Image.Transpose.FLIP_TOP_BOTTOM)
-        img = img.transpose(1)
-    elif exif == 5:
-        # img = img.transpose(Image.Transpose.ROTATE_270).transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        img = img.transpose(4).transpose(0)
-    elif exif == 6:
-        # img = img.transpose(Image.Transpose.ROTATE_270)
-        img = img.transpose(4)
-    elif exif == 7:
-        # img = img.transpose(Image.Transpose.ROTATE_90).transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-        img = img.transpose(2).transpose(0)
-    elif exif == 8:
-        # img = img.transpose(Image.Transpose.ROTATE_90)
-        img = img.transpose(2)
-    else:
-        exception_log('Exception in image_reorientation')
-    return img
-
-
 def card_image_resize(form):
     if form.cleaned_data['image_input'] == None:
         def_img = form.cleaned_data['default_img']
@@ -102,16 +73,10 @@ def card_image_resize(form):
 
     img_io = BytesIO()
     ft = img.format
-    orientation = 1
-    try:
-        orientation = int(img.getexif()[IMG_ORIENTATION])
-    except:
-        orientation = 1
     img = image_resize(CARD_IMAGE_MAXSIZE, img)
-    res = image_reorientation(img, orientation)
-    res.save(img_io, format=ft)
+    img = ImageOps.exif_transpose(img)
+    img.save(img_io, format=ft)
     form.instance.image.save(filename, ContentFile(img_io.getvalue()))
-    res.close()
     img.close()
 
 
@@ -135,15 +100,12 @@ def post_image_resize(post) -> None:
     hh = []
     wh = []
     exif = []
-    exif_orientation = []
     for i in range(0, post.num_images):
         with Image.open(images[i].file) as img:
-            orientation = 1
             try:
                 orientation = int(img.getexif()[IMG_ORIENTATION])
             except:
                 orientation = 1
-            exif_orientation.append(orientation)
             if orientation >= 5:
                 exif.append(True)
                 h, w = img.size
@@ -182,13 +144,11 @@ def post_image_resize(post) -> None:
         img_io = BytesIO()
         with Image.open(images[i].file) as img:
             ft = img.format
-
             img = img.crop(croparea[i])
             img = image_resize(POST_IMG_MAXSIZE, img)
-            res = image_reorientation(img, exif_orientation[i])
-            res.save(img_io, format=ft)
+            img = ImageOps.exif_transpose(img)
+            img.save(img_io, format=ft)
             th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
-            res.close()
 
 
 def exception_log(text):
