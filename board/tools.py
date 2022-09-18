@@ -5,6 +5,7 @@ from os.path import join as pj
 from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
+import gc
 
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
 
@@ -149,7 +150,7 @@ def post_image_resize(post) -> None:
             img = ImageOps.exif_transpose(img)
             img.save(img_io, format=ft)
             th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
-
+        gc.collect()
 
 def exception_log(text):
     print("----->>>>>> ", text)
