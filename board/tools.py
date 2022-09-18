@@ -145,14 +145,11 @@ def post_image_resize(post) -> None:
         img_io = BytesIO()
         with Image.open(images[i].file) as img:
             ft = img.format
-            r1 = img.crop(croparea[i])
-            r2 = image_resize(POST_IMG_MAXSIZE, r1)
-            r3 = ImageOps.exif_transpose(r2)
-            r3.save(img_io, format=ft)
+            img = img.crop(croparea[i])
+            img = image_resize(POST_IMG_MAXSIZE, img)
+            img = ImageOps.exif_transpose(img)
+            img.save(img_io, format=ft)
             th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
-            r1.close()
-            r2.close()
-            r3.close()
 
 def exception_log(text):
     print("----->>>>>> ", text)
