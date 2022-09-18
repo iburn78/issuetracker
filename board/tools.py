@@ -150,6 +150,7 @@ def post_image_resize(post) -> None:
             img = ImageOps.exif_transpose(img)
             img.save(img_io, format=ft)
             th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
+            del img
         gc.collect()
 
 def exception_log(text):
