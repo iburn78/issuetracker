@@ -6,7 +6,6 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
 
-
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
 
 CARD_IMAGE_MAXSIZE = 2000
