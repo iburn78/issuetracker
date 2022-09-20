@@ -5,7 +5,6 @@ from os.path import join as pj
 from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
-import gc
 
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
 
