@@ -1,10 +1,11 @@
-import cv2 as cv
-import pathlib
+from PIL import Image, ImageOps
 from django.conf import settings
 import os
 from os.path import join as pj
+from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
+import gc
 
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
 
@@ -26,22 +27,22 @@ PROFILE_PICS = pj(USER_UPLOADS, 'profile_pics')
 POST_MAX_COUNT_TO_DELETE_A_CARD = 10
 
 
-def image_resize(maxsize, img):
-    h, w, dim = img.shape
+def image_resize(maxsize, img: Image) -> Image:
+    w, h = img.size
     if w <= h:
         if h <= maxsize:
             res = img
         else:
             wr = round(w/h*maxsize)
             hr = maxsize
-            res = cv.resize(img, (wr, hr))
+            res = img.resize((wr, hr))
     else:
         if w <= maxsize:
             res = img
         else:
             wr = maxsize
             hr = round(h/w*maxsize)
-            res = cv.resize(img, (wr, hr))
+            res = img.resize((wr, hr))
     return res
 
 
@@ -55,10 +56,10 @@ def card_image_resize(form):
             return None
         elif os.path.basename(os.path.dirname(def_img)) == CARD_DEFAULT_IMAGES: 
             def_img_location = os.path.join(settings.MEDIA_ROOT, def_img)
-            img = cv.imread(def_img_location)
+            img = Image.open(def_img_location)
             filename = os.path.basename(def_img)
         else:
-            img = cv.imread(form.instance.image.file.name)
+            img = Image.open(form.instance.image.file)
             filename = os.path.basename(form.instance.image.name)
     else:
         name = form.instance.image.name
@@ -68,14 +69,16 @@ def card_image_resize(form):
         except:
             text = "Exception in delete cared image - card_image_resize: " + name
             exception_log(text)
-        img = cv.imread(form.cleaned_data['image_input'].file.name)
+        img = Image.open(form.cleaned_data['image_input'])
         filename = os.path.basename(form.cleaned_data['image_input'].name)
 
+    img_io = BytesIO()
+    ft = img.format
     img = image_resize(CARD_IMAGE_MAXSIZE, img)
-    ext = pathlib.Path(filename).suffix
-    ret, buf = cv.imencode(ext, img)
-    content = ContentFile(buf.tobytes())
-    form.instance.image.save(filename, content)
+    img = ImageOps.exif_transpose(img)
+    img.save(img_io, format=ft)
+    form.instance.image.save(filename, ContentFile(img_io.getvalue()))
+    img.close()
 
 
 def post_image_resize(post) -> None:
@@ -86,7 +89,8 @@ def post_image_resize(post) -> None:
             if th_images[i].name != "":
                 th_images[i].delete()
         except:
-            text = "Exception in delete images - def post_image_resize: " + th_images[i].name
+            text = "Exception in delete images - def post_image_resize: " + \
+                th_images[i].name
             exception_log(text)
 
     if post.num_images == 0:
@@ -96,38 +100,56 @@ def post_image_resize(post) -> None:
     ha = []
     hh = []
     wh = []
-    cvimg = []
+    exif = []
     for i in range(0, post.num_images):
-        cvimg.append(cv.imread(images[i].file.name))
-        h, w, dim = cvimg[i].shape
-        wa.append(w)
-        ha.append(h)
-        hh.append(h*h)
-        wh.append(w*h)
+        with Image.open(images[i].file) as img:
+            try:
+                orientation = int(img.getexif()[IMG_ORIENTATION])
+            except:
+                orientation = 1
+            if orientation >= 5:
+                exif.append(True)
+                h, w = img.size
+            else:
+                exif.append(False)
+                w, h = img.size
+            wa.append(w)
+            ha.append(h)
+            hh.append(h*h)
+            wh.append(w*h)
+
     try:
         ar = float(sum(hh)/sum(wh))
     except:
-        text = "Exception in ar calc. - def post_image_resize: " + th_images[i].name
-        ar = 1
+        text = "Exception in ar calc. - def post_image_resize: " + \
+            th_images[i].name
         exception_log(text)
+        ar = 1
 
     croparea = []
     for i in range(0, post.num_images):
         w = wa[i]
         h = ha[i]
         if ar >= h/w:
-            croparea.append((round((w-h/ar)/2), 0, round((w+h/ar)/2), h))
+            if exif[i]:
+                croparea.append((0, round((w-h/ar)/2), h, round((w+h/ar)/2)))  # transpose
+            else:
+                croparea.append((round((w-h/ar)/2), 0, round((w+h/ar)/2), h))
         else:
-            croparea.append((0, round((h-w*ar)/2), w, round((h+w*ar)/2)))
+            if exif[i]:
+                croparea.append((round((h-w*ar)/2), 0, round((h+w*ar)/2), w))  # transpose
+            else:
+                croparea.append((0, round((h-w*ar)/2), w, round((h+w*ar)/2)))
 
     for i in range(0, post.num_images):
-        cvimg[i] = cvimg[i][croparea[i][1]:croparea[i][3], croparea[i][0]:croparea[i][2]]
-        cvimg[i] = image_resize(POST_IMG_MAXSIZE, cvimg[i])
-        ext = pathlib.Path(images[i].file.name).suffix
-        ret, buf = cv.imencode(ext, cvimg[i])
-        content = ContentFile(buf.tobytes())
-        th_images[i].save(os.path.basename(images[i].file.name), content)
-
+        img_io = BytesIO()
+        with Image.open(images[i].file) as img:
+            ft = img.format
+            img = img.crop(croparea[i])
+            img = image_resize(POST_IMG_MAXSIZE, img)
+            img = ImageOps.exif_transpose(img)
+            img.save(img_io, format=ft)
+            th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
 
 def exception_log(text):
     print("----->>>>>> ", text)

@@ -1,5 +1,3 @@
-import cv2 as cv
-import pathlib
 from django.shortcuts import render, redirect
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
@@ -10,6 +8,8 @@ import datetime
 from django.contrib.auth.views import LoginView, PasswordResetView, PasswordResetDoneView, PasswordResetConfirmView, PasswordResetCompleteView, LogoutView
 from django.core.exceptions import PermissionDenied
 from users.models import User
+from PIL import Image, ImageOps
+from io import BytesIO
 from board.tools import image_resize, exception_log
 from django.core.files.base import ContentFile
 import os
@@ -55,13 +55,13 @@ def profile(request):
                     except: 
                         text = "Exception in delete profile pic - view fuction profile(): " + user_img
                         exception_log(text)
-                img = cv.imread(p_form.cleaned_data['picture'].file.name)
-                filename = os.path.basename(p_form.cleaned_data['picture'].name)
-                img = image_resize(PROFILE_PIC_MAXSIZE, img)
-                ext = pathlib.Path(filename).suffix
-                ret, buf = cv.imencode(ext, img)
-                content = ContentFile(buf.tobytes())
-                p_form.instance.image.save(filename, content)
+                with Image.open(p_form.cleaned_data['picture']) as img:
+                    img_io = BytesIO()
+                    ft = img.format
+                    img = image_resize(PROFILE_PIC_MAXSIZE, img)
+                    img = ImageOps.exif_transpose(img)
+                    img.save(img_io, format=ft)
+                    p_form.instance.image.save(os.path.basename(p_form.cleaned_data['picture'].name), ContentFile(img_io.getvalue()))
             p_form.save()
             messages.success(request, 'your account has been updated')
             return redirect('profile')
