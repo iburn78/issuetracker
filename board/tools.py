@@ -6,7 +6,6 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from datetime import datetime
 
-
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
 
 CARD_IMAGE_MAXSIZE = 2000
@@ -25,7 +24,6 @@ USER_DEFAULT_IMAGES = 'default_users'
 PROFILE_PICS = pj(USER_UPLOADS, 'profile_pics')
 
 POST_MAX_COUNT_TO_DELETE_A_CARD = 10
-
 
 def image_resize(maxsize, img: Image) -> Image:
     w, h = img.size
