@@ -9,7 +9,7 @@ from django.views.generic import (
 )
 from django.views import View
 
-from ..models import Card, Post, Comment
+from ..models import Card, Post
 from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
@@ -17,6 +17,7 @@ from ..tools import post_image_resize, exception_log
 from django.urls import resolve
 from django.views.static import serve
 import os
+from django.utils import timezone
 
 def postimageview(request, *args, **kwargs): 
     template_name = "board/image_view.html"
@@ -130,6 +131,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 images.append(img)
 
         form.instance.num_images = len(images)
+        form.instance.date_posted = timezone.now()
         for i in range(len(images), 7):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
