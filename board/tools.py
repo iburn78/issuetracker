@@ -4,7 +4,7 @@ import os
 from os.path import join as pj
 from io import BytesIO
 from django.core.files.base import ContentFile
-from datetime import datetime
+from django.utils import timezone
 
 
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
@@ -154,7 +154,7 @@ def exception_log(text):
     print("----->>>>>> ", text)
     logfilepath = os.path.join(settings.BASE_DIR, 'etc')
     with open(os.path.join(logfilepath, 'exception_log.txt'), 'a') as logfile:
-        now = datetime.now().strftime("[%Y-%m-%d %H:%M:%S]")
+        now = timezone.now().strftime("[%Y-%m-%d %H:%M:%S]")
         logfile.write(now + " " + text + "\n")
 
 
