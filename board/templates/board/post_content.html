@@ -110,6 +110,9 @@
     </div>
   </div>
   <div class="col-xl-4 p-0">
+    {% if post.title != '' %}
+    <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
+    {% endif %}
     <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% elif post.image1s %}
@@ -117,10 +120,16 @@
     <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
   <div class="col-xl-4 p-0">
+    {% if post.title != '' %}
+    <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
+    {% endif %}
     <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% else %}
   <div class="col p-0">
+    {% if post.title != '' %}
+    <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
+    {% endif %}
     <p class="article-content m-2 text-break">{{ post.content }}</p>
   </div>
   {% endif %}

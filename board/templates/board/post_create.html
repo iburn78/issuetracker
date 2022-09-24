@@ -19,7 +19,9 @@
   <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off" onsubmit="holdon(event)">
     {% csrf_token %}
     <fieldset>
-      <p class="m-0 p-0">Content*</p>
+      <p class="m-0 p-0">Title</p>
+      {{ form.title }}
+      <p class="m-0 p-0">Content</p>
       {{ form.content }}
       {% if num_images >= 1 %}<img src="{{ th_image1.url }}" alt="" class="post-img-update">{% endif %} 
       {% if num_images >= 2 %}<img src="{{ th_image2.url }}" alt="" class="post-img-update">{% endif %} 
@@ -63,15 +65,20 @@
         {{ form.image7_input }}
       </p>
       <p id="less-image7-line" style="display:{% if num_images == 7 %}block{% else %}none{% endif %};"><img class="mt-1 ms-1" id="delete-image7" src="{% static 'icons/dash-square.svg' %}" width="20" height="20"></p> 
-      <p class="m-0">Tags</p>
-      <p>{{ form.tags }}</p>
-      <p id="clear-image1"></p>
+      <p class="m-0 p-0">Tags</p>
+      <p class="mb-1 m-0 p-0">{{ form.tags }}</p>
+      {% if update %}
+      <div class="form-check mb-2">
+        <input class="form-check-input" type="checkbox" value="checked" name="update_date_posted" checked>
+        update date posted
+      </div>
+      {% endif %}
       <div id="holdon_area">
         <button id="post-cu-button" class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
           {% if update %}Update{% else %}Create{% endif %}
         </button>
       </div>
-      <input type="button" class="btn btn-outline-secondary btn-sm mb-2" value="cancel" onclick="javascript:history.go(-1);">
+      <input type="button" id="post-cu-cancel-button" class="btn btn-outline-secondary btn-sm mb-2" value="cancel" onclick="javascript:history.go(-1);">
     </fieldset>
   </form>
 </div>
@@ -186,38 +193,30 @@
   function holdon(e) {
     let sbutton = document.getElementById("post-cu-button");
     sbutton.style.display = 'none';
+    let cbutton = document.getElementById("post-cu-cancel-button");
+    cbutton.value = "go back"
     submit1();
   }; 
   
   function submit1() {
     document.getElementById("holdon_area").innerHTML = 
     `
-      <div class="mb-2 me-1 float-end">
-        --
-      </div>
+    <div class="mb-2 me-2 small text-muted float-end">
+    </div>
     `
-    setTimeout(submit2, 500);
+    setTimeout(submit2, 1000);
   }
   
   function submit2() {
     document.getElementById("holdon_area").innerHTML = 
     `
-      <div class="mb-2 me-1 float-end">
-        ----
-      </div>
+    <div class="mb-2 me-2 small text-muted float-end">
+      submitting...
+    </div>
     `
-    setTimeout(submit3, 500);
+    setTimeout(submit1, 3000);
   }
 
-  function submit3() {
-    document.getElementById("holdon_area").innerHTML = 
-    `
-      <div class="mb-2 me-1 float-end">
-        ------
-      </div>
-    `
-    setTimeout(submit1, 500);
-  }
   
 </script>
 {% endblock content %}

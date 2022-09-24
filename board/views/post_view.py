@@ -131,7 +131,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 images.append(img)
 
         form.instance.num_images = len(images)
-        form.instance.date_posted = timezone.now()
+        if self.request.POST.get('update_date_posted')=='checked':
+            form.instance.date_posted = timezone.now()
         for i in range(len(images), 7):
             images.append("")
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,

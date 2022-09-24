@@ -68,7 +68,10 @@
           
           <a href="{% url 'post-detail' post.id %}">
             <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
-            <p class="article-content text-dark mb-1 text-break">{{ post.content | truncatechars:50 }}</p>
+            {% if post.title != '' %}
+            <p class="article-content text-dark text-break fw-bold fs-6 bg-gray-100 m-0 p-0">{{ post.title }}</p>
+            {% endif %}
+            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text }}</p>
           </a>
           <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}

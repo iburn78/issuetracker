@@ -126,22 +126,22 @@ class SearchView_Post(ListView):
         if search_model == "post":
             if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
                 if cid == None:
-                    return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(author=self.request.user) & Q(card__is_public=False) & (Q(title__icontains=search_term) | Q(content__icontains=search_term))).distinct().order_by('-date_posted')
                 else: 
-                    return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(card_id = cid) & Q(author=self.request.user) & Q(card__is_public=False) & (Q(title__icontains=search_term) | Q(content__icontains=search_term))).distinct().order_by('-date_posted')
             else: 
                 if cid == None:
-                    return Post.objects.filter(Q(card__is_public=True) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(card__is_public=True) & (Q(title__icontains=search_term) | Q(content__icontains=search_term))).distinct().order_by('-date_posted')
                 else: 
-                    return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True) & Q(content__icontains=search_term)).distinct().order_by('-date_posted')
+                    return Post.objects.filter(Q(card_id = cid) & Q(card__is_public=True) & (Q(title__icontains=search_term) | Q(content__icontains=search_term))).distinct().order_by('-date_posted')
 
         elif search_model == "mylikes":
             if self.request.user.is_authenticated and not self.request.user.is_in_private_mode: 
                 pset = self.request.user.liked_post_set
                 if cid == None: 
-                    return pset.filter(content__icontains = search_term).distinct().order_by('-date_posted')
+                    return pset.filter(Q(title__icontains=search_term) | Q(content__icontains=search_term)).distinct().order_by('-date_posted')
                 else: 
-                    return pset.filter(card_id = cid).filter(content__icontains = search_term).distinct().order_by('-date_posted')
+                    return pset.filter(card_id = cid).filter(Q(title__icontains=search_term) | Q(content__icontains=search_term)).distinct().order_by('-date_posted')
             else: 
                 return Post.objects.none()
 

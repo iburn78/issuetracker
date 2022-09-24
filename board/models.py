@@ -122,6 +122,7 @@ class Post(models.Model):
     image6s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
     image7s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
 
+    title = models.CharField(blank=True, max_length=70)
     tags = TaggableManager(blank=True)
 
     def save(self, *args, **kwargs):
@@ -148,7 +149,7 @@ class Post(models.Model):
         return super().delete(*args, **kwargs)
 
     def get_preview_text(self):
-        res = ' '.join(self.content[:200].split('\n')[:3])
+        res = ' '.join(self.content[:150].split('\n')[:5])
         return res
 
     def __str__(self):
