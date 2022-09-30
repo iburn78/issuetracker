@@ -3,19 +3,23 @@
 {% block style %}
 <style>
   .th-img-chosen {
-  height: 200px;
-  width: 200px;
-  object-fit: cover;
-  overflow: hidden;
-  border-radius: 8px;
-  margin-top: 4px;
-  margin-bottom: 2px;
-}
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+  }
 </style>
 {% endblock style %}
 
 {% block content %}
-<input type="file" multiple="multiple" name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
+  <button type="submit">submit</button>
+</form>
 
 <div class="row">
   <div class="col">
@@ -58,6 +62,7 @@
   function updatePreview(input, target) {
     const files = input.files;
     const arr = Array.from(files);
+    console.log(input.files);
     arr.forEach((file, index) => {
       if (index < 5) {
         let reader = new FileReader();
