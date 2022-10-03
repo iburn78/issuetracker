@@ -17,6 +17,8 @@ def test(request):
     if request.method == "POST": 
         files = request.FILES.getlist('image')
         print(files)
+        file = request.FILES.get('image0')
+        print(file)
     return render(request, 'board/test.html')
 
 def about(request):

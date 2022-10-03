@@ -17,7 +17,8 @@
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
-  <input type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
+  <input id="choose_img" type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
+  <a href="" class="btn btn-primary" onclick="chooseimg(event)">choose</a>
   <button type="submit">submit</button>
 </form>
 
@@ -37,14 +38,16 @@
     <img hidden id="image-preview4" src="" class="th-img-chosen">
   </div>
 </div>
-
-<canvas id="canvas" width=1000></canvas>
-
-
 {% endblock content %}
 
 {% block script %}
 <script>
+  function chooseimg(event) {
+    event.preventDefault();
+    console.log("lkajfd"); 
+    let ci = document.getElementById("choose_img");
+    ci.click();
+  }
   const dropArea = document.getElementById('drop-area');
   
   dropArea.addEventListener('dragover', (event) => {
@@ -59,10 +62,18 @@
     updatePreview(event.dataTransfer, 'image-preview');
   });
   
+  function updateImage0(input) {
+    let list = new DataTransfer();
+    let file = new File(["content"], "filename.jpg");
+    list.items.add(file);
+    console.log(list);
+  }
+
   function updatePreview(input, target) {
     const files = input.files;
     const arr = Array.from(files);
     console.log(input.files);
+    
     arr.forEach((file, index) => {
       if (index < 5) {
         let reader = new FileReader();
