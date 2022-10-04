@@ -17,16 +17,11 @@
 {% block content %}
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
-  <input id="choose_img" type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
-  <a href="" class="btn btn-primary" onclick="chooseimg(event)">choose</a>
+  <input id="choose_img" hidden type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
+  <a href="" id="drop-area" class="btn btn-primary" onclick="chooseimg(event)">choose</a>
   <button type="submit">submit</button>
 </form>
 
-<div class="row">
-  <div class="col">
-    <div id="drop-area" class="bg-yellow-100 p-4">drop-area</div>
-  </div>
-</div>
 <div class="row m-0 p-0">
   <div class="col m-0 p-0">
     <img hidden id="image-preview0" src="" class="th-img-chosen">
@@ -44,10 +39,10 @@
 <script>
   function chooseimg(event) {
     event.preventDefault();
-    console.log("lkajfd"); 
     let ci = document.getElementById("choose_img");
     ci.click();
   }
+
   const dropArea = document.getElementById('drop-area');
   
   dropArea.addEventListener('dragover', (event) => {
@@ -60,14 +55,9 @@
     event.stopPropagation();
     event.preventDefault();
     updatePreview(event.dataTransfer, 'image-preview');
+    document.getElementById("choose_img").files = event.dataTransfer.files;
+    console.log(event.dataTransfer.files.length);
   });
-  
-  function updateImage0(input) {
-    let list = new DataTransfer();
-    let file = new File(["content"], "filename.jpg");
-    list.items.add(file);
-    console.log(list);
-  }
 
   function updatePreview(input, target) {
     const files = input.files;
