@@ -18,8 +18,9 @@
 <form method="POST" enctype="multipart/form-data">
   {% csrf_token %}
   <input id="choose_img" hidden type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
-  <a href="" id="drop-area" class="btn btn-primary" onclick="chooseimg(event)">choose</a>
-  <button type="submit">submit</button>
+  <a href="" id="drop-area" class="btn btn-sm btn-primary" onclick="chooseimg(event)">choose</a>
+  <button type="submit" class="btn btn-sm btn-secondary">submit</button>
+  <div id="img_notification"></div>
 </form>
 
 <div class="row m-0 p-0">
@@ -56,13 +57,19 @@
     event.preventDefault();
     updatePreview(event.dataTransfer, 'image-preview');
     document.getElementById("choose_img").files = event.dataTransfer.files;
-    console.log(event.dataTransfer.files.length);
+    
+    let ln = event.dataTransfer.files.length;
+    document.getElementById("img_notification").innerText = `${ln}/5 images are chosen`;
+    console.log(ln);
   });
 
   function updatePreview(input, target) {
     const files = input.files;
     const arr = Array.from(files);
     console.log(input.files);
+    let ln = input.files.length;
+    document.getElementById("img_notification").innerText = `${ln}/5 images are chosen`;
+    console.log(ln);
     
     arr.forEach((file, index) => {
       if (index < 5) {
