@@ -1,4 +1,18 @@
 {% extends "board/base.html" %}
+{% block style %}
+<style>
+  .th-img-chosen {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+    overflow: hidden;
+    border-radius: 8px;
+    margin-top: 4px;
+    margin-bottom: 2px;
+  }
+</style>
+{% endblock style %}
+
 {% block content %}
 {% load crispy_forms_tags %}
 {% load static %}
@@ -30,6 +44,22 @@
       {% if num_images >= 5 %}<img src="{{ th_image5.url }}" alt="" class="post-img-update">{% endif %} 
       {% if num_images >= 6 %}<img src="{{ th_image6.url }}" alt="" class="post-img-update">{% endif %} 
       {% if num_images >= 7 %}<img src="{{ th_image7.url }}" alt="" class="post-img-update">{% endif %} 
+      
+      <div class="row m-0 p-0">
+        <div class="col m-0 p-0">
+          <img hidden id="image-preview0" src="" class="th-img-chosen">
+          <img hidden id="image-preview1" src="" class="th-img-chosen">
+          <img hidden id="image-preview2" src="" class="th-img-chosen">
+          <img hidden id="image-preview3" src="" class="th-img-chosen">
+          <img hidden id="image-preview4" src="" class="th-img-chosen">
+          <img hidden id="image-preview5" src="" class="th-img-chosen">
+          <img hidden id="image-preview6" src="" class="th-img-chosen">
+        </div>
+      </div>
+      
+      <input id="images_input" hidden type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
+      <div class="d-flex align-items-center justify-content-between mt-1 me-1"><button id="drop-area" class="btn btn-sm btn-warning" onclick="addimg(event)">add images</button><span class="small text-muted" id="img_notification"></span></div>
+      
       <p class="mt-1 mb-0 p-0" id="image1" style="display:{% if num_images >= 0 %}block{% else %}none{% endif %}">Image 1 
         <img class="float-end mt-1 mb-1" id="clear-image1" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
         {{ form.image1_input }}
@@ -82,6 +112,51 @@
     </fieldset>
   </form>
 </div>
+<script>
+  function addimg(event) {
+    event.preventDefault();
+    document.getElementById("images_input").click();
+  }
+  
+  const dropArea = document.getElementById('drop-area');
+  
+  dropArea.addEventListener('dragover', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+  });
+  
+  dropArea.addEventListener('drop', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    updatePreview(event.dataTransfer, 'image-preview');
+    document.getElementById("images_input").files = event.dataTransfer.files;
+    let ln = event.dataTransfer.files.length;
+    document.getElementById("img_notification").innerText = `${ln}/7 images are chosen`;
+  });
+  
+  function updatePreview(input, target) {
+    const files = input.files;
+    const arr = Array.from(files);
+
+    console.log(input.files);
+
+    let ln = input.files.length;
+    document.getElementById("img_notification").innerText = `${ln}/7 images are chosen`;
+    
+    arr.forEach((file, index) => {
+      if (index < 7) {
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+          let img = document.getElementById(target+index);
+          img.src = this.result;
+          img.removeAttribute('hidden');
+        }
+      }
+    })
+  }
+</script>
 <script>
   document.getElementById('add-image2').addEventListener('click', function() {document.getElementById('image2').style.display = "block"; document.getElementById('add-image2-line').style.display ="none"; document.getElementById('add-image3-line').style.display ="block";});
   document.getElementById('add-image3').addEventListener('click', function() {document.getElementById('image3').style.display = "block"; document.getElementById('add-image3-line').style.display ="none"; document.getElementById('add-image4-line').style.display ="block";});
@@ -216,7 +291,7 @@
     `
     setTimeout(submit1, 3000);
   }
-
+  
   
 </script>
 {% endblock content %}
