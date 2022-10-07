@@ -57,44 +57,8 @@
         </div>
       </div>
       
-      <input id="images_input" hidden type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
-      <div class="d-flex align-items-center justify-content-between mt-1 me-1"><button id="drop-area" class="btn btn-sm btn-warning" onclick="addimg(event)">add images</button><span class="small text-muted" id="img_notification"></span></div>
-      
-      <p class="mt-1 mb-0 p-0" id="image1" style="display:{% if num_images >= 0 %}block{% else %}none{% endif %}">Image 1 
-        <img class="float-end mt-1 mb-1" id="clear-image1" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
-        {{ form.image1_input }}
-      </p>
-      <p id="add-image2-line" style="display:{% if num_images == 1 or num_images == 0 %}block{% else %}none{% endif %}"><img id="add-image2" class="mt-1 ms-1" src="{% static 'icons/plus-square.svg' %}" width="20" height="20"></p> 
-      <p class="mt-1 mb-0 p-0" id="image2" style="display:{% if num_images >= 2 %}block{% else %}none{% endif %};">Image 2
-        <img class="float-end mt-1 mb-1" id="clear-image2" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
-        {{ form.image2_input }}
-      </p>
-      <p id="add-image3-line" style="display:{% if num_images == 2 %}block{% else %}none{% endif %};"><img class="mt-1 ms-1" id="add-image3" src="{% static 'icons/plus-square.svg' %}" width="20" height="20"> <img class="ms-1 mt-1" id="delete-image2" src="{% static 'icons/dash-square.svg' %}" width="20" height="20"></p> 
-      <p class="mt-1 mb-0 p-0" id="image3" style="display:{% if num_images >= 3 %}block{% else %}none{% endif %};">Image 3
-        <img class="float-end mt-1 mb-1" id="clear-image3" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
-        {{ form.image3_input }}
-      </p>
-      <p id="add-image4-line" style="display:{% if num_images == 3 %}block{% else %}none{% endif %};"><img class="mt-1 ms-1" id="add-image4" src="{% static 'icons/plus-square.svg' %}" width="20" height="20"> <img class="ms-1 mt-1" id="delete-image3" src="{% static 'icons/dash-square.svg' %}" width="20" height="20"></p> 
-      <p class="mt-1 mb-0 p-0" id="image4" style="display:{% if num_images >= 4 %}block{% else %}none{% endif %};">Image 4
-        <img class="float-end mt-1 mb-1" id="clear-image4" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
-        {{ form.image4_input }}
-      </p>
-      <p id="add-image5-line" style="display:{% if num_images == 4 %}block{% else %}none{% endif %};"><img class="mt-1 ms-1" id="add-image5" src="{% static 'icons/plus-square.svg' %}" width="20" height="20"> <img class="ms-1 mt-1" id="delete-image4" src="{% static 'icons/dash-square.svg' %}" width="20" height="20"></p> 
-      <p class="mt-1 mb-0 p-0" id="image5" style="display:{% if num_images >= 5 %}block{% else %}none{% endif %};">Image 5
-        <img class="float-end mt-1 mb-1" id="clear-image5" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
-        {{ form.image5_input }}
-      </p>
-      <p id="add-image6-line" style="display:{% if num_images == 5 %}block{% else %}none{% endif %};"><img class="mt-1 ms-1" id="add-image6" src="{% static 'icons/plus-square.svg' %}" width="20" height="20"> <img class="ms-1 mt-1" id="delete-image5" src="{% static 'icons/dash-square.svg' %}" width="20" height="20"></p> 
-      <p class="mt-1 mb-0 p-0" id="image6" style="display:{% if num_images >= 6 %}block{% else %}none{% endif %};">Image 6
-        <img class="float-end mt-1 mb-1" id="clear-image6" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
-        {{ form.image6_input }}
-      </p>
-      <p id="add-image7-line" style="display:{% if num_images == 6 %}block{% else %}none{% endif %};"><img class="mt-1 ms-1" id="add-image7" src="{% static 'icons/plus-square.svg' %}" width="20" height="20"> <img class="ms-1 mt-1" id="delete-image6" src="{% static 'icons/dash-square.svg' %}" width="20" height="20"></p> 
-      <p class="mt-1 mb-0 p-0" id="image7" style="display:{% if num_images >= 7 %}block{% else %}none{% endif %};">Image 7
-        <img class="float-end mt-1 mb-1" id="clear-image7" src="{% static 'icons/x-square.svg' %}" width="18" height="18">
-        {{ form.image7_input }}
-      </p>
-      <p id="less-image7-line" style="display:{% if num_images == 7 %}block{% else %}none{% endif %};"><img class="mt-1 ms-1" id="delete-image7" src="{% static 'icons/dash-square.svg' %}" width="20" height="20"></p> 
+      <input id="images_input" hidden type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
+      <div class="d-flex align-items-center justify-content-between ms-0 m-1"><button id="drop-area" class="btn btn-sm btn-warning p-1 fw-bold" onclick="addimg(event)">Add images</button><span class="small text-muted" id="img_notification"></span></div>
       <p class="m-0 p-0">Tags</p>
       <p class="mb-1 m-0 p-0">{{ form.tags }}</p>
       {% if update %}
@@ -152,119 +116,14 @@
           let img = document.getElementById(target+index);
           img.src = this.result;
           img.removeAttribute('hidden');
+          img.onerror = function () {
+            console.log("image fake!!!!!!!!!!!!"); 
+          }
         }
       }
     })
   }
-</script>
-<script>
-  document.getElementById('add-image2').addEventListener('click', function() {document.getElementById('image2').style.display = "block"; document.getElementById('add-image2-line').style.display ="none"; document.getElementById('add-image3-line').style.display ="block";});
-  document.getElementById('add-image3').addEventListener('click', function() {document.getElementById('image3').style.display = "block"; document.getElementById('add-image3-line').style.display ="none"; document.getElementById('add-image4-line').style.display ="block";});
-  document.getElementById('add-image4').addEventListener('click', function() {document.getElementById('image4').style.display = "block"; document.getElementById('add-image4-line').style.display ="none"; document.getElementById('add-image5-line').style.display ="block";});
-  document.getElementById('add-image5').addEventListener('click', function() {document.getElementById('image5').style.display = "block"; document.getElementById('add-image5-line').style.display ="none"; document.getElementById('add-image6-line').style.display ="block";});
-  document.getElementById('add-image6').addEventListener('click', function() {document.getElementById('image6').style.display = "block"; document.getElementById('add-image6-line').style.display ="none"; document.getElementById('add-image7-line').style.display ="block";});
-  document.getElementById('add-image7').addEventListener('click', function() {document.getElementById('image7').style.display = "block"; document.getElementById('add-image7-line').style.display ="none"; document.getElementById('less-image7-line').style.display ="block";});
-  
-  document.getElementById('delete-image2').addEventListener('click', function() {document.getElementById("id_image2_input").value = ""; document.getElementById('image2').style.display = "none"; document.getElementById('add-image2-line').style.display ="block"; document.getElementById('add-image3-line').style.display ="none";});
-  document.getElementById('delete-image3').addEventListener('click', function() {document.getElementById("id_image3_input").value = ""; document.getElementById('image3').style.display = "none"; document.getElementById('add-image3-line').style.display ="block"; document.getElementById('add-image4-line').style.display ="none";});
-  document.getElementById('delete-image4').addEventListener('click', function() {document.getElementById("id_image4_input").value = ""; document.getElementById('image4').style.display = "none"; document.getElementById('add-image4-line').style.display ="block"; document.getElementById('add-image5-line').style.display ="none";});
-  document.getElementById('delete-image5').addEventListener('click', function() {document.getElementById("id_image5_input").value = ""; document.getElementById('image5').style.display = "none"; document.getElementById('add-image5-line').style.display ="block"; document.getElementById('add-image6-line').style.display ="none";});
-  document.getElementById('delete-image6').addEventListener('click', function() {document.getElementById("id_image6_input").value = ""; document.getElementById('image6').style.display = "none"; document.getElementById('add-image6-line').style.display ="block"; document.getElementById('add-image7-line').style.display ="none";});
-  document.getElementById('delete-image7').addEventListener('click', function() {document.getElementById("id_image7_input").value = ""; document.getElementById('image7').style.display = "none"; document.getElementById('add-image7-line').style.display ="block"; document.getElementById('less-image7-line').style.display ="none";});
-  
-  document.getElementById("clear-image1").addEventListener("click", function() {document.getElementById("id_image1_input").value = "";});
-  document.getElementById("clear-image2").addEventListener("click", function() {document.getElementById("id_image2_input").value = "";});
-  document.getElementById("clear-image3").addEventListener("click", function() {document.getElementById("id_image3_input").value = "";});
-  document.getElementById("clear-image4").addEventListener("click", function() {document.getElementById("id_image4_input").value = "";});
-  document.getElementById("clear-image5").addEventListener("click", function() {document.getElementById("id_image5_input").value = "";});
-  document.getElementById("clear-image6").addEventListener("click", function() {document.getElementById("id_image6_input").value = "";});
-  document.getElementById("clear-image7").addEventListener("click", function() {document.getElementById("id_image7_input").value = "";});
-  
-  let ii1 = document.getElementById("image1_input-clear_id");
-  if (ii1 != null){
-    ii1.addEventListener('change', e => {
-      if (e.currentTarget.checked) {
-        document.getElementById("id_image1_input").value="";
-        document.getElementById("id_image1_input").disabled= true;
-      } else {
-        document.getElementById("id_image1_input").disabled= false;
-        document.getElementById("id_image1_input").value="";
-      }
-    })
-  }
-  let ii2 = document.getElementById("image2_input-clear_id");
-  if (ii2 != null){
-    ii2.addEventListener('change', e => {
-      if (e.currentTarget.checked) {
-        document.getElementById("id_image2_input").value="";
-        document.getElementById("id_image2_input").disabled= true;
-      } else {
-        document.getElementById("id_image2_input").disabled= false;
-        document.getElementById("id_image2_input").value="";
-      }
-    })
-  }
-  let ii3 = document.getElementById("image3_input-clear_id");
-  if (ii3 != null){
-    ii3.addEventListener('change', e => {
-      if (e.currentTarget.checked) {
-        document.getElementById("id_image3_input").value="";
-        document.getElementById("id_image3_input").disabled= true;
-      } else {
-        document.getElementById("id_image3_input").disabled= false;
-        document.getElementById("id_image3_input").value="";
-      }
-    })
-  }
-  let ii4 = document.getElementById("image4_input-clear_id");
-  if (ii4 != null){
-    ii4.addEventListener('change', e => {
-      if (e.currentTarget.checked) {
-        document.getElementById("id_image4_input").value="";
-        document.getElementById("id_image4_input").disabled= true;
-      } else {
-        document.getElementById("id_image4_input").disabled= false;
-        document.getElementById("id_image4_input").value="";
-      }
-    })
-  }
-  let ii5 = document.getElementById("image5_input-clear_id");
-  if (ii5 != null){
-    ii5.addEventListener('change', e => {
-      if (e.currentTarget.checked) {
-        document.getElementById("id_image5_input").value="";
-        document.getElementById("id_image5_input").disabled= true;
-      } else {
-        document.getElementById("id_image5_input").disabled= false;
-        document.getElementById("id_image5_input").value="";
-      }
-    })
-  }
-  let ii6 = document.getElementById("image6_input-clear_id");
-  if (ii6 != null){
-    ii6.addEventListener('change', e => {
-      if (e.currentTarget.checked) {
-        document.getElementById("id_image6_input").value="";
-        document.getElementById("id_image6_input").disabled= true;
-      } else {
-        document.getElementById("id_image6_input").disabled= false;
-        document.getElementById("id_image6_input").value="";
-      }
-    })
-  }
-  let ii7 = document.getElementById("image7_input-clear_id");
-  if (ii7 != null){
-    ii7.addEventListener('change', e => {
-      if (e.currentTarget.checked) {
-        document.getElementById("id_image7_input").value="";
-        document.getElementById("id_image7_input").disabled= true;
-      } else {
-        document.getElementById("id_image7_input").disabled= false;
-        document.getElementById("id_image7_input").value="";
-      }
-    })
-  }
-  
+
   function holdon(e) {
     let sbutton = document.getElementById("post-cu-button");
     sbutton.style.display = 'none';

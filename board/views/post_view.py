@@ -69,6 +69,8 @@ class PostCreateView(CreateView):
         images = []
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
+        img_field_input = self.request.FILES.getlist('image')[:7]
+        print(img_field_input)
         for img in img_field_input:
             if img != None:
                 images.append(img)

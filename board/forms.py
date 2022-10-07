@@ -40,9 +40,10 @@ class PostForm(forms.ModelForm):
     image5_input = forms.ImageField(required=False, widget=Customclearable)
     image6_input = forms.ImageField(required=False, widget=Customclearable)
     image7_input = forms.ImageField(required=False, widget=Customclearable)
+    mimages = forms.ImageField(required=False, widget=Customclearable(attrs={'multiple': True}))
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
+        fields = ['title', 'content', 'tags', 'mimages', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
         widgets = {
             'content': forms.Textarea(attrs={'rows':'12', 'placeholder':''}), 
         }
