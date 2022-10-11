@@ -69,8 +69,7 @@ class PostCreateView(CreateView):
         images = []
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
-        img_field_input = self.request.FILES.getlist('image')[:7]
-        print(img_field_input)
+        
         for img in img_field_input:
             if img != None:
                 images.append(img)
@@ -102,6 +101,7 @@ class PostCreateView(CreateView):
         context['card'] = get_object_or_404(
             Card, id=self.kwargs.get('card_id'))
         context['num_images'] = 0
+        context['image_range'] = []
         return context
 
     def get_initial(self):
@@ -167,14 +167,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['card'] = self.get_object().card
         context['update'] = True
-        context['num_images'] = self.get_object().num_images
-        context['th_image1'] = self.get_object().image1s
-        context['th_image2'] = self.get_object().image2s
-        context['th_image3'] = self.get_object().image3s
-        context['th_image4'] = self.get_object().image4s
-        context['th_image5'] = self.get_object().image5s
-        context['th_image6'] = self.get_object().image6s
-        context['th_image7'] = self.get_object().image7s
+        num_images = self.get_object().num_images
+        context['num_images'] = num_images
+        image_range = [self.get_object().image1s, self.get_object().image2s, self.get_object().image3s, 
+            self.get_object().image4s, self.get_object().image5s, self.get_object().image6s, self.get_object().image7s]
+        context['image_range'] = image_range[0:num_images]
         return context
 
     def get_initial(self):
