@@ -10,6 +10,11 @@
     margin-top: 4px;
     margin-bottom: 2px;
   }
+  
+  .align-top {
+    display: flex;
+    align-items: top;
+  }
 </style>
 {% endblock style %}
 
@@ -37,22 +42,44 @@
       {{ form.title }}
       <p class="m-0 p-0">Content</p>
       {{ form.content }}
-      <span class="text-muted small">
+      {% if num_images > 0 %}
+      <div class="text-muted small">Current images:</div>
+      {% endif %}
+      <div class="row m-0 p-0 row-cols-auto text-muted small">
         {% for img in image_range %}
-        {{forloop.counter}}
-        <img src="{{ img.url }}" alt="" class="post-img-update">
+        <div class="col m-0 p-0 align-top">
+          <i class="bi bi-{{forloop.counter}}-square me-1" width="22" height="22"></i>
+          <img src="{{ img.url }}" alt="" class="post-img-update me-1">
+        </div>
         {% endfor %} 
-      </span>
-      
-      <div class="row m-0 p-0">
-        <div class="col m-0 p-0">
-          <img hidden id="image-preview1" src="" class="th-img-style">
-          <img hidden id="image-preview2" src="" class="th-img-style">
-          <img hidden id="image-preview3" src="" class="th-img-style">
-          <img hidden id="image-preview4" src="" class="th-img-style">
-          <img hidden id="image-preview5" src="" class="th-img-style">
-          <img hidden id="image-preview6" src="" class="th-img-style">
-          <img hidden id="image-preview7" src="" class="th-img-style">
+      </div>
+      <div hidden id="new_img_intro" class="small text-muted">
+        {% if update %}
+        <hr class="m-0 p-0 mt-1">
+        New images:
+        {% endif %}
+      </div>
+      <div class="row m-0 p-0 row-cols-auto text-muted small">
+        <div hidden id="image-preview1-div" class="col m-0 p-0 align-top">
+          <i class="bi bi-1-square-fill me-1" width="22" height="22"></i><img id="image-preview1" src="" class="th-img-style me-1">
+        </div>
+        <div hidden id="image-preview2-div" class="col m-0 p-0 align-top">
+          <i class="bi bi-2-square-fill me-1" width="22" height="22"></i><img id="image-preview2" src="" class="th-img-style me-1">
+        </div>
+        <div hidden id="image-preview3-div" class="col m-0 p-0 align-top">
+          <i class="bi bi-3-square-fill me-1" width="22" height="22"></i><img id="image-preview3" src="" class="th-img-style me-1">
+        </div>
+        <div hidden id="image-preview4-div" class="col m-0 p-0 align-top">
+          <i class="bi bi-4-square-fill me-1" width="22" height="22"></i><img id="image-preview4" src="" class="th-img-style me-1">
+        </div>
+        <div hidden id="image-preview5-div" class="col m-0 p-0 align-top">
+          <i class="bi bi-5-square-fill me-1" width="22" height="22"></i><img id="image-preview5" src="" class="th-img-style me-1">
+        </div>
+        <div hidden id="image-preview6-div" class="col m-0 p-0 align-top">
+          <i class="bi bi-6-square-fill me-1" width="22" height="22"></i><img id="image-preview6" src="" class="th-img-style me-1">
+        </div>
+        <div hidden id="image-preview7-div" class="col m-0 p-0 align-top">
+          <i class="bi bi-7-square-fill me-1" width="22" height="22"></i><img id="image-preview7" src="" class="th-img-style me-1">
         </div>
       </div>
       
@@ -101,8 +128,11 @@
     reader.readAsDataURL(input.files[0]);
     reader.onload = function () {
       let img = document.getElementById(target);
+      let img_div = document.getElementById(target+"-div");
+      let img_intro = document.getElementById('new_img_intro');
       img.src = this.result;
-      img.removeAttribute('hidden');
+      img_div.removeAttribute('hidden');
+      img_intro.removeAttribute('hidden');
     }
   }
   

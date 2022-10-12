@@ -162,8 +162,8 @@
     </span>
     <a href class="p-0 m-0 me-2 float-end" onclick="share_post(event, {{post.id}}, '{{post.get_preview_text|truncatechars:30}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
     {% else %}
-      <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" onclick="">publish</a>
-      <a href="{% url 'card-select' %}?rt=move&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" onclick="">move</a>
+    <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" onclick="">publish</a>
+    <a href="{% url 'card-select' %}?rt=move&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" onclick="">move</a>
     {% endif %}
   </div>
 </div>
@@ -215,3 +215,8 @@
 </div>
 <span id="modal_close_bottom"></span>
 <br><br>
+
+{% block script %}
+<script>
+</script>
+{% endblock script %}

@@ -90,11 +90,7 @@ class PostCreateView(CreateView):
         new_post.save()
         form.save_m2m()
         post_image_resize(new_post)
-        return redirect(self.get_success_url())
-
-    def get_success_url(self) -> str:
-        card_id = self.kwargs.get('card_id')
-        return f'/card/{card_id}'
+        return redirect('card-content', self.kwargs.get('card_id'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -146,16 +142,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         form.save_m2m()
         post_image_resize(rev_post)
         
-        redirect_url = redirect(self.get_success_url())
         if rev_post.content == '' and rev_post.num_images == 0:
             messages.warning(self.request, "Post deleted - no content and no images")
             rev_post.delete()
 
-        return redirect_url
-
-    def get_success_url(self) -> str:
-        card_id = self.get_object().card.id
-        return f'/card/{card_id}'
+        return redirect('card-content', self.get_object().card.id)
 
     def test_func(self):
         post = self.get_object()
