@@ -90,13 +90,13 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                 pc = ''
 
             if request_type == 'publish':
-                if card.is_public and not card.is_official:
+                if (card.is_public and not card.is_official) or (card.is_public and request.user.is_public_card_manager):
                     post.card = card
                     post.date_posted = timezone.now() 
                     post.save()
                     request.user.is_in_private_mode = False
                     request.user.save()
-                    messages.success(self.request, f"Post{pc} moved to public card ({card.title[:15].strip()})")
+                    messages.success(self.request, f"Post{pc} published to public card ({card.title[:15].strip()})")
                     return JsonResponse({"card_id": post.card.id}, status=200)
                 else:
                     return JsonResponse({}, status=400)

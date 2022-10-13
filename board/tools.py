@@ -5,6 +5,9 @@ from os.path import join as pj
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.utils import timezone
+from pathlib import Path
+from random import random
+
 
 
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
@@ -140,6 +143,7 @@ def post_image_resize(post) -> None:
             else:
                 croparea.append((0, round((h-w*ar)/2), w, round((h+w*ar)/2)))
 
+    rnd = str(round(random()*1000))
     for i in range(0, post.num_images):
         img_io = BytesIO()
         with Image.open(images[i].file) as img:
@@ -148,7 +152,9 @@ def post_image_resize(post) -> None:
             img = image_resize(POST_IMG_MAXSIZE, img)
             img = ImageOps.exif_transpose(img)
             img.save(img_io, format=ft)
-            th_images[i].save(os.path.basename(images[i].file.name), ContentFile(img_io.getvalue()))
+            fn = os.path.basename(images[i].file.name)
+            fnr = Path(fn).stem + '_' + rnd + Path(fn).suffix
+            th_images[i].save(fnr, ContentFile(img_io.getvalue()))
 
 def exception_log(text):
     print("----->>>>>> ", text)

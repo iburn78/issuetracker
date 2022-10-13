@@ -45,11 +45,19 @@
       {% if num_images > 0 %}
       <div class="text-muted small">Current images:</div>
       {% endif %}
-      <div class="row m-0 p-0 row-cols-auto text-muted small">
+      <div class="row m-0 p-0 row-cols-auto text-muted">
         {% for img in image_range %}
         <div class="col m-0 p-0 align-top">
-          <i class="bi bi-{{forloop.counter}}-square me-1" width="22" height="22"></i>
-          <img src="{{ img.url }}" alt="" class="post-img-update me-1">
+          <i class="bi bi-{{forloop.counter}}-square me-1"></i>
+          <div class="row m-0 p-0">
+            <div class="col m-0 p-0">
+            <a data-bs-toggle="collapse" data-bs-target="#edit_image{{forloop.counter}}"><img src="{{ img.url }}" alt="" class="th-img-style me-1"></a>
+            <div class="collapse" id="edit_image{{forloop.counter}}">
+              <button type="button" class="btn float-end btn-sm btn-danger px-1 py-0 me-1 mt-1 mb-2" onclick="">del</button>
+              <button type="button" class="btn float-end btn-sm btn-warning px-1 py-0 me-1 mt-1 mb-2" onclick="addimg(event, 1)">replace</button>
+            </div>
+            </div>
+          </div>
         </div>
         {% endfor %} 
       </div>
