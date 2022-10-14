@@ -97,7 +97,7 @@ class PostCreateView(CreateView):
         context['card'] = get_object_or_404(
             Card, id=self.kwargs.get('card_id'))
         context['num_images'] = 0
-        context['image_range'] = []
+        context['image_range'] = list(range(1, 8))
         return context
 
     def get_initial(self):
@@ -160,9 +160,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         context['update'] = True
         num_images = self.get_object().num_images
         context['num_images'] = num_images
-        image_range = [self.get_object().image1s, self.get_object().image2s, self.get_object().image3s, 
+        simages = [self.get_object().image1s, self.get_object().image2s, self.get_object().image3s, 
             self.get_object().image4s, self.get_object().image5s, self.get_object().image6s, self.get_object().image7s]
-        context['image_range'] = image_range[0:num_images]
+        context['image_range'] = simages[0:num_images] + list(range(num_images+1, 8))
         return context
 
     def get_initial(self):
