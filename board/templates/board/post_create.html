@@ -1,22 +1,4 @@
 {% extends "board/base.html" %}
-{% block style %}
-<style>
-  .th-img-style {
-    height: 150px;
-    width: 150px;
-    object-fit: cover;
-    overflow: hidden;
-    border-radius: 8px;
-    margin-top: 4px;
-    margin-bottom: 2px;
-  }
-  
-  .align-top {
-    display: flex;
-    align-items: top;
-  }
-</style>
-{% endblock style %}
 
 {% block content %}
 {% load crispy_forms_tags %}
@@ -50,12 +32,12 @@
           <div class="row m-0 p-0">
             <div class="col m-0 p-0">
             {% if forloop.counter <= num_images %}
-            <a data-bs-toggle="collapse" data-bs-target="#edit_image{{forloop.counter}}"><img id="image-preview{{forloop.counter}}" src="{{ img.url }}" alt="" class="th-img-style me-1"></a>
+            <a id='image_input{{forloop.counter}}_alink' data-bs-toggle="collapse" data-bs-target="#edit_image{{forloop.counter}}"><img id="image-preview{{forloop.counter}}" src="{{ img.url }}" alt="" class="th-img-style me-1"></a>
             {% else %}
             <a data-bs-toggle="collapse" data-bs-target="#edit_image{{forloop.counter}}"><img id="image-preview{{forloop.counter}}" src="" alt="" class="th-img-style me-1"></a>
             {% endif %}
             <div class="collapse" id="edit_image{{forloop.counter}}">
-              <button type="button" class="btn float-end btn-sm btn-danger px-1 py-0 me-1 mt-1 mb-2" onclick="delimg(event, {{forloop.counmter}})">del</button>
+              <button type="button" class="btn float-end btn-sm btn-danger px-1 py-0 me-1 mt-1 mb-2" onclick="delimg(event, {{forloop.counter}})">del</button>
               <button type="button" class="btn float-end btn-sm btn-warning px-1 py-0 me-1 mt-1 mb-2" onclick="addimg(event, {{forloop.counter}})">replace</button>
             </div>
             </div>
@@ -63,23 +45,25 @@
         </div>
         {% endfor %}
       </div>
-      
-      
-      <input id="image_input1" hidden type="file" name="image1_input" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview1')" >
-      <input id="image_input2" hidden type="file" name="image2_input" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview2')" >
-      <input id="image_input3" hidden type="file" name="image3_input" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview3')" >
-      <input id="image_input4" hidden type="file" name="image4_input" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview4')" >
-      <input id="image_input5" hidden type="file" name="image5_input" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview5')" >
-      <input id="image_input6" hidden type="file" name="image6_input" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview6')" >
-      <input id="image_input7" hidden type="file" name="image7_input" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview7')" >
-      <div class="d-flex align-items-center ms-0 m-1">
-        <button class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, 1)">1</button>
-        <button class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, 2)">2</button>
-        <button class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, 3)">3</button>
-        <button class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, 4)">4</button>
-        <button class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, 5)">5</button>
-        <button class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, 6)">6</button>
-        <button class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, 7)">7</button>
+          
+      {{ form.image1_input }}
+      {{ form.image2_input }}
+      {{ form.image3_input }}
+      {{ form.image4_input }}
+      {{ form.image5_input }}
+      {{ form.image6_input }}
+      {{ form.image7_input }}
+      <input id="id_mimages" hidden type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
+      <input id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
+      <div class="d-flex align-items-center ms-0 m-1 mt-2">
+        {% for img in image_range %}
+        {% if forloop.counter <= num_images %}
+        <button hidden id="imgbtn{{forloop.counter}}" class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, {{forloop.counter}})">{{forloop.counter}}</button>
+        {% else %}
+        <button id="imgbtn{{forloop.counter}}" class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, {{forloop.counter}})">{{forloop.counter}}</button>
+        {% endif %}
+        {% endfor %}
+        <button id="all-drop-area" class="btn btn-sm btn-success p-1 px-2 me-2 fw-bold" onclick="add_multi(event)">all / drop</button>
       </div>
       <p class="m-0 p-0">Tags</p>
       <p class="mb-1 m-0 p-0">{{ form.tags }}</p>
@@ -98,22 +82,124 @@
     </fieldset>
   </form>
 </div>
+{% endblock content %}
+{% block script %}
 <script>
+  String.prototype.replaceAt = function(index, character) {
+      if (this.length > index) {
+        return this.substr(0, index) + character + this.substr(index+character.length);
+      }
+      else { 
+        return this; 
+      }
+  };
+
+  const mik = document.getElementById('id_mimage_keys');
+  mik.value = '';
+
   function addimg(event, num) {
     event.preventDefault();
-    document.getElementById("image_input"+num.toString()).click();
+    let n = num.toString();
+    document.getElementById("id_image"+n+"_input").click();
+    let del_checkbox = document.getElementById("image"+n+"_input-clear_id");
+    if (del_checkbox != null) {
+      del_checkbox.checked = false;
+    }
+    mik.value = mik.value.replaceAt(n-1, '_');
+  }
+
+  function add_multi(event) {
+    event.preventDefault();
+    document.getElementById("id_mimages").click();
   }
   
-  function updatePreview(input, target) {
+  function delimg(event, num) {
+    event.preventDefault();
+    delimg_(num);
+    mik.value = mik.value.replaceAt(num-1, '_');
+  }
+  
+  function delimg_(num) {
+    let n = num.toString();
+    let del_checkbox = document.getElementById("image"+n+"_input-clear_id");
+    if (del_checkbox != null) {
+      del_checkbox.checked = true;
+    }
+    document.getElementById("id_image"+n+"_input").value="";
+    document.getElementById('image-preview'+n).src = "";
+    document.getElementById("image-preview"+n+"-div").setAttribute('hidden', '');
+    document.getElementById("imgbtn"+n).removeAttribute('hidden');
+    let bsCollapse = new bootstrap.Collapse("#edit_image"+n, {
+      toggle: false
+    });
+    bsCollapse.hide();
+  }
+
+  function delimg_all() {
+    for (i=1; i<8; i++) {
+      delimg_(i)
+    }
+  }
+  
+  function updatePreview(input, num_text) {
+    let n = num_text[5]; 
     let reader = new FileReader();
     reader.readAsDataURL(input.files[0]);
     reader.onload = function () {
-      let img = document.getElementById(target);
-      let img_div = document.getElementById(target+"-div");
-      img.src = this.result;
-      img_div.removeAttribute('hidden');
+      document.getElementById('image-preview'+n).src = this.result;
+      document.getElementById('image-preview'+n+"-div").removeAttribute('hidden');
+      document.getElementById("imgbtn"+n).setAttribute('hidden', '');
+      let bsCollapse = new bootstrap.Collapse("#edit_image"+n, {
+        toggle: false
+      });
+      bsCollapse.hide();
     }
   }
+
+  function updatePreview_multi(input) {
+    const files = input.files;
+    const arr = Array.from(files);
+    let mkeys = '';
+    delimg_all(); 
+    
+    arr.forEach((file, index) => {
+      if (index < 7) {
+        let n = (index+1).toString();
+        mkeys += n;
+        let reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+          document.getElementById('image-preview'+n).src = this.result;
+          document.getElementById('image-preview'+n).onerror = function() {
+            mkeys = mkeys.replaceAt(n-1, '_');
+            mik.value=mkeys;
+          }; 
+          document.getElementById('image-preview'+n+"-div").removeAttribute('hidden');
+          document.getElementById("imgbtn"+n).setAttribute('hidden', '');
+          let bsCollapse = new bootstrap.Collapse("#edit_image"+n, {
+            toggle: false
+          });
+          bsCollapse.hide();
+        }
+      }
+    })
+    mik.value=mkeys;
+  }
+
+  const dropArea = document.getElementById('all-drop-area');
+  
+  dropArea.addEventListener('dragover', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'copy';
+  });
+  
+  dropArea.addEventListener('drop', (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    document.getElementById("multi_img_select").files = event.dataTransfer.files;
+    updatePreview_multi(event.dataTransfer);
+  });
   
   function holdon(e) {
     let sbutton = document.getElementById("post-cu-button");
@@ -141,7 +227,5 @@
     `
     setTimeout(submit1, 3000);
   }
-  
-  
 </script>
-{% endblock content %}
+{% endblock script %}

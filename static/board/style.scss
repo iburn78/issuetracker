@@ -1,12 +1,12 @@
 @import "../../../etc/scss/functions";
 
 $grid-breakpoints: (
-  xs: 0,
-  sm: 576px,
-  md: 768px,
-  lg: 992px,
-  xl: 1200px,
-  xxl: 2000px,
+xs: 0,
+sm: 576px,
+md: 768px,
+lg: 992px,
+xl: 1200px,
+xxl: 2000px,
 );
 
 @import "../../../etc/scss/variables";
@@ -15,7 +15,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -25,7 +25,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -35,7 +35,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -45,7 +45,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -55,7 +55,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -65,7 +65,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -75,7 +75,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -85,7 +85,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -95,7 +95,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -105,7 +105,7 @@ $grid-breakpoints: (
   .bg-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-#{$key} {
     color: $value !important;
   }
@@ -115,7 +115,7 @@ $grid-breakpoints: (
   .bg-gray-#{$key} {
     background-color: $value !important;
   }
-
+  
   .text-gray-#{$key} {
     color: $value !important;
   }
@@ -183,17 +183,6 @@ body {
   z-index: 0;
   border-radius: 8px;
   background-color: $blue-100;
-}
-
-.post-img-update {
-  height: 100px;
-  object-fit: cover;
-  overflow: hidden;
-  z-index: 0;
-  border-radius: 8px;
-  background-color: $blue-100;
-  margin-top: 4px;
-  margin-bottom: 2px;
 }
 
 .card-img-select {
@@ -332,5 +321,29 @@ main::after {
 }
 
 pre {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
+}
+
+.post-img-update {
+  height: 100px;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
+.th-img-style {
+  height: 150px;
+  width: 150px;
+  object-fit: cover;
+  overflow: hidden;
+  border-radius: 8px;
+  margin-top: 4px;
+  margin-bottom: 2px;
+}
+
+.align-top {
+  display: flex;
+  align-items: top;
 }

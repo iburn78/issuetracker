@@ -78,9 +78,17 @@ class PostCreateView(CreateView):
             messages.warning(self.request, "Enter content or at least 1 image")
             return redirect('post-create', self.kwargs.get('card_id'))
 
-        form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
+
+        mkeys = list(form.cleaned_data['mimage_keys'])
+        mimages_input = self.request.FILES.getlist('mimages')[:7]
+        for i in range(0, len(mkeys)): 
+            if mkeys[i] != '_': 
+                images[i] = mimages_input[int(mkeys[i])-1]
+
+        form.instance.num_images = len(images)
+
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 
@@ -133,6 +141,14 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             form.instance.date_posted = timezone.now()
         for i in range(len(images), 7):
             images.append("")
+
+        mkeys = list(form.cleaned_data['mimage_keys'])
+        mimages_input = self.request.FILES.getlist('mimages')[:7]
+        for i in range(0, len(mkeys)): 
+            if mkeys[i] != '_': 
+                images[i] = mimages_input[int(mkeys[i])-1]
+                form.instance.num_images = max(form.instance.num_images, i+1)
+
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 

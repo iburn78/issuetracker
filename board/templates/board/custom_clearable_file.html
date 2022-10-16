@@ -6,4 +6,4 @@
 </span>
 {% endif %}
 {% endif %}
-<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} onchange="updatePreview(this, '{{widget.name}}')">
