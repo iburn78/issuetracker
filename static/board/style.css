@@ -807,7 +807,7 @@ body {
 }
 
 .KR-font {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   color: black;
 }
 
@@ -842,7 +842,6 @@ body {
     opacity: 1;
   }
 }
-
 .card-body {
   border-radius: 8px;
 }
@@ -1033,11 +1032,33 @@ pre {
 }
 
 .align-top {
-  display: -webkit-box;
-  display: -ms-flexbox;
   display: flex;
-  -webkit-box-align: top;
-      -ms-flex-align: top;
-          align-items: top;
+  align-items: top;
 }
-/*# sourceMappingURL=style.css.map */
+
+@keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes flickerAnimation {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.animate-flicker {
+  -webkit-animation: flickerAnimation 3s infinite;
+  animation: flickerAnimation 3s infinite;
+}/*# sourceMappingURL=style.css.map */

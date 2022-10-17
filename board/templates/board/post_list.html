@@ -28,6 +28,9 @@
   </div>
   <hr class="m-1 p-0">
   <div class="row m-0 p-0">
+    {% if not posts %}
+    <div class="col m-1 p-0 text-muted">no result...</div>
+    {% endif %}
     {% for post in posts %}
     <div class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
       <div class="row m-0 p-0 mt-2">
@@ -64,7 +67,7 @@
             {% if post.title != '' %}
             <p class="article-content text-dark text-break fw-bold fs-6 bg-gray-100 m-0 mb-1 p-0">{{ post.title }}</p>
             {% endif %}
-            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text }}</p>
+            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text|truncatechars:150 }}</p>
           </a>
           <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}

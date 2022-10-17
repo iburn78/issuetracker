@@ -59,9 +59,9 @@
       {{ form.image5_input }}
       {{ form.image6_input }}
       {{ form.image7_input }}
-      <input id="id_mimages" hidden type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
-      <input id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
-      <input id="id_imgsequence" type="text" name="imgsequence" class="form-control">
+      <input hidden id="id_mimages" type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
+      <input hidden id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
+      <input hidden id="id_imgsequence" type="text" name="imgsequence" class="form-control">
       <div class="d-flex align-items-center ms-0 m-1 mt-2">
         {% for img in image_range %}
         {% if forloop.counter <= num_images %}
@@ -100,7 +100,9 @@
       return this; 
     }
   };
-  String.prototype.swapTwo = function(a, b) {
+  String.prototype.swapTwo = function(i, j) {
+    a = this[i-1];
+    b = this[j-1];
     return this.replace(a, 'x').replace(b, 'y').replace('x', b).replace('y', a);
   }
 
@@ -199,13 +201,42 @@
     mik.value=mkeys;
   }
   
-  function move_left(event, i) {
-      document.getElementById('image-preview'+i).src = this.result;
-
+  function move_left_(event, n) {
+    event.preventDefault();
+    const r = document.getElementById('image-preview'+n);
+    const rd = document.getElementById('image-preview'+n+'-div');
+    const l = document.getElementById('image-preview'+(n-1)); 
+    const ld = document.getElementById('image-preview'+(n-1)+'-div');
+    let rimg = r.src;
+    r.src = l.src;
+    l.src = rimg;
+    rh = rd.hasAttribute('hidden');
+    lh = ld.hasAttribute('hidden');
+    if (rh) {
+      ld.setAttribute('hidden', '');
+    }
+    else {
+      ld.removeAttribute('hidden');
+    }
+    if (lh) {
+      rd.setAttribute('hidden', '');
+    }
+    else {
+      rd.removeAttribute('hidden');
+    }
+    ims.value = ims.value.swapTwo(n-1, n); 
   }
 
-  function move_left(event, i) {
+  function move_left(event, n) {
+    move_left_(event, n); 
+    document.getElementById('edit_image'+n).classList.remove('show')
+    document.getElementById('edit_image'+(n-1)).classList.add('show');
+  }
 
+  function move_right(event, n) {
+    move_left(event, n+1); 
+    document.getElementById('edit_image'+(n+1)).classList.add('show')
+    document.getElementById('edit_image'+n).classList.remove('show');
   }
 
   const dropArea = document.getElementById('all-drop-area');
@@ -228,26 +259,12 @@
     sbutton.style.display = 'none';
     let cbutton = document.getElementById("post-cu-cancel-button");
     cbutton.value = "go back"
-    submit1();
-  }; 
-  
-  function submit1() {
     document.getElementById("holdon_area").innerHTML = 
     `
-    <div class="mb-2 me-2 small text-muted float-end">
-    </div>
-    `
-    setTimeout(submit2, 1000);
-  }
-  
-  function submit2() {
-    document.getElementById("holdon_area").innerHTML = 
-    `
-    <div class="mb-2 me-2 small text-muted float-end">
+    <div class="animate-flicker mb-2 me-2 small text-muted float-end">
       submitting...
     </div>
     `
-    setTimeout(submit1, 3000);
-  }
+  }; 
 </script>
 {% endblock script %}

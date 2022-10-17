@@ -76,7 +76,12 @@ class PostCreateView(CreateView):
             if mkeys[i] != '_' and (img_field_input[i] == None or img_field_input[i] == False):
                 img_field_input[i] = mimages_input[int(mkeys[i])-1]
 
-        for img in img_field_input:
+        ims = list(form.cleaned_data['imgsequence'])
+        img_field_input_seq_adjusted = []
+        for s in ims: 
+            img_field_input_seq_adjusted.append(img_field_input[int(s)-1]) 
+
+        for img in img_field_input_seq_adjusted:
             if img != None and img != False:
                 images.append(img)
 
@@ -123,8 +128,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         
         mkeys = list(form.cleaned_data['mimage_keys'])
         mimages_input = self.request.FILES.getlist('mimages')[:7]
-        print(mkeys)
-        print(mimages_input)
         for i in range(0, len(mkeys)): 
             if mkeys[i] != '_' and (img_field_input[i] == None or img_field_input[i] == False):
                 img_field_input[i] = mimages_input[int(mkeys[i])-1]
@@ -142,6 +145,12 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                         original_images[i].name
                     exception_log(text)
 
+        ims = list(form.cleaned_data['imgsequence'])
+        img_field_input_seq_adjusted = []
+        for s in ims: 
+            img_field_input_seq_adjusted.append(img_field_input[int(s)-1]) 
+
+        for i, img in enumerate(img_field_input_seq_adjusted):
             if img != False and img != None:
                 images.append(img)
 
@@ -150,7 +159,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             form.instance.date_posted = timezone.now()
         for i in range(len(images), 7):
             images.append("")
-        print(images)
 
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images

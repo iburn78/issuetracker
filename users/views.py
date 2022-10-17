@@ -63,7 +63,7 @@ def profile(request):
                     img.save(img_io, format=ft)
                     p_form.instance.image.save(os.path.basename(p_form.cleaned_data['picture'].name), ContentFile(img_io.getvalue()))
             p_form.save()
-            messages.success(request, 'your account has been updated')
+            messages.success(request, 'Your account has been updated')
             return redirect('profile')
     else:
         u_form = UserUpdateForm(instance=request.user)
