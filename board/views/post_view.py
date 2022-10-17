@@ -70,25 +70,24 @@ class PostCreateView(CreateView):
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
         
+        mkeys = list(form.cleaned_data['mimage_keys'])
+        mimages_input = self.request.FILES.getlist('mimages')[:7]
+        for i in range(0, len(mkeys)): 
+            if mkeys[i] != '_' and (img_field_input[i] == None or img_field_input[i] == False):
+                img_field_input[i] = mimages_input[int(mkeys[i])-1]
+
         for img in img_field_input:
-            if img != None:
+            if img != None and img != False:
                 images.append(img)
 
         if form.cleaned_data['content'] == '' and len(images) == 0:
             messages.warning(self.request, "Enter content or at least 1 image")
             return redirect('post-create', self.kwargs.get('card_id'))
 
+        form.instance.num_images = len(images)
         for i in range(len(images), 7):
             images.append("")
-
-        mkeys = list(form.cleaned_data['mimage_keys'])
-        mimages_input = self.request.FILES.getlist('mimages')[:7]
-        for i in range(0, len(mkeys)): 
-            if mkeys[i] != '_': 
-                images[i] = mimages_input[int(mkeys[i])-1]
-
-        form.instance.num_images = len(images)
-
+            
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 
@@ -121,8 +120,18 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         images = []
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
+        
+        mkeys = list(form.cleaned_data['mimage_keys'])
+        mimages_input = self.request.FILES.getlist('mimages')[:7]
+        print(mkeys)
+        print(mimages_input)
+        for i in range(0, len(mkeys)): 
+            if mkeys[i] != '_' and (img_field_input[i] == None or img_field_input[i] == False):
+                img_field_input[i] = mimages_input[int(mkeys[i])-1]
+
         original_images = [form.instance.image1, form.instance.image2, form.instance.image3,
                            form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7]
+
         for i, img in enumerate(img_field_input):
             if img_field_input[i] != original_images[i]:
                 try:
@@ -141,13 +150,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             form.instance.date_posted = timezone.now()
         for i in range(len(images), 7):
             images.append("")
-
-        mkeys = list(form.cleaned_data['mimage_keys'])
-        mimages_input = self.request.FILES.getlist('mimages')[:7]
-        for i in range(0, len(mkeys)): 
-            if mkeys[i] != '_': 
-                images[i] = mimages_input[int(mkeys[i])-1]
-                form.instance.num_images = max(form.instance.num_images, i+1)
+        print(images)
 
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
             form.instance.image5, form.instance.image6, form.instance.image7] = images
@@ -158,11 +161,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         form.save_m2m()
         post_image_resize(rev_post)
         
+        cid = self.get_object().card.id
         if rev_post.content == '' and rev_post.num_images == 0:
             messages.warning(self.request, "Post deleted - no content and no images")
             rev_post.delete()
-
-        return redirect('card-content', self.get_object().card.id)
+        return redirect('card-content', cid)
 
     def test_func(self):
         post = self.get_object()

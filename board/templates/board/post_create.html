@@ -25,7 +25,7 @@
       <p class="m-0 p-0">Content</p>
       {{ form.content }}
       <p class="m-0 p-0">Images</p>
-      <div class="row m-0 p-0 row-cols-auto text-muted">
+      <div id="image_preview_section" class="row m-0 p-0 row-cols-auto text-muted">
         {% for img in image_range %}
         <div {% if forloop.counter > num_images %}hidden{% endif %} id="image-preview{{forloop.counter}}-div" class="col m-0 p-0 align-top">
           <i class="bi bi-{{forloop.counter}}-square me-1"></i>
@@ -39,6 +39,12 @@
             <div class="collapse" id="edit_image{{forloop.counter}}">
               <button type="button" class="btn float-end btn-sm btn-danger px-1 py-0 me-1 mt-1 mb-2" onclick="delimg(event, {{forloop.counter}})">del</button>
               <button type="button" class="btn float-end btn-sm btn-warning px-1 py-0 me-1 mt-1 mb-2" onclick="addimg(event, {{forloop.counter}})">replace</button>
+              {% if forloop.counter > 1%}
+              <button class="btn btn-sm px-1 py-0 mt-1 mb-2" onclick="move_left(event, {{forloop.counter}})"><img src="{% static 'icons/chevron-left.svg' %}" width="14" height="14"></button>
+              {% endif %}
+              {% if forloop.counter < 7%}
+              <button class="btn btn-sm px-1 py-0 mt-1 mb-2 me-1" onclick="move_right(event, {{forloop.counter}})"><img src="{% static 'icons/chevron-right.svg'%}" width="14" height="14"></button>
+              {% endif %}
             </div>
             </div>
           </div>
@@ -55,6 +61,7 @@
       {{ form.image7_input }}
       <input id="id_mimages" hidden type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
       <input id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
+      <input id="id_imgsequence" type="text" name="imgsequence" class="form-control">
       <div class="d-flex align-items-center ms-0 m-1 mt-2">
         {% for img in image_range %}
         {% if forloop.counter <= num_images %}
@@ -86,16 +93,21 @@
 {% block script %}
 <script>
   String.prototype.replaceAt = function(index, character) {
-      if (this.length > index) {
-        return this.substr(0, index) + character + this.substr(index+character.length);
-      }
-      else { 
-        return this; 
-      }
+    if (this.length > index) {
+      return this.substr(0, index) + character + this.substr(index+character.length);
+    }
+    else { 
+      return this; 
+    }
   };
+  String.prototype.swapTwo = function(a, b) {
+    return this.replace(a, 'x').replace(b, 'y').replace('x', b).replace('y', a);
+  }
 
   const mik = document.getElementById('id_mimage_keys');
+  const ims = document.getElementById('id_imgsequence');
   mik.value = '';
+  ims.value = '1234567';
 
   function addimg(event, num) {
     event.preventDefault();
@@ -161,6 +173,7 @@
     const arr = Array.from(files);
     let mkeys = '';
     delimg_all(); 
+    ims.value = '1234567';
     
     arr.forEach((file, index) => {
       if (index < 7) {
@@ -184,6 +197,15 @@
       }
     })
     mik.value=mkeys;
+  }
+  
+  function move_left(event, i) {
+      document.getElementById('image-preview'+i).src = this.result;
+
+  }
+
+  function move_left(event, i) {
+
   }
 
   const dropArea = document.getElementById('all-drop-area');
