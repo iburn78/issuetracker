@@ -234,7 +234,7 @@
   }
 
   function move_right(event, n) {
-    move_left(event, n+1); 
+    move_left_(event, n+1); 
     document.getElementById('edit_image'+(n+1)).classList.add('show')
     document.getElementById('edit_image'+n).classList.remove('show');
   }
