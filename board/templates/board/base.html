@@ -5,10 +5,21 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta property="og:title" content="IssueTracker - organize your issues">
-  <meta property="og:description" content="track and search issues effectively">
-  <!-- <meta id="meta_og_image" property="og:image" content="{% static 'board/thumbnail_issuetracker.jpg' %}"> -->
-  <meta id="meta_og_image" property="og:image" content="https://issuetracker.info/media/uploaded/ppost_imgsr/7670393_20210930_190337.jpg" data-isomorphic-meta="true">
+  {% if meta_og_title %}
+  <meta property="og:title" content="{{ meta_og_title | truncatechars:30 }}" data-isomorphic-meta="true">
+  {% else %}
+  <meta property="og:title" content="IssueTracker - organize your issues" data-isomorphic-meta="true">
+  {% endif %}
+  {% if meta_og_desc %}
+  <meta property="og:description" content="{{ meta_og_desc }}" data-isomorphic-meta="true">
+  {% else %}
+  <meta property="og:description" content="track and search issues effectively" data-isomorphic-meta="true">
+  {% endif %}
+  {% if meta_og_image %}
+  <meta property="og:image" content="{{ meta_og_image }}" data-isomorphic-meta="true">
+  {% else %}
+  <meta property="og:image" content="{% static 'board/thumbnail_issuetracker.jpg' %}" data-isomorphic-meta="true">
+  {% endif %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Anton&family=Open+Sans&display=swap" rel="stylesheet">

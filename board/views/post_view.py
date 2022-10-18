@@ -225,11 +225,31 @@ class PostDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        post = self.get_object()
         context['post'] = post
         context['form'] = self.form_class()
-        if self.get_object().image1s != '':
-            context['og_image'] = self.request.build_absolute_uri(self.get_object().image1s.url)
+        mot = ""
+        if post.title.strip() != "" and post.get_preview_text().strip() !="":
+            mot = post.title.strip()+": "+post.get_preview_text().strip()
+        elif post.title.strip() == "":
+            mot = post.get_preview_text().strip()
+        else:
+            pass
+            #######################################
+            #######################################
+            #######################################
+            #######################################
+            #######################################
+            #######################################
+            #######################################
+            #######################################
+            #######################################
+            #######################################
+
+        context['meta_og_title'] = post.title + ": " + post.get_preview_text()
+        # context['meta_og_desc'] = ''
+        if post.image1s != '':
+            context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
         return context
 
 
