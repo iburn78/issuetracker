@@ -51,7 +51,6 @@
         </div>
         {% endfor %}
       </div>
-          
       {{ form.image1_input }}
       {{ form.image2_input }}
       {{ form.image3_input }}
@@ -59,9 +58,9 @@
       {{ form.image5_input }}
       {{ form.image6_input }}
       {{ form.image7_input }}
-      <input hidden id="id_mimages" type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
-      <input hidden id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
-      <input hidden id="id_imgsequence" type="text" name="imgsequence" class="form-control">
+      <input id="id_mimages" type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
+      <input id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
+      <input id="id_imgsequence" type="text" name="imgsequence" class="form-control">
       <div class="d-flex align-items-center ms-0 m-1 mt-2">
         {% for img in image_range %}
         {% if forloop.counter <= num_images %}

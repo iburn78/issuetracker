@@ -9,7 +9,7 @@
   {% include 'board/post_script.html' %}
   <script>
   {% if post.image1s %}
-  document.getElementById("meta_og_image").setAttribute('content', '{{post.image1s.url}}');
+  document.getElementById("meta_og_image").setAttribute('content', '{{og_image}}');
   {% endif %}
   render_comments({{post.id}}, 1);
   document.getElementById("modal_close_top").innerHTML = '<button type="button" class="float-end btn-close me-2" onclick="javascript:history.go(-1);"></button>';

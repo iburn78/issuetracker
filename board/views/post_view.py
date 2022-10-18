@@ -228,6 +228,8 @@ class PostDetailView(DetailView):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         context['post'] = post
         context['form'] = self.form_class()
+        if self.get_object().image1s != '':
+            context['og_image'] = self.request.build_absolute_uri(self.get_object().image1s.url)
         return context
 
 
