@@ -228,11 +228,8 @@ class PostDetailView(DetailView):
         post = self.get_object()
         context['post'] = post
         context['form'] = self.form_class()
-        mot = post.get_preview_text().strip()
-        if post.title.strip() != "":
-            mot = post.title.strip()+": "+ mot
-        context['meta_og_title'] = post.title + ": " + post.get_preview_text()
-        # context['meta_og_desc'] = ''
+        context['meta_og_title'] = post.title.strip()
+        context['meta_og_desc'] = post.get_preview_text().strip()
         if post.image1s != '':
             context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
         return context

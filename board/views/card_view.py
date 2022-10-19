@@ -189,7 +189,7 @@ class CardContentListView(ListView):
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         context['form'] = CommentForm
         context['meta_og_title'] = card.title.strip()
-        # context['meta_og_desc'] = ''
+        context['meta_og_desc'] = card.desc.strip()
         context['meta_og_image'] = self.request.build_absolute_uri(card.image.url)
         return context
 
