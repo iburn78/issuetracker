@@ -252,7 +252,6 @@ class PostDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 class PostMediaView(LoginRequiredMixin, UserPassesTestMixin, View):
-
     def get(self, *args, **kwargs):
         target_file = self.kwargs.get('file')
         target_dir = os.path.dirname(resolve(self.request.path_info).route)
