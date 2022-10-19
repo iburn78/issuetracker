@@ -190,7 +190,7 @@ class CardContentListView(ListView):
         context['form'] = CommentForm
         context['meta_og_title'] = card.title.strip()
         # context['meta_og_desc'] = ''
-        context['meta_og_image'] = self.request.build_absolute_uri(card.image1.url)
+        context['meta_og_image'] = self.request.build_absolute_uri(card.image.url)
         return context
 
 
