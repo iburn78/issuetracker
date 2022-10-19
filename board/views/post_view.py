@@ -228,24 +228,9 @@ class PostDetailView(DetailView):
         post = self.get_object()
         context['post'] = post
         context['form'] = self.form_class()
-        mot = ""
-        if post.title.strip() != "" and post.get_preview_text().strip() !="":
-            mot = post.title.strip()+": "+post.get_preview_text().strip()
-        elif post.title.strip() == "":
-            mot = post.get_preview_text().strip()
-        else:
-            pass
-            #######################################
-            #######################################
-            #######################################
-            #######################################
-            #######################################
-            #######################################
-            #######################################
-            #######################################
-            #######################################
-            #######################################
-
+        mot = post.get_preview_text().strip()
+        if post.title.strip() != "":
+            mot = post.title.strip()+": "+ mot
         context['meta_og_title'] = post.title + ": " + post.get_preview_text()
         # context['meta_og_desc'] = ''
         if post.image1s != '':

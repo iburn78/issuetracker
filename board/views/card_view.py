@@ -183,10 +183,14 @@ class CardContentListView(ListView):
         context = super().get_context_data(**kwargs)
         card_id = self.kwargs.get('card_id')
         context['card_id'] = card_id
-        context['card'] = get_object_or_404(Card, id=card_id)
+        card = get_object_or_404(Card, id=card_id)
+        context['card'] = card
         context['author_count'] = User.objects.filter(post__card_id = card_id).distinct().count()
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         context['form'] = CommentForm
+        context['meta_og_title'] = card.title.strip()
+        # context['meta_og_desc'] = ''
+        context['meta_og_image'] = self.request.build_absolute_uri(card.image1.url)
         return context
 
 
