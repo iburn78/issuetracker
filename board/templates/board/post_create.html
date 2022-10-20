@@ -91,7 +91,7 @@
 {% endblock content %}
 {% block script %}
 <script>
-  String.prototype.replaceAt = function(index, character) {
+  String.prototype.it_replaceAt_ = function(index, character) {
     if (this.length > index) {
       return this.substr(0, index) + character + this.substr(index+character.length);
     }
@@ -99,7 +99,7 @@
       return this; 
     }
   };
-  String.prototype.swapTwo = function(i, j) {
+  String.prototype.it_swapTwo_ = function(i, j) {
     a = this[i-1];
     b = this[j-1];
     return this.replace(a, 'x').replace(b, 'y').replace('x', b).replace('y', a);
@@ -118,7 +118,7 @@
     if (del_checkbox != null) {
       del_checkbox.checked = false;
     }
-    mik.value = mik.value.replaceAt(n-1, '_');
+    mik.value = mik.value.it_replaceAt_(n-1, '_');
   }
 
   function add_multi(event) {
@@ -129,7 +129,7 @@
   function delimg(event, num) {
     event.preventDefault();
     delimg_(num);
-    mik.value = mik.value.replaceAt(num-1, '_');
+    mik.value = mik.value.it_replaceAt_(num-1, '_');
   }
   
   function delimg_(num) {
@@ -186,7 +186,7 @@
         reader.onload = function () {
           document.getElementById('image-preview'+n).src = this.result;
           // document.getElementById('image-preview'+n).onerror = function() {
-          //   mkeys = mkeys.replaceAt(n-1, '_');
+          //   mkeys = mkeys.it_replaceAt_(n-1, '_');
           //   mik.value=mkeys;
           // }; 
           document.getElementById('image-preview'+n+"-div").removeAttribute('hidden');
@@ -224,7 +224,7 @@
     else {
       rd.removeAttribute('hidden');
     }
-    ims.value = ims.value.swapTwo(n-1, n); 
+    ims.value = ims.value.it_swapTwo_(n-1, n); 
   }
 
   function move_left(event, n) {
