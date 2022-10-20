@@ -60,7 +60,6 @@
       {{ form.image7_input }}
       <input id="id_mimages" type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
       <input id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
-      <input id="id_imgsequence" type="text" name="imgsequence" class="form-control">
       <div class="d-flex align-items-center ms-0 m-1 mt-2">
         {% for img in image_range %}
         {% if forloop.counter <= num_images %}
@@ -91,34 +90,71 @@
 {% endblock content %}
 {% block script %}
 <script>
-  String.prototype.it_replaceAt_ = function(index, character) {
-    if (this.length > index) {
-      return this.substr(0, index) + character + this.substr(index+character.length);
-    }
-    else { 
-      return this; 
-    }
-  };
+  // String.prototype.it_replaceAt_ = function(index, character) {
+  //   if (this.length > index) {
+  //     return this.substr(0, index) + character + this.substr(index+character.length);
+  //   }
+  //   else { 
+  //     return this; 
+  //   }
+  // };
   String.prototype.it_swapTwo_ = function(i, j) {
     a = this[i-1];
     b = this[j-1];
     return this.replace(a, 'x').replace(b, 'y').replace('x', b).replace('y', a);
   }
 
+  function CAP_to_num(c) {
+    switch(c) {
+      case 'A': return '1';
+      case 'B': return '2';
+      case 'C': return '3';
+      case 'D': return '4';
+      case 'E': return '5';
+      case 'F': return '6';
+      case 'G': return '7';
+      default: return '';
+    }
+  }
+
+  function low_to_num(c) {
+    switch(c) {
+      case 'a': return '1';
+      case 'b': return '2';
+      case 'c': return '3';
+      case 'd': return '4';
+      case 'e': return '5';
+      case 'f': return '6';
+      case 'g': return '7';
+      default: return '';
+    }
+  }
+
+  function charnum_in_nth(n) {
+    let c = mik.value[n-1];
+    if ( c > 0 && c < 8) {
+      return c;
+    }
+    else {
+      return low_to_num(c) + CAP_to_num(c);
+    }
+  }
+
+  // logic of mik
+  // ABCDEFG: orignal images or replaced images
+  // abcdefg: deleted images
+  // 1234567: multiple selection images
+  
+  const CAP = 'ABCDEFG';
+  const low = 'abcdefg';
+
   const mik = document.getElementById('id_mimage_keys');
-  const ims = document.getElementById('id_imgsequence');
-  mik.value = '';
-  ims.value = '1234567';
+  mik.value = CAP.substring(0, {{num_images}})+low.substring({{num_images}}, 7);
 
   function addimg(event, num) {
     event.preventDefault();
     let n = num.toString();
-    document.getElementById("id_image"+n+"_input").click();
-    let del_checkbox = document.getElementById("image"+n+"_input-clear_id");
-    if (del_checkbox != null) {
-      del_checkbox.checked = false;
-    }
-    mik.value = mik.value.it_replaceAt_(n-1, '_');
+    document.getElementById("id_image"+charnum_in_nth(n)+"_input").click();
   }
 
   function add_multi(event) {
@@ -128,17 +164,25 @@
   
   function delimg(event, num) {
     event.preventDefault();
-    delimg_(num);
-    mik.value = mik.value.it_replaceAt_(num-1, '_');
+    let n = num.toString();
+    delimg_(n);
+    
+    let t = mik.value[n-1];
+    if ( t > 0 && t < 8) {
+      mik.value = mik.value.replace(t, low[t-1]);
+    }
+    else {
+      mik.value = mik.value.replace(t, t.toLowerCase());
+    }
   }
   
-  function delimg_(num) {
-    let n = num.toString();
-    let del_checkbox = document.getElementById("image"+n+"_input-clear_id");
+  function delimg_(n) {
+    let del_checkbox = document.getElementById("image"+charnum_in_nth(n)+"_input-clear_id");
     if (del_checkbox != null) {
       del_checkbox.checked = true;
     }
-    document.getElementById("id_image"+n+"_input").value="";
+
+    document.getElementById("id_image"+charnum_in_nth(n)+"_input").value="";
     document.getElementById('image-preview'+n).src = "";
     document.getElementById("image-preview"+n+"-div").setAttribute('hidden', '');
     document.getElementById("imgbtn"+n).removeAttribute('hidden');
@@ -167,24 +211,36 @@
       });
       bsCollapse.hide();
     }
+    let t = mik.value[n-1];
+    if ( t > 0 && t < 8) {
+      mik.value = mik.value.replace(t, CAP[t-1]);
+    }
+    else {
+      mik.value = mik.value.replace(t, t.toUpperCase());
+    }
+    let del_checkbox = document.getElementById("image"+charnum_in_nth(n)+"_input-clear_id");
+    if (del_checkbox != null) {
+      del_checkbox.checked = false;
+    }
   }
 
   function updatePreview_multi(input) {
     const files = input.files;
     const arr = Array.from(files);
-    let mkeys = '';
     delimg_all(); 
-    mik.value = ''; 
-    ims.value = '1234567';
+    mik.value = '1234567'.substring(0, arr.length)+low.substring(arr.length, 7);
     
     arr.forEach((file, index) => {
       if (index < 7) {
         let n = (index+1).toString();
-        mkeys += n;
         let reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onload = function () {
           document.getElementById('image-preview'+n).src = this.result;
+          //////////////////////////////////
+          //////////////////////////////////
+          //////////////////////////////////
+          // NEED TO REVISIT!!!!
           // document.getElementById('image-preview'+n).onerror = function() {
           //   mkeys = mkeys.it_replaceAt_(n-1, '_');
           //   mik.value=mkeys;
@@ -198,33 +254,51 @@
         }
       }
     })
-    mik.value=mkeys;
   }
   
   function move_left_(event, n) {
     event.preventDefault();
     const r = document.getElementById('image-preview'+n);
     const rd = document.getElementById('image-preview'+n+'-div');
+    const rb = document.getElementById('imgbtn'+n);
     const l = document.getElementById('image-preview'+(n-1)); 
     const ld = document.getElementById('image-preview'+(n-1)+'-div');
+    const lb = document.getElementById('imgbtn'+(n-1));
+    // image swap
     let rimg = r.src;
     r.src = l.src;
     l.src = rimg;
-    rh = rd.hasAttribute('hidden');
-    lh = ld.hasAttribute('hidden');
-    if (rh) {
+    // image - div swap
+    rdh = rd.hasAttribute('hidden');
+    ldh = ld.hasAttribute('hidden');
+    if (rdh) {
       ld.setAttribute('hidden', '');
     }
     else {
       ld.removeAttribute('hidden');
     }
-    if (lh) {
+    if (ldh) {
       rd.setAttribute('hidden', '');
     }
     else {
       rd.removeAttribute('hidden');
     }
-    ims.value = ims.value.it_swapTwo_(n-1, n); 
+    // image - button swap
+    rbh = rb.hasAttribute('hidden');
+    lbh = lb.hasAttribute('hidden');
+    if (rbh) {
+      lb.setAttribute('hidden', '');
+    }
+    else {
+      lb.removeAttribute('hidden');
+    }
+    if (lbh) {
+      rb.setAttribute('hidden', '');
+    }
+    else {
+      rb.removeAttribute('hidden');
+    }
+    mik.value = mik.value.it_swapTwo_(n-1, n); 
   }
 
   function move_left(event, n) {
