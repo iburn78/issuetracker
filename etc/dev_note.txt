@@ -37,3 +37,4 @@ Upgrades:
 Notes:
 - published post's images may remain in private image folder in the server
 - may need to write image-clean-up code
+- in private mode, if brower access public card through url, it shows public card content in private environment: it should be OK
