@@ -1,88 +1,13 @@
 {% extends "board/base.html" %}
 
 {% block style %}
-<style>
-  .th-img-chosen {
-    height: 200px;
-    width: 200px;
-    object-fit: cover;
-    overflow: hidden;
-    border-radius: 8px;
-    margin-top: 4px;
-    margin-bottom: 2px;
-  }
-</style>
+<style></style>
 {% endblock style %}
 
 {% block content %}
-<form method="POST" enctype="multipart/form-data">
-  {% csrf_token %}
-  <input id="choose_img" hidden type="file" multiple name="image" class="form-control" accept="image/*" onchange="updatePreview(this, 'image-preview')" >
-  <a href="" id="drop-area" class="btn btn-sm btn-primary" onclick="chooseimg(event)">choose</a>
-  <button type="submit" class="btn btn-sm btn-secondary">submit</button>
-  <div id="img_notification"></div>
-</form>
-
-<div class="row m-0 p-0">
-  <div class="col m-0 p-0">
-    <img hidden id="image-preview0" src="" class="th-img-chosen">
-    <i id="image_edit_0" class="bi bi-screwdriver"></i>
-    <i id="image_remove_0" class="bi bi-x-lg"></i>
-    <img hidden id="image-preview1" src="" class="th-img-chosen">
-    <img hidden id="image-preview2" src="" class="th-img-chosen">
-    <img hidden id="image-preview3" src="" class="th-img-chosen">
-    <img hidden id="image-preview4" src="" class="th-img-chosen">
-  </div>
-</div>
 {% endblock content %}
 
 {% block script %}
-<script>
-  function chooseimg(event) {
-    event.preventDefault();
-    let ci = document.getElementById("choose_img");
-    ci.click();
-  }
-
-  const dropArea = document.getElementById('drop-area');
-  
-  dropArea.addEventListener('dragover', (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'copy';
-  });
-  
-  dropArea.addEventListener('drop', (event) => {
-    event.stopPropagation();
-    event.preventDefault();
-    updatePreview(event.dataTransfer, 'image-preview');
-    document.getElementById("choose_img").files = event.dataTransfer.files;
-    
-    let ln = event.dataTransfer.files.length;
-    document.getElementById("img_notification").innerText = `${ln}/5 images are chosen`;
-    console.log(ln);
-  });
-
-  function updatePreview(input, target) {
-    const files = input.files;
-    const arr = Array.from(files);
-    console.log(input.files);
-    let ln = input.files.length;
-    document.getElementById("img_notification").innerText = `${ln}/5 images are chosen`;
-    console.log(ln);
-    
-    arr.forEach((file, index) => {
-      if (index < 5) {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-          let img = document.getElementById(target+index);
-          img.src = this.result;
-          img.removeAttribute('hidden');
-        }
-      }
-    })
-  }
-</script>
+<script></script>
 {% endblock script %}
 
