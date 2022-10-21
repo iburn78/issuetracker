@@ -18,6 +18,7 @@ from django.urls import resolve
 from django.views.static import serve
 import os
 from django.utils import timezone
+from imghdr import what as imgval
 
 def postimageview(request, *args, **kwargs): 
     template_name = "board/image_view.html"
@@ -71,19 +72,18 @@ class PostCreateView(CreateView):
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
         
         mkeys = list(form.cleaned_data['mimage_keys'])
-        mimages_input = self.request.FILES.getlist('mimages')[:7]
+        mimages_input = self.request.FILES.getlist('mimages')[:7] # multiple file selection does not perform image validation
+
+        AN = {'A': 1, 'B': 2, 'C':3, 'D':4, 'E':5, 'F':6, 'G':7}
         for i in range(0, len(mkeys)): 
-            if mkeys[i] != '_' and (img_field_input[i] == None or img_field_input[i] == False):
-                img_field_input[i] = mimages_input[int(mkeys[i])-1]
-
-        ims = list(form.cleaned_data['imgsequence'])
-        img_field_input_seq_adjusted = []
-        for s in ims: 
-            img_field_input_seq_adjusted.append(img_field_input[int(s)-1]) 
-
-        for img in img_field_input_seq_adjusted:
-            if img != None and img != False:
-                images.append(img)
+            if mkeys[i].isdigit():
+                img = mimages_input[int(mkeys[i])-1]
+                if imgval(img) != None: 
+                    images.append(img)
+            elif mkeys[i].isupper():
+                images.append(img_field_input[AN[mkeys[i]]-1])
+            else: 
+                pass
 
         if form.cleaned_data['content'] == '' and len(images) == 0:
             messages.warning(self.request, "Enter content or at least 1 image")
@@ -125,15 +125,22 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         images = []
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
-        
-        mkeys = list(form.cleaned_data['mimage_keys'])
-        mimages_input = self.request.FILES.getlist('mimages')[:7]
-        for i in range(0, len(mkeys)): 
-            if mkeys[i] != '_' and (img_field_input[i] == None or img_field_input[i] == False):
-                img_field_input[i] = mimages_input[int(mkeys[i])-1]
 
         original_images = [form.instance.image1, form.instance.image2, form.instance.image3,
                            form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7]
+        
+        mkeys = list(form.cleaned_data['mimage_keys'])
+        mimages_input = self.request.FILES.getlist('mimages')[:7]
+        AN = {'A': 1, 'B': 2, 'C':3, 'D':4, 'E':5, 'F':6, 'G':7}
+        for i in range(0, len(mkeys)): 
+            if mkeys[i].isdigit(): 
+                img = mimages_input[int(mkeys[i])-1]
+                if imgval(img) != None: 
+                    images.append(img)
+            elif mkeys[i].isupper():
+                images.append(img_field_input[AN[mkeys[i]]-1])
+            else: 
+                pass
 
         for i, img in enumerate(img_field_input):
             if img_field_input[i] != original_images[i]:
@@ -144,15 +151,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     text = "Exception in delete th_images - class PostUpdateView delete(): " + \
                         original_images[i].name
                     exception_log(text)
-
-        ims = list(form.cleaned_data['imgsequence'])
-        img_field_input_seq_adjusted = []
-        for s in ims: 
-            img_field_input_seq_adjusted.append(img_field_input[int(s)-1]) 
-
-        for i, img in enumerate(img_field_input_seq_adjusted):
-            if img != False and img != None:
-                images.append(img)
 
         form.instance.num_images = len(images)
         if self.request.POST.get('update_date_posted')=='checked':
