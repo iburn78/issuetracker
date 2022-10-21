@@ -18,7 +18,7 @@ from django.urls import resolve
 from django.views.static import serve
 import os
 from django.utils import timezone
-from imghdr import what as imgval
+from PIL import Image
 
 def postimageview(request, *args, **kwargs): 
     template_name = "board/image_view.html"
@@ -78,8 +78,11 @@ class PostCreateView(CreateView):
         for i in range(0, len(mkeys)): 
             if mkeys[i].isdigit():
                 img = mimages_input[int(mkeys[i])-1]
-                if imgval(img) != None: 
+                try: 
+                    Image.open(img)
                     images.append(img)
+                except:
+                    pass
             elif mkeys[i].isupper():
                 images.append(img_field_input[AN[mkeys[i]]-1])
             else: 
@@ -135,8 +138,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for i in range(0, len(mkeys)): 
             if mkeys[i].isdigit(): 
                 img = mimages_input[int(mkeys[i])-1]
-                if imgval(img) != None: 
+                try: 
+                    Image.open(img)
                     images.append(img)
+                except:
+                    pass
             elif mkeys[i].isupper():
                 images.append(img_field_input[AN[mkeys[i]]-1])
             else: 
