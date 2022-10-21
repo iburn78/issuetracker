@@ -964,7 +964,7 @@ a.article-title:hover {
   -o-object-fit: cover;
      object-fit: cover;
   width: 100%;
-  height: 125px;
+  height: 170px;
   overflow: hidden;
   border-radius: 8px;
 }
