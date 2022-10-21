@@ -15,7 +15,8 @@
     {% endif %}
     {% for card in cards %}
     <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
-      <div class="card animated border-0">
+      <!-- <div class="card animated border-0"> -->
+      <div class="card border-0">
         {% if card.image %}
         <a href="{% url 'card-content' card.id %}" class="card border-0">
         <img src="{{ card.image.url }}" class="card-img">
@@ -51,7 +52,8 @@
   <div class="row m-0">
     {% for card in public_cards %}
     <div id="card_dom{{card.id}}" class="col-sm-6 col-lg-4 col-xl-3 col-xxl-2 p-1">
-      <div class="card animated border-0">
+      <!-- <div class="card animated border-0"> -->
+      <div class="card border-0">
         {% if card.image %}
         <a href="{% url 'card-content' card.id %}" class="card border-0">
         <img src="{{ card.image.url }}" class="card-img">

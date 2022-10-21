@@ -41,7 +41,8 @@
     {% endif %}
     {% for card in cards %}
     <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
-      <div class="card animated border-0">
+      <!-- <div class="card animated border-0"> -->
+      <div class="card border-0">
         <div class="row m-0 mb-1 p-0">
           <div class="col-2 m-0 p-0">
             {% if card.image %}
@@ -87,7 +88,8 @@
     {% for card in public_cards %}
     {% if not card_select_for_new_post or user.is_public_card_manager or not card.is_official %}
     <div id="card_dom{{card.id}}" class="col-sm-12 col-md-6 col-xxl-4 m-0 px-1">
-      <div class="card animated border-0">
+      <!-- <div class="card animated border-0"> -->
+      <div class="card border-0">
         <div class="row m-0 mb-1 p-0">
           <div class="col-2 m-0 p-0">
             {% if card.image %}
