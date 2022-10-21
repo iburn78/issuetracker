@@ -35,7 +35,11 @@ def postimageview(request, *args, **kwargs):
     elif img_no == 7: target = post.image7.url
     else: 
         raise PermissionDenied
+    context['post'] = post
     context['image_url'] = target
+    context['meta_og_title'] = post.title.strip()
+    context['meta_og_desc'] = post.get_preview_text().strip()
+    context['meta_og_image'] = request.build_absolute_uri(target)
     if post.card.is_public or request.user == post.author:
         return render(request, template_name, context)
     else: 
@@ -232,6 +236,36 @@ class PostDetailView(DetailView):
         post = self.get_object()
         context['post'] = post
         context['form'] = self.form_class()
+        context['meta_og_title'] = post.title.strip()
+        context['meta_og_desc'] = post.get_preview_text().strip()
+        if post.image1s != '':
+            context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
+        return context
+
+
+class PostImageView(DetailView): 
+    model = Post
+    template_name = 'board/post_images.html'
+    context_object_name = 'post'
+
+    def get(self, request, *args, **kwargs):
+        post = get_object_or_404(Post, id=self.kwargs.get('pk'))
+        if post.card.is_public:
+            return super().get(request, *args, **kwargs)
+        else:
+            if not self.request.user.is_authenticated:
+                return redirect('login')
+            else:
+                if self.request.user == post.card.owner:
+                    return super().get(request, *args, **kwargs)
+                else:
+                    raise PermissionDenied
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = self.get_object()
+        images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s]
+        context['images'] = images[0:post.num_images]
         context['meta_og_title'] = post.title.strip()
         context['meta_og_desc'] = post.get_preview_text().strip()
         if post.image1s != '':

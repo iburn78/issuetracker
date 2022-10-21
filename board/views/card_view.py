@@ -191,6 +191,10 @@ class CardContentListView(ListView):
         context['meta_og_title'] = card.title.strip()
         context['meta_og_desc'] = card.desc.strip()
         context['meta_og_image'] = self.request.build_absolute_uri(card.image.url)
+        
+        post_to_open = self.request.GET.get('post_id') 
+        if post_to_open != None:
+            context['postmodal_open'] = 'postmodal_open('+str(post_to_open)+');'
         return context
 
 

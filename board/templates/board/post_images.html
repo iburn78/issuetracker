@@ -1,0 +1,54 @@
+{% load static %}
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% if meta_og_title %}
+  <meta property="og:title" content="{{ meta_og_title }}">
+  {% else %}
+  <meta property="og:title" content="IssueTracker">
+  {% endif %}
+  {% if meta_og_desc %}
+  <meta property="og:description" content="{{ meta_og_desc }}">
+  {% else %}
+  <meta property="og:description" content="track and search issues effectively">
+  {% endif %}
+  {% if meta_og_image %}
+  <meta property="og:image" content="{{ meta_og_image }}">
+  {% else %}
+  <meta property="og:image" content="{% static 'board/thumbnail_issuetracker.jpg' %}">
+  {% endif %}
+  <link rel="stylesheet" href="{% static 'bs5/bootstrap.css' %}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+  {% block style %}{% endblock style %}
+  <script src="{% static 'bs5/bootstrap.bundle.js' %}"></script>
+  <link rel="icon" href="{% static 'board/IssueTracker_Logo.png' %}">
+  <title>IssueTracker</title>
+  <style>
+    .post-images-list {
+      height: 250px;
+      width: 250px;
+      object-fit: cover;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <a href="{% url 'card-content' post.card.id %}?post_id={{post.id}}" type="button" class="btn-close m-2 ms-0"></a>
+      </div>
+    </div>
+    <div class="row">
+      {% for img in images %}
+      <div class="col-auto d-flex justify-content-left align-items-top m-1">
+        <i class="bi bi-{{forloop.counter}}-square me-1 text-dark"></i>
+        <a href="{% url 'postimage-view' post.id forloop.counter %}">
+        <img src="{{img.url}}" class="post-images-list"></a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
