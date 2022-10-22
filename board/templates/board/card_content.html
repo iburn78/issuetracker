@@ -225,5 +225,10 @@
   };
   {{ postmodal_open }}
 
+  history.pushState(null, null, window.top.location.pathname + window.top.location.search);
+    window.addEventListener('popstate', (e) => {
+      e.preventDefault();
+      history.pushState(null, null, window.top.location.pathname + window.top.location.search);
+    });
 </script>
 {% endblock script %}
