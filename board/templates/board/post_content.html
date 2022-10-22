@@ -117,7 +117,7 @@
   </div>
   {% elif post.image1s %}
   <div class="col-xl-8 p-0 mt-1">
-    <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
+    <a href="{% url 'post-images' post.id %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
   <div class="col-xl-4 p-0">
     {% if post.title != '' %}

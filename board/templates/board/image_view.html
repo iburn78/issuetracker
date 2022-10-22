@@ -29,11 +29,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <!-- <button type="button" class="btn-close m-2 ms-0" onclick="javascript:history.back()"></button> -->
-        1. HOW TO CHOOSE FROM BELOW 
         <a href="{% url 'post-images' post.id %}" type="button" class="btn-close m-2 ms-0"></a>
-        <a href="{% url 'card-content' post.card.id %}?post_id={{post.id}}" type="button" class="btn-close m-2 ms-0"></a>
-        2. HOW NOT TO USE GET PARAMETERS AS THEY STAY THROUGHOUT THE REFRESH
       </div>
     </div>
     <div class="row">
