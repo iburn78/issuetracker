@@ -23,6 +23,18 @@
       <p class="m-0 p-0">Title</p>
       {{ form.title }}
       <p class="m-0 p-0">Content</p>
+      <div class="btn btn-primary m-0 p-0" style="width:30px" onclick="insert_(this)">😀</div>
+      <div class="btn" onclick="insert_(this)">😂</div>
+      <div class="btn" onclick="insert_(this)">😍</div>
+      <div class="btn" onclick="insert_(this)">😳</div>
+      <div class="btn" onclick="insert_(this)">🥺</div>
+      <div class="btn" onclick="insert_(this)">✖</div>
+      <div class="btn" onclick="insert_(this)">✔</div>
+      <div class="btn" onclick="insert_(this)">🡄</div>
+      <div class="btn" onclick="insert_(this)">🡆</div>
+      <div class="btn btn-primary m-0 p-0" style="width:30px" onclick="insert_(this)">•</div>
+      <div class="btn btn-primary m-0 p-0" style="width:30px" onclick="insert_(this)">–</div>
+      <div class="btn" onclick="insert_(this)">▶</div>
       {{ form.content }}
       <p class="m-0 p-0">Images</p>
       <div id="image_preview_section" class="row m-0 p-0 row-cols-auto text-muted">
@@ -63,18 +75,18 @@
       <div class="d-flex align-items-center ms-0 m-1 mt-2">
         {% for img in image_range %}
         {% if forloop.counter <= num_images %}
-        <button hidden id="imgbtn{{forloop.counter}}" class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, {{forloop.counter}})">{{forloop.counter}}</button>
+        <button hidden id="imgbtn{{forloop.counter}}" class="btn btn-sm btn-warning p-1 px-2 mx-1 fw-bold" onclick="addimg(event, {{forloop.counter}})">{{forloop.counter}}</button>
         {% else %}
-        <button id="imgbtn{{forloop.counter}}" class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold" onclick="addimg(event, {{forloop.counter}})">{{forloop.counter}}</button>
+        <button id="imgbtn{{forloop.counter}}" class="btn btn-sm btn-warning p-1 px-2 mx-1 fw-bold" onclick="addimg(event, {{forloop.counter}})">{{forloop.counter}}</button>
         {% endif %}
         {% endfor %}
-        <button id="all-drop-area" class="btn btn-sm btn-success p-1 px-2 me-2 fw-bold" onclick="add_multi(event)">all / drop</button>
+        <button id="all-drop-area" class="btn btn-sm btn-success p-1 px-2 mx-1 fw-bold" onclick="add_multi(event)">all / drop</button>
       </div>
       <p class="m-0 p-0">Tags</p>
       <p class="mb-1 m-0 p-0">{{ form.tags }}</p>
       {% if update %}
       <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="checked" name="update_date_posted" checked>
+        <input class="form-check-input" type="checkbox" value="checked" name="update_date_posted">
         update date posted
       </div>
       {% endif %}
@@ -90,6 +102,16 @@
 {% endblock content %}
 {% block script %}
 <script>
+  function insert_(input) {
+    let ta = document.getElementById('id_content');
+    let ss = ta.selectionStart;
+    let se = ta.selectionEnd;
+    ta.value = ta.value.substring(0,ss)+input.innerText+ta.value.substring(se,);
+    ta.focus();
+    ta.selectionStart = se+input.innerText.length;
+    ta.selectionEnd = se+input.innerText.length;
+  }
+
   String.prototype.it_swapTwo_ = function(i, j) {
     a = this[i-1];
     b = this[j-1];
