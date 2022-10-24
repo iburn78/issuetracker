@@ -38,7 +38,11 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        <a href="{% url 'card-content' post.card.id %}?post_id={{post.id}}" type="button" class="btn-close m-2 ms-0"></a>
+        {% if page_num %}
+        <a href="{% url 'card-content' post.card.id %}?page={{page_num}}&post_id={{post.id}}" type="button" class="btn-close m-2 ms-0"></a>
+        {% else %}
+        <a href="{% url 'card-content' post.card.id %}" type="button" class="btn-close m-2 ms-0"></a>
+        {% endif %}
       </div>
     </div>
     <div class="row">

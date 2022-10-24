@@ -29,6 +29,8 @@ PROFILE_PICS = pj(USER_UPLOADS, 'profile_pics')
 
 POST_MAX_COUNT_TO_DELETE_A_CARD = 10
 
+CARDCONTENTLISTVIEW_PAGINATED_BY = 12
+
 def image_resize(maxsize, img: Image) -> Image:
     w, h = img.size
     if w <= h:

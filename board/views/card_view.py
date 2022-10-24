@@ -157,7 +157,7 @@ class CardContentListView(ListView):
     model = Post
     template_name = 'board/card_content.html'
     context_object_name = 'posts'
-    paginate_by = 12
+    paginate_by = CARDCONTENTLISTVIEW_PAGINATED_BY
 
     def get(self, request, *args, **kwargs):
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))

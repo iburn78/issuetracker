@@ -13,12 +13,19 @@ from ..models import Card, Post
 from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
-from ..tools import post_image_resize, exception_log
+from ..tools import post_image_resize, exception_log, CARDCONTENTLISTVIEW_PAGINATED_BY
 from django.urls import resolve
 from django.views.static import serve
 import os
 from django.utils import timezone
 from PIL import Image
+
+
+def getpage_number(cid, pid):
+    ps = Post.objects.filter(card_id = cid).order_by('-date_posted')
+    for i, p in enumerate(ps):
+        if p.id == pid: 
+            return int(i/CARDCONTENTLISTVIEW_PAGINATED_BY)+1
 
 def postimageview(request, *args, **kwargs): 
     template_name = "board/image_view.html"
@@ -260,6 +267,8 @@ class PostImageView(DetailView):
                     return super().get(request, *args, **kwargs)
                 else:
                     raise PermissionDenied
+    
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -270,6 +279,9 @@ class PostImageView(DetailView):
         context['meta_og_desc'] = post.get_preview_text().strip()
         if post.image1s != '':
             context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
+        pn = getpage_number(post.card.id, post.id)
+        if pn != None:
+            context['page_num'] = pn
         return context
 
 

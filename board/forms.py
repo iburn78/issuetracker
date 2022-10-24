@@ -21,8 +21,8 @@ class CardForm(forms.ModelForm):
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'is_official': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'toggle_official': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
-            'title': forms.TextInput(attrs={'class':'form-control',}), 
-            'desc': forms.Textarea(attrs={'class':'form-control', 'rows':3}), 
+            'title': forms.TextInput(attrs={'spellcheck': 'true', 'class':'form-control',}), 
+            'desc': forms.Textarea(attrs={'spellcheck': 'true', 'class':'form-control', 'rows':3}), 
             'default_img': forms.HiddenInput,
         }
 
@@ -47,7 +47,8 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ['title', 'content', 'tags', 'mimages', 'mimage_keys', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
         widgets = {
-            'content': forms.Textarea(attrs={'rows':'12', 'placeholder':''}), 
+            'title': forms.TextInput(attrs={'spellcheck': 'true'}), 
+            'content': forms.Textarea(attrs={'spellcheck': 'true', 'rows':'12', 'placeholder':''}), 
         }
     
     def __init__(self, *args, **kwargs):
@@ -70,7 +71,7 @@ class CommentForm(forms.ModelForm):
             'content': 'comment', 
         }
         widgets = {
-            'content': forms.Textarea(attrs={'rows':'2', 'placeholder':'', 'maxlength':COMMENT_MAX_LENGTH,}), 
+            'content': forms.Textarea(attrs={'spellcheck': 'true', 'rows':'2', 'placeholder':'', 'maxlength':COMMENT_MAX_LENGTH,}), 
         }
 
     def __init__(self, *args, **kwargs):
