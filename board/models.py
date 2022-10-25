@@ -123,6 +123,7 @@ class Post(models.Model):
     image7s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
 
     title = models.CharField(blank=True, max_length=70)
+    is_html = models.BooleanField(default=False)
     tags = TaggableManager(blank=True)
 
     def save(self, *args, **kwargs):

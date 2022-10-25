@@ -19,6 +19,7 @@ from django.views.static import serve
 import os
 from django.utils import timezone
 from PIL import Image
+from django.utils.html import strip_tags
 
 
 def getpage_number(cid, pid):
@@ -45,7 +46,7 @@ def postimageview(request, *args, **kwargs):
     context['post'] = post
     context['image_url'] = target
     context['meta_og_title'] = post.title.strip()
-    context['meta_og_desc'] = post.get_preview_text().strip()
+    context['meta_og_desc'] = strip_tags(post.get_preview_text()).strip()
     context['meta_og_image'] = request.build_absolute_uri(target)
     if post.card.is_public or request.user == post.author:
         return render(request, template_name, context)
@@ -111,6 +112,11 @@ class PostCreateView(CreateView):
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 
         form.instance.author = self.request.user
+        print(self.request.POST.get('html_or_text'))
+        if self.request.POST.get('html_or_text')=='html':
+            form.instance.is_html = True;
+        else:
+            form.instance.is_html = False;
         form.instance.card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         new_post = form.save(commit=False)
         new_post.save()
@@ -124,6 +130,7 @@ class PostCreateView(CreateView):
             Card, id=self.kwargs.get('card_id'))
         context['num_images'] = 0
         context['image_range'] = list(range(1, 8))
+        context['html_or_text'] = ""
         return context
 
     def get_initial(self):
@@ -179,6 +186,10 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 
         form.instance.author = self.get_object().author
+        if self.request.POST.get('html_or_text')=='html':
+            form.instance.is_html = True;
+        else:
+            form.instance.is_html = False;
         rev_post = form.save(commit=False)
         rev_post.save()
         form.save_m2m()
@@ -198,13 +209,18 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['card'] = self.get_object().card
+        post = self.get_object()
+        context['card'] = post.card
         context['update'] = True
-        num_images = self.get_object().num_images
+        num_images = post.num_images
         context['num_images'] = num_images
-        simages = [self.get_object().image1s, self.get_object().image2s, self.get_object().image3s, 
-            self.get_object().image4s, self.get_object().image5s, self.get_object().image6s, self.get_object().image7s]
+        simages = [post.image1s, post.image2s, post.image3s, 
+            post.image4s, post.image5s, post.image6s, post.image7s]
         context['image_range'] = simages[0:num_images] + list(range(num_images+1, 8))
+        if post.is_html:
+            context['html_or_text'] = 'checked'
+        else:
+            context['html_or_text'] = ''
         return context
 
     def get_initial(self):
@@ -244,7 +260,7 @@ class PostDetailView(DetailView):
         context['post'] = post
         context['form'] = self.form_class()
         context['meta_og_title'] = post.title.strip()
-        context['meta_og_desc'] = post.get_preview_text().strip()
+        context['meta_og_desc'] = strip_tags(post.get_preview_text()).strip()
         if post.image1s != '':
             context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
         return context
@@ -276,7 +292,7 @@ class PostImageView(DetailView):
         images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s]
         context['images'] = images[0:post.num_images]
         context['meta_og_title'] = post.title.strip()
-        context['meta_og_desc'] = post.get_preview_text().strip()
+        context['meta_og_desc'] = strip_tags(post.get_preview_text()).strip()
         if post.image1s != '':
             context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
         pn = getpage_number(post.card.id, post.id)

@@ -45,7 +45,7 @@ class PostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'tags', 'mimages', 'mimage_keys', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
+        fields = ['title', 'content', 'tags', 'mimages', 'mimage_keys', 'is_html', 'image1_input', 'image2_input', 'image3_input', 'image4_input', 'image5_input', 'image6_input', 'image7_input']
         widgets = {
             'title': forms.TextInput(attrs={'spellcheck': 'true'}), 
             'content': forms.Textarea(attrs={'spellcheck': 'true', 'rows':'12', 'placeholder':''}), 
