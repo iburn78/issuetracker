@@ -5,31 +5,26 @@
 {% endblock style %}
 
 {% block content %}
-<div class="row">
-  <div class="col">
-    <div class="btn btn-sm btn-primary m-0 p-0" onclick="smile(this)">😀</div>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col">
-    <textarea type="textarea" id="id_textarea" name="text">initial text</textarea>
-  </div>
-</div>
+<div id="demo"></div>
 
 {% endblock content %}
-
 {% block script %}
 <script>
-  function smile(input) {
-    let ta = document.getElementById('id_textarea');
-    let ss = ta.selectionStart;
-    let se = ta.selectionEnd;
-    console.log(ss, se)
-    ta.value = ta.value.substring(0,ss)+input.innerText+ta.value.substring(se,);
-    console.log(ta.value.substring(0,ss)); 
+var x = document.getElementById("demo");
+function getLocation() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+    x.innerHTML = "Geolocation is not supported by this browser.";
   }
+}
 
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude +
+  "<br>Longitude: " + position.coords.longitude;
+}
+
+getLocation(); 
 </script>
 {% endblock script %}
 
