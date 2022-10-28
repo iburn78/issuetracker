@@ -286,6 +286,7 @@
   function clear_commentReplyForm(event, comment_id) {
     event.preventDefault();
     document.getElementById("rtr_target"+comment_id).innerHTML = '';
+    document.getElementById("rtr_target_id"+comment_id).innerHTML = '';
     let comment = document.querySelector("#commentReplyForm"+comment_id+" #id_content");
     comment.value = "";
     comment.focus();
@@ -336,9 +337,9 @@
     };
     try {
       await navigator.share(shareData)
-      console.log('post shared successfully');
+      // console.log('post shared successfully');
     } catch(err) {
-      console.log(`error: ${err}`);
+      // console.log(`error: ${err}`);
     };
   }
   

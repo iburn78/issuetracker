@@ -68,7 +68,7 @@
     <div class="col-md-6 col-xl-4 col-xxl-3 p-0 pb-1 m-0">
       <div class="row m-0 p-0">
         {% if post.image1s %}
-        <div class="col-4 m-0 p-1 pe-0">
+        <div class="col-6 m-0 p-1 pe-0">
           <div class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-inner">
               <div class="carousel-item active">
@@ -122,7 +122,7 @@
           </div>
         </div>
         {% endif %}
-        <div class="col{% if post.image1s %}-8{% endif %} m-0 p-1"> 
+        <div class="col{% if post.image1s %}-6{% endif %} m-0 p-1"> 
           <div class="d-flex justify-content-between">
             <div class="d-flex">
               {% if card.is_public %}
@@ -143,9 +143,13 @@
             </div>
           </div>
           
+          <div hidden id="post_modal{{post.id}}" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}"></div>
           <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
             <div id="divider-bar-narrower" class="m-0 p-0" style="background-color:{{card.card_color}}"></div>
-            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text }}</p>
+            {% if post.title != '' %}
+            <p class="article-content text-dark text-break fw-bold bg-gray-100 fs-6 m-0 mb-1 p-0">{{ post.title }}</p>
+            {% endif %}
+            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text|truncatechars:150|striptags }}</p>
           </a>
           <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}
@@ -215,5 +219,16 @@
   // document.querySelectorAll("#modal_close_bottom").forEach(e => {
     //   e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a><br><br>';
     // });
-  </script>
-  {% endblock script %}
+
+  function postmodal_open(id) {
+    document.getElementById('post_modal'+id).click();
+  };
+  {{ postmodal_open }}
+
+  history.pushState(null, null, window.top.location.pathname + window.top.location.search);
+    window.addEventListener('popstate', (e) => {
+      e.preventDefault();
+      history.pushState(null, null, window.top.location.pathname + window.top.location.search);
+    });
+</script>
+{% endblock script %}

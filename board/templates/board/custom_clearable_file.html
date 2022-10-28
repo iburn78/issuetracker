@@ -1,9 +1,9 @@
 {% if widget.is_initial %}
 {% if not widget.required %}
-<span class="ms-2 form-check form-check-inline">
+<span hidden class="ms-2 form-check form-check-inline">
   <label class="form-check-label text-muted" for="{{ widget.checkbox_id }}"> remove </label>
   <input class="form-check-input" type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"{% if widget.attrs.disabled %} disabled{% endif %}> 
 </span>
 {% endif %}
 {% endif %}
-<input type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %}>
+<input hidden type="{{ widget.type }}" name="{{ widget.name }}"{% include "django/forms/widgets/attrs.html" %} onchange="updatePreview(this, '{{widget.name}}')">

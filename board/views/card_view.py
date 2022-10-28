@@ -84,14 +84,19 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
             post = get_object_or_404(Post, id=pid)
             card = get_object_or_404(Card, id=card_id)
 
+            if post.content != '':
+                pc = ' ['+ post.content[:15].strip() + '...]'
+            else:
+                pc = ''
+
             if request_type == 'publish':
-                if card.is_public and not card.is_official:
+                if (card.is_public and not card.is_official) or (card.is_public and request.user.is_public_card_manager):
                     post.card = card
                     post.date_posted = timezone.now() 
                     post.save()
                     request.user.is_in_private_mode = False
                     request.user.save()
-                    messages.success(self.request, f"Post ({post.content[:10]}) moved to public card ({card.title[:10]}) - date posted updated")
+                    messages.success(self.request, f"Post{pc} published to public card [{card.title[:15].strip()}...]")
                     return JsonResponse({"card_id": post.card.id}, status=200)
                 else:
                     return JsonResponse({}, status=400)
@@ -99,11 +104,11 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
             elif request_type == 'move':
                 if card.owner == request.user and not card.is_public:
                     if post.card == card: 
-                        messages.success(self.request, f"Post ({post.content[:10]}) stayed in the current private card ({card.title[:10]})")
+                        messages.success(self.request, f"Post{pc} stayed in the current private card [{card.title[:15].strip()}...]")
                     else: 
                         post.card = card
                         post.save()
-                        messages.success(self.request, f"Post ({post.content[:10]}) moved to private card ({card.title[:10]})")
+                        messages.success(self.request, f"Post{pc} moved to private card [{card.title[:15].strip()}...]")
                     return JsonResponse({"card_id": post.card.id}, status=200)
                 else: 
                     return JsonResponse({}, status=400)
@@ -152,7 +157,7 @@ class CardContentListView(ListView):
     model = Post
     template_name = 'board/card_content.html'
     context_object_name = 'posts'
-    paginate_by = 12
+    paginate_by = CARDCONTENTLISTVIEW_PAGINATED_BY
 
     def get(self, request, *args, **kwargs):
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
@@ -178,10 +183,18 @@ class CardContentListView(ListView):
         context = super().get_context_data(**kwargs)
         card_id = self.kwargs.get('card_id')
         context['card_id'] = card_id
-        context['card'] = get_object_or_404(Card, id=card_id)
+        card = get_object_or_404(Card, id=card_id)
+        context['card'] = card
         context['author_count'] = User.objects.filter(post__card_id = card_id).distinct().count()
         context['post_limit'] = POST_MAX_COUNT_TO_DELETE_A_CARD
         context['form'] = CommentForm
+        context['meta_og_title'] = card.title.strip()
+        context['meta_og_desc'] = card.desc.strip()
+        context['meta_og_image'] = self.request.build_absolute_uri(card.image.url)
+        
+        post_to_open = self.request.GET.get('post_id') 
+        if post_to_open != None:
+            context['postmodal_open'] = 'postmodal_open('+str(post_to_open)+'); window.history.replaceState(null, null, window.location.pathname);'
         return context
 
 

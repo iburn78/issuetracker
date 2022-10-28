@@ -5,6 +5,7 @@ from django.views import View
 from ..models import Post, Comment
 from ..forms import CommentForm
 from django.http import JsonResponse
+from django.utils import timezone
 
 def comment_counter(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
@@ -121,7 +122,7 @@ class CommentMgmtView(View):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
             comment = get_object_or_404(Comment, id=self.kwargs.get('pk'))
             contentbrief = comment.content[:100]
-            date_posted = comment.date_posted.strftime("%y-%m-%d %H:%M")
+            date_posted = timezone.localtime(comment.date_posted).strftime("%y-%m-%d %H:%M")
             return JsonResponse({"content": comment.content,
             "contentbrief": contentbrief,             
             "date_posted": date_posted,             
@@ -138,7 +139,7 @@ class CommentMgmtView(View):
             if request_type == 'update': 
                 if request.user == comment.author:
                     comment.content = request.POST.get('content')
-                    # comment.date_posted = datetime.now()
+                    # comment.date_posted = timezone.now()
                     comment.save()
                     return JsonResponse({}, status=200)
                 else:

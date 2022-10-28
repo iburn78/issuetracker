@@ -7,6 +7,7 @@ from random import choice
 from os.path import join as path_join
 from os import listdir
 from os.path import isfile
+from django.utils import timezone
 
 def random_user_img():
     dir_path = path_join(settings.MEDIA_ROOT, USER_DEFAULT_IMAGES)
@@ -33,7 +34,7 @@ class Profile(models.Model):
         super().save(*args, **kwargs)
             
     def last_login(self):
-        return self.user.last_login.strftime("%Y-%m-%d, %H:%M:%S")
+        return timezone.localtime(self.user.last_login).strftime("%Y-%m-%d, %H:%M:%S")
 
     def delete(self, *args, **kwargs): 
         name = str(self.image.name)

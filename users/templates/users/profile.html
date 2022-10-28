@@ -10,7 +10,7 @@
 	</div>	
 	<div class="row">
 		<div class="col-md-5">
-			<img class="rounded mb-2" src="{{user.profile.image.url}}" width="100%">
+			<img id="profile_picture" class="rounded mb-2" src="{{user.profile.image.url}}" width="100%">
 			
 		</div>	
 		<div class="col-md-7">
@@ -32,12 +32,12 @@
 				<p class="emphasis-font text-red-700">STAFF</p>
 				{% endif %}
 				<div class="collapse bg-yellow-100" id="collapseProfile">
-				{% if not user.is_VIP %}
+					{% if not user.is_VIP %}
 					<p class="p-0 m-0 ms-2 text-muted">next level: <span class="emphasis-font text-red-700">VIP</span></p>
-				{% endif %}
-				{% if not user.is_public_card_manager %}
+					{% endif %}
+					{% if not user.is_public_card_manager %}
 					<p class="p-0 m-0 ms-2 text-muted">apply for <span class="emphasis-font text-red-700">PUBLIC CARD MANAGER</span> - contact admin</p>
-				{% endif %}
+					{% endif %}
 				</div>
 				<p class="text-secondary mt-1 mb-0">{{user.email}}</p>
 				<p class="text-secondary mt-1 mb-0"><small><b>date join:</b></small> {{user.date_joined|date:"M d, Y H:i" }}</p>
@@ -53,6 +53,9 @@
 			<fieldset class ="form-group">
 				{{ u_form }}
 				{{ p_form }}
+				<div>
+					<button id="imgbtn" class="btn btn-sm btn-warning p-1 px-2 me-2 fw-bold mb-2" onclick="changeimg(event)">picture change</button>
+				</div>
 				<a class="mt-2 btn btn-outline-secondary btn-sm" href="{% url 'password_reset' %}">Reset Password</a>
 				<input type="button" class="mt-2 btn btn-sm btn-outline-secondary float-end" value="cancel" onclick="javascript:history.go(-1);">
 				<button class="mt-2 btn btn-primary btn-sm float-end me-1" type="submit">Update</button>
@@ -61,3 +64,22 @@
 	</div>
 </div>
 {% endblock content %}
+
+{% block script %}
+<script>
+  function changeimg(e) {
+    e.preventDefault();
+    document.getElementById("id_picture").click();
+  }
+  
+  function updateProfilePreview(input) {
+    let reader = new FileReader();
+    reader.readAsDataURL(input.files[0]);
+    reader.onload = function () {
+      document.getElementById("profile_picture" ).src = this.result;
+      document.getElementById("profile_picture").onerror = function () {
+      };
+    };
+  }
+</script>
+{% endblock script %}

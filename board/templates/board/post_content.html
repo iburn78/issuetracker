@@ -68,34 +68,34 @@
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
-          <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
         </div>
         <div class="carousel-item">
-          <a href="{% url 'postimage-view' post.id 2 %}"><img src="{{ post.image2s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image2s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% if post.image3s %}
         <div class="carousel-item">
-          <a href="{% url 'postimage-view' post.id 3 %}"><img src="{{ post.image3s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image3s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image4s %}
         <div class="carousel-item">
-          <a href="{% url 'postimage-view' post.id 4 %}"><img src="{{ post.image4s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image4s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image5s %}
         <div class="carousel-item">
-          <a href="{% url 'postimage-view' post.id 5 %}"><img src="{{ post.image5s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image5s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image6s %}
         <div class="carousel-item">
-          <a href="{% url 'postimage-view' post.id 6 %}"><img src="{{ post.image6s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image6s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
         {% if post.image7s %}
         <div class="carousel-item">
-          <a href="{% url 'postimage-view' post.id 7 %}"><img src="{{ post.image7s.url }}" class="d-block w-100 rounded"></a>
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image7s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
       </div>
@@ -110,18 +110,27 @@
     </div>
   </div>
   <div class="col-xl-4 p-0">
-    <p class="article-content m-2 text-break">{{ post.content }}</p>
+    {% if post.title != '' %}
+    <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
+    {% endif %}
+    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
   </div>
   {% elif post.image1s %}
   <div class="col-xl-8 p-0 mt-1">
-    <a href="{% url 'postimage-view' post.id 1 %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
+    <a href="{% url 'post-images' post.id %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
   <div class="col-xl-4 p-0">
-    <p class="article-content m-2 text-break">{{ post.content }}</p>
+    {% if post.title != '' %}
+    <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
+    {% endif %}
+    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
   </div>
   {% else %}
   <div class="col p-0">
-    <p class="article-content m-2 text-break">{{ post.content }}</p>
+    {% if post.title != '' %}
+    <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
+    {% endif %}
+    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
   </div>
   {% endif %}
 </div>
@@ -151,10 +160,10 @@
       <span class="p-0 m-0 float-end"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
       {% endif %}
     </span>
-    <a href class="p-0 m-0 me-2 float-end" onclick="share_post(event, {{post.id}}, '{{post.get_preview_text|truncatechars:30}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
+    <a href class="p-0 m-0 me-2 float-end" onclick="share_post(event, {{post.id}}, '{{post.get_preview_text|truncatechars:30|striptags}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
     {% else %}
-      <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" onclick="">publish</a>
-      <a href="{% url 'card-select' %}?rt=move&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" onclick="">move</a>
+    <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" onclick="">publish</a>
+    <a href="{% url 'card-select' %}?rt=move&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" onclick="">move</a>
     {% endif %}
   </div>
 </div>
@@ -206,3 +215,4 @@
 </div>
 <span id="modal_close_bottom"></span>
 <br><br>
+
