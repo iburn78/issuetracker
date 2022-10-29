@@ -16,10 +16,11 @@ class CardForm(forms.ModelForm):
     toggle_official = forms.BooleanField(required=False)
     class Meta:
         model = Card
-        fields = ['title', 'image_input', 'default_img', 'card_color', 'desc', 'is_public', 'is_official', 'toggle_official']
+        fields = ['title', 'image_input', 'default_img', 'card_color', 'desc', 'is_public', 'is_official', 'toggle_official', 'is_geocard']
         widgets = {
             'is_public': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'is_official': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
+            'is_geocard': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'toggle_official': forms.CheckboxInput(attrs={'class': 'form-check-input', }),
             'title': forms.TextInput(attrs={'spellcheck': 'true', 'class':'form-control',}), 
             'desc': forms.Textarea(attrs={'spellcheck': 'true', 'class':'form-control', 'rows':3}), 
