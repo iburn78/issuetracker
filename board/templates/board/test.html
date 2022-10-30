@@ -12,21 +12,28 @@
 {% endblock content %}
 {% block script %}
 <script>
-var x = document.getElementById("demo");
-function getLocation() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    x.innerHTML = "Geolocation is not supported by this browser.";
+  var x = document.getElementById("demo");
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition, positionError);
+    } else {
+      x.innerHTML = "Geolocation is not supported by this browser.";
+    }
   }
-}
+  
+  function showPosition(position) {
+    console.log(position); 
+    x.innerHTML = "Latitude: " + position.coords.latitude +
+    "<br>Longitude: " + position.coords.longitude + "<br>Accuracy: " + position.coords.accuracy;
+  }
+  
+  function positionError() {    
+    console.log('Geolocation is not enabled. Please enable to use this feature')
+  }
 
-function showPosition(position) {
-  x.innerHTML = "Latitude: " + position.coords.latitude +
-  "<br>Longitude: " + position.coords.longitude;
-}
+  getLocation(); 
 
-getLocation(); 
 </script>
 {% endblock script %}
 

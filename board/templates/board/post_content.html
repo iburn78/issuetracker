@@ -137,7 +137,7 @@
 
 <div class="row m-0 mt-1 bg-gray-100">
   <div class="col p-1 m-0">
-    (xlongitude {{post.xlongitude}}, ylatitude {{post.ylatitude}})
+    (x {{post.xlongitude}}, y {{post.ylatitude}})
     {% if post.card.is_public %}
     <a href class="p-0 m-0 ms-2 me-1 float-end" data-bs-toggle="collapse" data-bs-target="#post_options{{post.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>
     <span id="vote_meter_post{{post.id}}">
