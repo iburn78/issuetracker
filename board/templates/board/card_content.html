@@ -3,7 +3,7 @@
 {% load static %}
 <div class="container-fluid p-0 m-0">
   <div class="row p-0 m-0">
-    <div class="col p-1 m-0">
+    <div class="col-8 p-1 m-0">
       {% if card.is_public %}
       {% if card.is_official %}
       <img src="{% static 'board/IssueTracker_Logo.png' %}" width="24" height="24">
@@ -12,7 +12,12 @@
       {% else %}
       <img src="{% static 'icons/person-circle.svg' %}" width="24" height="24">
       {% endif %}
+      {% if card.is_geocard %}
+      <img src="{% static 'icons/map-fill.svg' %}" width="20" height="20">
+      {% endif %}
       <b class="KR-font">{{ card.title }}</b>
+    </div>
+    <div class="col-4 p-1 m-0">
       <a href="{% url 'main' %}" type="button" class="float-end btn-close ms-1"></a>
       {% if card.is_official and user.is_public_card_manager %}
       <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
@@ -21,7 +26,7 @@
       {% elif not card.is_public and user == card.owner %}
       <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% endif %}
-      <a class="float-end" href="" data-bs-toggle="collapse" data-bs-target="#collapseDesc" id="collapseToggle"><img src="{% static 'icons/textarea-resize.svg' %}" width="27" height="27"></a>
+      <a class="float-end text-dark" href="" data-bs-toggle="collapse" data-bs-target="#collapseDesc" id="collapseToggle"><img src="{% static 'icons/textarea-resize.svg' %}" width="27" height="27"></a>
     </div>
   </div>
   <div class="collapse" id="collapseDesc">
@@ -51,6 +56,10 @@
           <div>{{ card.post_set.count }} posts {% if card.is_public %} ({{ author_count }} authors) {% endif %} </div>
         </div>
         <div class="float-end">by <b>{{ card.owner }}</b></div>
+        {% if card.is_geocard %}
+        <img src="{% static 'icons/map-fill.svg' %}" width="20" height="20">
+        <b class="text-dark small">GEO CARD</b>
+        {% endif %}
       </div>
     </div>
   </div>

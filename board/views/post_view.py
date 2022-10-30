@@ -112,7 +112,6 @@ class PostCreateView(CreateView):
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 
         form.instance.author = self.request.user
-        print(self.request.POST.get('html_or_text'))
         if self.request.POST.get('html_or_text')=='html':
             form.instance.is_html = True;
         else:
@@ -121,13 +120,18 @@ class PostCreateView(CreateView):
         new_post = form.save(commit=False)
         new_post.save()
         form.save_m2m()
+        
+        if new_post.xlongitude == None or new_post.ylatitude == None: 
+            if self.request.session.get('GEO_warning_set', False) == False:
+                self.request.session['GEO_warning_set'] = True
+                messages.warning(self.request, 'GEO data is not available: please turn on/allow location access in your device')
+        
         post_image_resize(new_post)
         return redirect('card-content', self.kwargs.get('card_id'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['card'] = get_object_or_404(
-            Card, id=self.kwargs.get('card_id'))
+        context['card'] = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         context['num_images'] = 0
         context['image_range'] = list(range(1, 8))
         context['html_or_text'] = ""
@@ -177,7 +181,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     exception_log(text)
 
         form.instance.num_images = len(images)
-        if self.request.POST.get('update_date_posted')=='checked':
+      
+        if self.request.POST.get('update_date_posted')=='update_date':
             form.instance.date_posted = timezone.now()
         for i in range(len(images), 7):
             images.append("")
@@ -193,6 +198,12 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         rev_post = form.save(commit=False)
         rev_post.save()
         form.save_m2m()
+
+        if self.request.POST.get('update_geo_data')=='update_geo' and (rev_post.xlongitude == None or rev_post.ylatitude == None): 
+            if self.request.session.get('GEO_warning_set', False) == False:
+                self.request.session['GEO_warning_set'] = True
+                messages.warning(self.request, 'GEO data is not available: please turn on/allow location access in your device')
+
         post_image_resize(rev_post)
         
         cid = self.get_object().card.id

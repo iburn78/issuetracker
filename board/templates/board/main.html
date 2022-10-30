@@ -26,6 +26,9 @@
         {% endif %}
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark p-2" style="background-color: {{ card.card_color }};">
+            {% if card.is_geocard %}
+            <img src="{% static 'icons/map-fill.svg' %}" class="float-end mx-1" style="margin-top:1px;" width="16" height="16">
+            {% endif %}
             <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
             <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
             <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
@@ -64,6 +67,9 @@
         <a href="{% url 'card-content' card.id %}">
           <div class="card-body text-dark p-2" style="background-color: {{ card.card_color }};">
             <span class="float-end pub-icon-style">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
+            {% if card.is_geocard %}
+            <img src="{% static 'icons/map-fill.svg' %}" class="float-end mx-1" style="margin-top:1px;" width="16" height="16">
+            {% endif %}
             {% if card.is_official %}
             <span class="float-end pub-icon-style me-1"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
             {% endif %}

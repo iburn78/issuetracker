@@ -168,6 +168,8 @@ class CardContentListView(ListView):
 
     def get_queryset(self):
         selected_card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
+        if (selected_card.is_geocard): 
+            print('GEO CARD!!!!!!!!!!! - need to change order_by....')
         if selected_card.is_public:
             return Post.objects.filter(card__id=selected_card.id).order_by('-date_posted')
         else:

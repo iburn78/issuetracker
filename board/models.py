@@ -128,8 +128,8 @@ class Post(models.Model):
     title = models.CharField(blank=True, max_length=70)
     is_html = models.BooleanField(default=False)
     tags = TaggableManager(blank=True)
-    latitude = models.FloatField(blank=True, null=True)
-    longitue = models.FloatField(blank=True, null=True)
+    xlongitude = models.FloatField(blank=True, null=True)
+    ylatitude = models.FloatField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)

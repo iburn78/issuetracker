@@ -17,7 +17,7 @@
     {% endif %}
     {% endif %}
   </div>
-  <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off" onsubmit="holdon(event)">
+  <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off" id="post_cu_form" onsubmit="holdon(event)">
     {% csrf_token %}
     <fieldset>
       <p class="m-0 p-0">Title</p>
@@ -87,14 +87,22 @@
       </div>
       <p class="m-0 p-0">Tags</p>
       <p class="mb-1 m-0 p-0">{{ form.tags }}</p>
+      {{ form.xlongitude.as_hidden }} 
+      {{ form.ylatitude.as_hidden }}
       {% if update %}
-      <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="checked" name="update_date_posted">
+      <div class="form-check mb-0">
+        <input class="form-check-input" type="checkbox" value="update_date" name="update_date_posted">
         update date posted
       </div>
+      {% if card.is_geocard %}
+      <div class="form-check mb-2">
+        <input id="id_update_geo" class="form-check-input" type="checkbox" value="update_geo" name="update_geo_data">
+        update GEO data to current location
+      </div>
+      {% endif %}
       {% endif %}
       <div id="holdon_area">
-        <button id="post-cu-button" class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
+        <button id="post-cu-button" class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit" onclick="fill_geodata(event)">
           {% if update %}Update{% else %}Create{% endif %}
         </button>
       </div>
@@ -102,9 +110,30 @@
     </fieldset>
   </form>
 </div>
+<div id="placeholder"></div>
 {% endblock content %}
 {% block script %}
 <script>
+  function fill_geodata(e) {
+    e.preventDefault();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(fill_geodata);
+    } else {
+      document.getElementById('post_cu_form').submit();
+    }
+    function fill_geodata(position) {
+      {% if update %}
+      if (document.getElementById('id_update_geo').checked) {
+        document.getElementById('id_xlongitude').value = position.coords.longitude;
+        document.getElementById('id_ylatitude').value = position.coords.latitude;
+      }
+      {% else %}
+      document.getElementById('id_xlongitude').value = position.coords.longitude;
+      document.getElementById('id_ylatitude').value = position.coords.latitude;
+      {% endif %}
+      document.getElementById('post_cu_form').submit();
+    }
+  }
 
   function html_or_text_() {
     const hot = document.getElementById('id_html_or_text');

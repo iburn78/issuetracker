@@ -55,6 +55,9 @@
           </div>
           <div class="col-10 m-0 p-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
+              {% if card.is_geocard %}
+              <img src="{% static 'icons/map-fill.svg' %}" class="float-end" style="margin-top:2px; margin-left:2px; " width="16" height="16">
+              {% endif %}
               <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
               <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
               <a href="{% url 'card-content' card.id %}" id="card_for_selection{{card.id}}" class="card-title-select text-dark KR-font">{{ card.title }}</a>
@@ -103,6 +106,9 @@
           <div class="col-10 m-0 p-0">
             <div class="card-body text-dark" style="background-color: {{ card.card_color }};">
               <span class="float-end" style="margin-right: -10px;">(<img src="{% static 'icons/people-fill.svg' %}" width="17" height="17">)</span>
+              {% if card.is_geocard %}
+              <img src="{% static 'icons/map-fill.svg' %}" class="float-end mx-1" style="margin-top:5px;" width="16" height="16">
+              {% endif %}
               {% if card.is_official %}
               <span class="float-end me-1" style="margin-right: -10px;"><img src="{% static 'board/IssueTracker_Logo.png' %}" width="22" height="22"></span>
               {% endif %}
