@@ -20,6 +20,7 @@ import os
 from django.utils import timezone
 from PIL import Image
 from django.utils.html import strip_tags
+from django.utils.safestring import mark_safe
 
 
 def getpage_number(cid, pid):
@@ -121,14 +122,8 @@ class PostCreateView(CreateView):
         new_post.save()
         form.save_m2m()
         
-        print('create cool')
-        print(new_post.card.is_geocard)
-        print(new_post.xlongitude)
-        print(new_post.ylatitude)
         if new_post.card.is_geocard and (new_post.xlongitude == None or new_post.ylatitude == None): 
-            if self.request.session.get('GEO_warning_set', False) == False:
-                self.request.session['GEO_warning_set'] = True
-                messages.warning(self.request, 'GEO data is not available: please turn on/allow location access in your device')
+            messages.warning(self.request, "GEO data is not available: allow location access in site setting of your browser/device - refer to About page")
         
         post_image_resize(new_post)
         return redirect('card-content', self.kwargs.get('card_id'))
@@ -203,18 +198,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         rev_post.save()
         form.save_m2m()
 
-        print('update cool')
-        print(rev_post.card.is_geocard)
-        print(rev_post.xlongitude)
-        print(rev_post.ylatitude)
-        print(form.instance.xlongitude)
-        print(form.instance.ylatitude)
-        print(self.request.POST.get('update_geo_data'))
         if rev_post.card.is_geocard and self.request.POST.get('update_geo_data')=='update_geo' and (form.instance.xlongitude == None or form.instance.ylatitude == None): 
-            print('so cool')
-            if self.request.session.get('GEO_warning_set', False) == False:
-                self.request.session['GEO_warning_set'] = True
-                messages.warning(self.request, 'GEO data is not available: please turn on/allow location access in your device')
+            messages.warning(self.request, "GEO data is not available: allow location access in site setting of your browser/device - refer to About page")
 
         post_image_resize(rev_post)
         

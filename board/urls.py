@@ -17,11 +17,11 @@ urlpatterns = [
     path('card_select/', CardSelectView.as_view(), name='card-select'),
     path('about/', about, name='about'),
     path('new_card/', CardCreateView.as_view(), name='card-create'),
-    # card-content url is hard coded in post move / publish javascript
+    # card-content url is hard coded in post move / publish javascript in card_list.html
     path('card/<int:card_id>/', CardContentListView.as_view(), name='card-content'),
     path('card/<int:pk>/update/', CardUpdateView.as_view(), name='card-update'),
     path('card/<int:pk>/delete/', CardDeleteView.as_view(), name='card-delete'),
-    # post-create url is hard coded in card-selection-for-new-post javascript
+    # post-create url is hard coded in card-selection-for-new-post javascript in card_list.html
     path('card/<int:card_id>/new_post/', PostCreateView.as_view(), name='post-create'),
     path('post_delete/<int:pk>/', PostDeleteView.as_view(), name='post-delete'),
     path('post_update/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
