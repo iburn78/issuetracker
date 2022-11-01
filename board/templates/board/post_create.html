@@ -87,8 +87,8 @@
       </div>
       <p class="m-0 p-0">Tags</p>
       <p class="mb-1 m-0 p-0">{{ form.tags }}</p>
-      {{ form.xlongitude}} 
-      {{ form.ylatitude}}
+      {{ form.xlongitude}} as hidden !!!!!!!!!!!!
+      {{ form.ylatitude.as_hidden}}
       {% if update %}
       <div class="form-check mb-0">
         <input class="form-check-input" type="checkbox" value="update_date" name="update_date_posted">
@@ -114,6 +114,20 @@
 {% endblock content %}
 {% block script %}
 <script>
+  function turn_on_geo() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(nouse, geo_off);
+    }
+    function nouse(position) { }
+    function geo_off(position) {
+        console.log('haha');
+    }
+  }
+
+  {% if card.is_geocard %}
+  turn_on_geo()
+  {% endif %}
+
   function fill_geodata(e) {
     {% if card.is_geocard %}
 
@@ -138,7 +152,6 @@
       document.getElementById('id_ylatitude').value = position.coords.latitude;
       document.getElementById('post_cu_form').submit();
     }
-
     {% endif %}
   }
 

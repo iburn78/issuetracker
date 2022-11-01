@@ -122,7 +122,7 @@
     </div>
   </nav>
   
-  <main role="main" class="my-1">
+  <main role="main" class="">
     <div class="container-fluid m-0 p-0">
       {% if messages %}
       {% for message in messages %}
@@ -132,11 +132,11 @@
       {% endfor %}
       {% endif %} 
       {% block search_form %}{% endblock search_form %}
-      <div id="search_card_res" class="bg-gray-100 mx-0 my-2"></div>
-      <div id="search_post_res" class="bg-gray-100 mx-0 my-2"></div>
-      <div id="search_taggedpost_res" class="bg-gray-100 mx-0 my-2"></div>
-      <div id="search_tag_res" class="bg-gray-100 mx-0 my-2"></div>
-      <div id="search_author_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div hidden id="search_card_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div hidden id="search_post_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div hidden id="search_taggedpost_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div hidden id="search_tag_res" class="bg-gray-100 mx-0 my-2"></div>
+      <div hidden id="search_author_res" class="bg-gray-100 mx-0 my-2"></div>
       <div id="search_no_result" style="display:none;" class="bg-gray-100 m-1 text-muted">no search result...</div>
       <div id="search_clear_button" style="display:none;" class="">
         <div class="d-flex justify-content-end"><div class="btn btn-outline-secondary btn-sm p-1 me-1 mb-1" onclick="clear_search()">clear search result</div></div>
@@ -177,6 +177,13 @@
       document.getElementById("search_taggedpost_res").innerHTML="";
       document.getElementById("search_tag_res").innerHTML="";
       document.getElementById("search_author_res").innerHTML=""; 
+
+      document.getElementById("search_card_res").setAttribute('hidden', '')
+      document.getElementById("search_post_res").setAttribute('hidden', '')
+      document.getElementById("search_taggedpost_res").setAttribute('hidden', '')
+      document.getElementById("search_tag_res").setAttribute('hidden', '')
+      document.getElementById("search_author_res").setAttribute('hidden', '')
+
       document.getElementById("search_no_result").style.display = 'none';
       document.getElementById("search_clear_button").style.display = 'none';
     }
@@ -247,6 +254,7 @@
           count = JSON.parse(this.responseText).count;
           if (count > 0) {
             document.getElementById("search_card_res").innerHTML = JSON.parse(this.responseText).res;
+            document.getElementById("search_card_res").removeAttribute('hidden');
             document.getElementById("search_no_result").style.display = 'none';
           };
         };
@@ -270,6 +278,7 @@
           count = JSON.parse(this.responseText).count;
           if (count > 0) {
             document.getElementById("search_"+search_model+"_res").innerHTML = JSON.parse(this.responseText).res;
+            document.getElementById("search_"+search_model+"_res").removeAttribute('hidden');
             document.getElementById("search_no_result").style.display = 'none';
           };
         };
@@ -293,6 +302,7 @@
           count = JSON.parse(this.responseText).count;
           if (count > 0) {
             document.getElementById("search_author_res").innerHTML = JSON.parse(this.responseText).res;
+            document.getElementById("search_author_res").removeAttribute('hidden');
             document.getElementById("search_no_result").style.display = 'none';
           };
         };

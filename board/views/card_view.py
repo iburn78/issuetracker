@@ -121,7 +121,7 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['card_select_for_new_post'] = True
+        context['card_select_for_new_post'] = True # also for publish and move
 
         context['request_type'] = self.request.GET.get('rt')
         context['target_pid'] = self.request.GET.get('pid')
