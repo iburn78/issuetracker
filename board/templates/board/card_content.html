@@ -137,7 +137,7 @@
               <a class="me-2 text-dark" href="{% url 'author-posts' post.author.id %}?cid={{card.id}}"><b>{{ post.author }}</b></a>
               {% endif %}
               <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
-                <div class="text-gray-500 small"> 
+                <div class="text-muted small"> 
                   {{ post.date_posted|date:"M d" }} 
                 </div>
               </a>
