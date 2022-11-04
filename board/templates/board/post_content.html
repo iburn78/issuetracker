@@ -165,6 +165,13 @@
     {% else %}
     <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" style="width: 40px;" onclick="">pub</a>
     <a href="{% url 'card-select' %}?rt=move&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" style="width: 40px;" onclick="">mov</a>
+    <span id="vote_meter_post{{post.id}}">
+      {% if user in post.likes.all %}
+      <span class="p-0 m-0 me-1 float-end" onclick="vote_click({{post.id}}, 'up', 'post', false)"><img src="{% static 'icons/up-arrow-fill.svg' %}" width="22" height="22"></span>
+      {% else %}
+      <span class="p-0 m-0 me-1 float-end" onclick="vote_click({{post.id}}, 'up', 'post', false)"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
+      {% endif %}
+    </span>
     {% endif %}
   </div>
 </div>
