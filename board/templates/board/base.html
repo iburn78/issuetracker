@@ -26,7 +26,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="{% static 'bs5/bootstrap.css' %}">
-  <link rel="stylesheet" href="{% static 'board/style_20221025.css' %}">
+  <link rel="stylesheet" href="{% static 'board/style_20221104.css' %}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
   {% block style %}{% endblock style %}
   <script src="{% static 'bs5/bootstrap.bundle.js' %}"></script>
@@ -69,40 +69,40 @@
           </div>
           {% endif %}
           <div class="nav-item nav-link ms-2"> 
-            <a class="nav-item me-3" href="{% url 'main' %}" style="color:inherit;"><i class="nav-item bi bi-grid" width="22" height="22"></i><span class="nav-item small"> cards</span></a>
-            <a class="nav-item" href="{% url 'card-list' %}" style="color:inherit;"><i class="nav-item bi bi-list-ul" width="22" height="22"></i><span class="nav-item small"> list</span></a>
+            <a class="nav-item me-3" href="{% url 'main' %}" style="color:inherit;"><i class="nav-item bi bi-grid"></i><span class="nav-item small"> cards</span></a>
+            <a class="nav-item" href="{% url 'card-list' %}" style="color:inherit;"><i class="nav-item bi bi-list-ul"></i><span class="nav-item small"> list</span></a>
           </div>
           {% if user.is_authenticated %}
           <form class="nav-item nav-link ms-2" id="logout-form" method="post" action="{% url 'logout' %}">
             {% csrf_token %}
-            <i class="nav-item bi bi-box-arrow-up" width="22" height="22"></i>
+            <i class="nav-item bi bi-box-arrow-up"></i>
             <button type="submit" class="nav-item small m-0 p-0" style="border:none; background:none; color:inherit"> logout</button>
           </form>
           {% else %}
-          <a class="nav-item nav-link ms-2" href="{% url 'login' %}?next={{request.path}}"><i class="nav-item bi bi-box-arrow-in-down" width="22" height="22"></i><span class="nav-item small"> login</span></a>
+          <a class="nav-item nav-link ms-2" href="{% url 'login' %}?next={{request.path}}"><i class="nav-item bi bi-box-arrow-in-down"></i><span class="nav-item small"> login</span></a>
           {% endif %}
           <li class="dropdown">
             <a href class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">
-              <i class="nav-item bi bi-intersect" width="22" height="22"></i>
+              <i class="nav-item bi bi-intersect"></i>
               <span class="nav-item small"> more</span>
             </a>
             <!-- note below django template language in class -->
             <div class="dropdown-menu {% if user.is_in_private_mode %}navbar-dark bg-gray-800 dropdown-menu-dark{% else %}navbar-light bg-gray-300{% endif %}">
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-create' %}"><i class="nav-item bi bi-textarea-resize" width="24" height="24"></i><span class="nav-item small"> new card</span></a></ul>
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-select' %}"><i class="nav-item bi bi-pencil-square" width="24" height="24"></i><span class="nav-item small"> new post</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-create' %}"><i class="nav-item bi bi-textarea-resize"></i><span class="nav-item small"> new card</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'card-select' %}"><i class="nav-item bi bi-pencil-square"></i><span class="nav-item small"> new post</span></a></ul>
               {% if user.is_authenticated %}
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'profile' %}"><i class="nav-item bi bi-person-lines-fill" width="24" height="24"></i><span class="nav-item small"> profile</span></a></ul>
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'mylikes' %}"><i class="nav-item bi bi-shift" width="24" height="24"></i><span class="nav-item small"> my likes</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'profile' %}"><i class="nav-item bi bi-person-lines-fill"></i><span class="nav-item small"> profile</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'mylikes' %}"><i class="nav-item bi bi-shift"></i><span class="nav-item small"> my likes</span></a></ul>
               {% else %}
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'register' %}"><i class="nav-item bi bi-person-plus-fill" width="24" height="24"></i><span class="nav-item small"> register</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'register' %}"><i class="nav-item bi bi-person-plus-fill"></i><span class="nav-item small"> register</span></a></ul>
               {% endif %}
-              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'search' %}"><i class="nav-item bi bi-search" width="24" height="24"></i><span class="nav-item small"> search</span></a></ul>
+              <ul class="dropdown-item nav-item nav-link m-0 p-2 ps-3"><a class="nav-item" style="color:inherit" href="{% url 'search' %}"><i class="nav-item bi bi-search"></i><span class="nav-item small"> search</span></a></ul>
             </div>
           </li>
           {% if user.is_authenticated and user.is_public_card_manager %}
           <li class="dropdown">
             <a href class="nav-item nav-link dropdown-toggle ms-2" data-bs-toggle="dropdown">
-              <i class="nav-item bi bi-nut" width="22" height="22"></i> 
+              <i class="nav-item bi bi-nut"></i> 
               <span class="nav-item small"> admin</span>
             </a>
             <!-- note below django template language in class -->

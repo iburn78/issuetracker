@@ -1129,4 +1129,9 @@ input:checked + .slider:before {
 
 .slider.round:before {
   border-radius: 50%;
-}/*# sourceMappingURL=style_20221025.css.map */
+}
+
+.hflip {
+  display: inline-block;
+  transform: scaleY(-1);
+}/*# sourceMappingURL=style_20221104.css.map */

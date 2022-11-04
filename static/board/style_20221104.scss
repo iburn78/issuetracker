@@ -445,3 +445,8 @@ input:checked + .slider:before {
 .slider.round:before {
   border-radius: 50%;
 }
+
+.hflip {
+  display: inline-block;
+  transform: scaleY(-1);
+}
