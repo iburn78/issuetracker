@@ -137,8 +137,7 @@
           request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
           request.onreadystatechange = function() {
             if(this.readyState === 4 && this.status === 200) {
-              let card_id = JSON.parse(this.responseText).card_id;
-              window.location.href = '{% url "main" %}'+'card/'+card_id;
+              window.location.href = JSON.parse(this.responseText).rtarget;
             };
           };
           let formData = new FormData();
@@ -149,8 +148,21 @@
           request.send(formData);
 
         {% else %}
-          window.location.href = origin.href+'new_post/';
 
+          let request = new XMLHttpRequest();
+          request.open("POST", "{% url 'post-mp-mgmt' %}"); 
+          request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+          request.onreadystatechange = function() {
+            if(this.readyState === 4 && this.status === 200) {
+              window.location.href = JSON.parse(this.responseText).rtarget;
+            };
+          };
+          let formData = new FormData();
+          formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+          formData.append('request_type', 'new_post');
+          formData.append('target_pid', '');
+          formData.append('card_id', parseInt(origin.id.slice(18)));
+          request.send(formData);
         {% endif %}
 
       {% endif %}

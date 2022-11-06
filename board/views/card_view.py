@@ -81,15 +81,14 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
             request_type = request.POST.get('request_type')
             pid = request.POST.get('target_pid')
             card_id = request.POST.get('card_id')
-            post = get_object_or_404(Post, id=pid)
-            card = get_object_or_404(Card, id=card_id)
-
-            if post.content != '':
-                pc = ' ['+ post.content[:15].strip() + '...]'
-            else:
-                pc = ''
 
             if request_type == 'publish':
+                post = get_object_or_404(Post, id=pid)
+                card = get_object_or_404(Card, id=card_id)
+                if post.content != '':
+                    pc = ' ['+ post.content[:15].strip() + '...]'
+                else:
+                    pc = ''
                 if (card.is_public and not card.is_official) or (card.is_public and request.user.is_public_card_manager):
                     post.card = card
                     post.date_posted = timezone.now() 
@@ -97,11 +96,17 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                     request.user.is_in_private_mode = False
                     request.user.save()
                     messages.success(self.request, f"Post{pc} published to public card [{card.title[:15].strip()}...]")
-                    return JsonResponse({"card_id": post.card.id}, status=200)
+                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id}))}, status=200)
                 else:
                     return JsonResponse({}, status=400)
             
             elif request_type == 'move':
+                post = get_object_or_404(Post, id=pid)
+                card = get_object_or_404(Card, id=card_id)
+                if post.content != '':
+                    pc = ' ['+ post.content[:15].strip() + '...]'
+                else:
+                    pc = ''
                 if card.owner == request.user and not card.is_public:
                     if post.card == card: 
                         messages.success(self.request, f"Post{pc} stayed in the current private card [{card.title[:15].strip()}...]")
@@ -109,9 +114,14 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                         post.card = card
                         post.save()
                         messages.success(self.request, f"Post{pc} moved to private card [{card.title[:15].strip()}...]")
-                    return JsonResponse({"card_id": post.card.id}, status=200)
+                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id}))}, status=200)
                 else: 
                     return JsonResponse({}, status=400)
+
+            elif request_type == 'new_post':
+                card = get_object_or_404(Card, id=card_id)
+                return JsonResponse({"rtarget": request.build_absolute_uri(reverse('post-create', args={card.id}))}, status=200)
+
             else:
                 return JsonResponse({}, status=400)
         else: 
@@ -169,6 +179,8 @@ class CardContentListView(ListView):
     def get_queryset(self):
         selected_card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         if (selected_card.is_geocard): 
+            print('GEO CARD!!!!!!!!!!! - need to change order_by....')
+            print('GEO CARD!!!!!!!!!!! - need to change order_by....')
             print('GEO CARD!!!!!!!!!!! - need to change order_by....')
         if selected_card.is_public:
             return Post.objects.filter(card__id=selected_card.id).order_by('-date_posted')
