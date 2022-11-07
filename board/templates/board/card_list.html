@@ -126,6 +126,8 @@
 <script>
   document.addEventListener('click', e => {
     const origin = e.target.closest('a');
+    const idname = 'card_for_selection';
+    const idlen = idname.length; 
     if (origin != null && origin.id.startsWith("card_for_selection")) {
       e.preventDefault();
       {% if card_select_for_new_post %}
@@ -144,7 +146,7 @@
           formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
           formData.append('request_type', '{{request_type}}');
           formData.append('target_pid', {{target_pid}});
-          formData.append('card_id', parseInt(origin.id.slice(18)));
+          formData.append('card_id', parseInt(origin.id.slice(idlen)));
           request.send(formData);
 
         {% else %}
@@ -161,7 +163,7 @@
           formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
           formData.append('request_type', 'new_post');
           formData.append('target_pid', '');
-          formData.append('card_id', parseInt(origin.id.slice(18)));
+          formData.append('card_id', parseInt(origin.id.slice(idlen)));
           request.send(formData);
         {% endif %}
 
