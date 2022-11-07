@@ -124,6 +124,9 @@
   
   <main role="main" class="">
     <div class="container-fluid m-0 p-0">
+      <div hidden id="id_geo_notification" class="alert alert-warning m-1 p-2">
+        Location data is not available: please allow location access in site setting of your browser/device
+      </div>
       {% if messages %}
       {% for message in messages %}
       <div class="alert alert-{{ message.tags }} m-1 p-2">
@@ -345,6 +348,18 @@
     }
     add_report_count();
     add_exception_count();
+
+    function turn_on_geo() { // should be located before block script
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(geo_on, geo_off);
+      }
+      function geo_on(position) { 
+        document.getElementById('id_geo_notification').setAttribute('hidden', '');
+      }
+      function geo_off(position) {
+        document.getElementById('id_geo_notification').removeAttribute('hidden');
+      }
+    } 
     
   </script>
   {% endif %} 

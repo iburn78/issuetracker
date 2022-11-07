@@ -145,11 +145,14 @@
             
             <div class="d-flex">
               {% if card.is_public %}
-              <span id="listpagecounter{{post.id}}" class="float-end small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17">{{ post.likes.count }}{%endif%}</span>
+              <span id="listpagecounter{{post.id}}" class="small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17" style="margin-right:2px;">{{ post.likes.count }}{%endif%}</span>
               {% else %}
-              <span id="listpagecounter{{post.id}}" class="float-end small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17">{%endif%}</span>
+              <span id="listpagecounter{{post.id}}" class="small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17">{%endif%}</span>
               {% endif %}
-              <span id="allrepliescounter{{post.id}}" class="float-end small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" class="ms-2" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
+              <span id="allrepliescounter{{post.id}}" class="small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" class="ms-2" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
+              {% if post.xlongitude and post.ylatitude %}
+              <span class=""><img src="{% static 'icons/map-fill.svg' %}" class="ms-1 mb-1" width="13" height="13"></span>
+              {% endif %}
             </div>
           </div>
           
@@ -240,5 +243,10 @@
       e.preventDefault();
       history.pushState(null, null, window.top.location.pathname + window.top.location.search);
     });
+
+  {% if card.is_geocard %}
+  turn_on_geo()
+  {% endif %}
+
 </script>
 {% endblock script %}

@@ -114,19 +114,6 @@
 {% endblock content %}
 {% block script %}
 <script>
-  function turn_on_geo() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(nouse, geo_off);
-    }
-    function nouse(position) { }
-    function geo_off(position) {
-        console.log('haha');
-    }
-  }
-
-  {% if card.is_geocard %}
-  turn_on_geo()
-  {% endif %}
 
   function fill_geodata(e) {
     {% if card.is_geocard %}
@@ -418,5 +405,10 @@
     </div>
     `
   }; 
+
+  {% if card.is_geocard %}
+  turn_on_geo()
+  {% endif %}
+
 </script>
 {% endblock script %}

@@ -122,9 +122,6 @@ class PostCreateView(CreateView):
         new_post.save()
         form.save_m2m()
         
-        if new_post.card.is_geocard and (new_post.xlongitude == None or new_post.ylatitude == None): 
-            messages.warning(self.request, "GEO data is not available: allow location access in site setting of your browser/device - refer to About page")
-        
         post_image_resize(new_post)
         return redirect('card-content', self.kwargs.get('card_id'))
 
@@ -197,9 +194,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         rev_post = form.save(commit=False)
         rev_post.save()
         form.save_m2m()
-
-        if rev_post.card.is_geocard and self.request.POST.get('update_geo_data')=='update_geo' and (form.instance.xlongitude == None or form.instance.ylatitude == None): 
-            messages.warning(self.request, "GEO data is not available: allow location access in site setting of your browser/device - refer to About page")
 
         post_image_resize(rev_post)
         
