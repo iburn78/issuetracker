@@ -60,7 +60,7 @@
             
             <div class="d-flex">
               {% if post.card.is_public %}
-              <span id="listpagecounter{{post.id}}" class="float-end small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17"> {{ post.likes.count }}{%endif%}</span>
+              <span id="listpagecounter{{post.id}}" class="float-end small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17">{{ post.likes.count }}{%endif%}</span>
               {% else %}
               <span id="listpagecounter{{post.id}}" class="float-end small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17">{%endif%}</span>
               {% endif %}
