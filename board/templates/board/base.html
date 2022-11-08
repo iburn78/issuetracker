@@ -125,7 +125,7 @@
   <main role="main" class="">
     <div class="container-fluid m-0 p-0">
       <div hidden id="id_geo_notification" class="alert alert-warning m-1 p-2">
-        Location data is not available: please allow location access in site setting of your browser/device
+        Please allow <b>location access</b> in your device <a href="{% url 'about' %}" class="text-yellow-700">(how?)</a>
       </div>
       {% if messages %}
       {% for message in messages %}
@@ -349,7 +349,7 @@
     add_report_count();
     add_exception_count();
 
-    function turn_on_geo() { // should be located before block script
+    function turn_on_geo() { 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(geo_on, geo_off);
       }
