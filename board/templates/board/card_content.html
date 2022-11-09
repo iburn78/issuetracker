@@ -238,15 +238,6 @@
   };
   {{ postmodal_open }}
 
-  history.pushState(null, null, window.top.location.pathname + window.top.location.search);
-  console.log('hoy1'); 
-  console.log(history); 
-    window.addEventListener('popstate', (e) => {
-      e.preventDefault();
-      console.log('hoy2'); 
-      history.pushState(null, null, window.top.location.pathname + window.top.location.search);
-    });
-
   {% if card.is_geocard %}
   turn_on_geo()
   {% endif %}
