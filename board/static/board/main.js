@@ -1,6 +1,10 @@
 const [entry] = performance.getEntriesByType("navigation");
-if (entry["type"] === "back_forward")
+console.log(entry);
+if (entry["type"] === "back_forward") {
+    console.log('pressed');
+    alert('back__forward');
     location.reload();
+}; 
 
 function init() {
   document.body.addEventListener('click', menu_close, true);
