@@ -135,14 +135,14 @@
   {% endif %}
 </div>
 
-<div hidden id="id_coord" class="alert alert-warning p-1 m-1" role="alert" onclick="event.preventDefault(); document.getElementById('id_coord').setAttribute('hidden', '');">
+<div hidden id="id_coord{{post.id}}" class="alert alert-warning p-1 m-1" role="alert" onclick="event.preventDefault(); document.getElementById('id_coord{{post.id}}').setAttribute('hidden', '');">
   x: {{ post.xlongitude }}, y: {{ post.ylatitude }} <!-- LATER IMPLEMENT THIS AS A MAP -->
 </div>
 
 <div class="row m-0 mt-1 bg-gray-100">
   <div class="col p-1 m-0">
     {% if post.xlongitude and post.ylatitude %}
-    <a href="" class="small text-muted" onclick="event.preventDefault(); document.getElementById('id_coord').removeAttribute('hidden');"><img src="{% static 'icons/map-fill.svg' %}" class="ms-1 mb-1" width="17" height="17"> location</a>
+    <a href="" class="small text-muted" onclick="event.preventDefault(); document.getElementById('id_coord{{post.id}}').removeAttribute('hidden');"><img src="{% static 'icons/map-fill.svg' %}" class="ms-1 mb-1" width="17" height="17"> location</a>
     {% endif %}
     {% if post.card.is_public %}
     <a href class="p-0 m-0 ms-2 me-1 float-end" data-bs-toggle="collapse" data-bs-target="#post_options{{post.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>

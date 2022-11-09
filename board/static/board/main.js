@@ -17,3 +17,9 @@ function menu_close(event) {
     }
   }
 };
+
+// below navigation control is not perfect
+const _type = performance.getEntriesByType("navigation")[0].type;
+if (_type == "back_forward") {
+  location.reload();
+};

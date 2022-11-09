@@ -242,5 +242,14 @@
   turn_on_geo()
   {% endif %}
 
+  // below navigation control is not perfect
+  // <div id="backbutton_notification" class="bg-blue-200"></div>
+  history.pushState(null, null, window.top.location.pathname + window.top.location.search);
+  window.addEventListener('popstate', (e) => {
+    e.preventDefault();
+    history.pushState(null, null, window.top.location.pathname + window.top.location.search);
+    // document.getElementById('backbutton_notification').innerText = 'message'; 
+  });
+
 </script>
 {% endblock script %}
