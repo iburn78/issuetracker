@@ -947,7 +947,7 @@ a.article-title:hover {
 }
 
 .article-content {
-  white-space: pre-line;
+  white-space: pre-wrap;
 }
 
 .article-metadata {
@@ -1134,4 +1134,4 @@ input:checked + .slider:before {
 .hflip {
   display: inline-block;
   transform: scaleY(-1);
-}/*# sourceMappingURL=style_20221104.css.map */
+}/*# sourceMappingURL=style_20221128.css.map */

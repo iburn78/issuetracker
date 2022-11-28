@@ -155,7 +155,7 @@ class Post(models.Model):
         return super().delete(*args, **kwargs)
 
     def get_preview_text(self):
-        res = ' '.join(self.content[:155].split('\n')[:5])
+        res = ' '.join(self.content[:170].splitlines())
         return res
 
     def __str__(self):
