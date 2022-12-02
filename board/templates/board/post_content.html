@@ -35,6 +35,8 @@
 
 <!-- delete collapse part end -->
 
+  {{ post.xlongitude }}
+  {{ post.ylatitude }}
 <div id="divider-bar" class="m-0" style="background-color:{{post.card.card_color}}"></div>
 <div class="row m-0">
   <div class="col my-1 pe-1">
@@ -141,7 +143,7 @@
 
 <div class="row m-0 mt-1 bg-gray-100">
   <div class="col p-1 m-0">
-    {% if post.xlongitude and post.ylatitude %}
+    {% if card.is_geocard and post.xlongitude and post.ylatitude %}
     <a href="" class="small text-muted" onclick="event.preventDefault(); document.getElementById('id_coord{{post.id}}').removeAttribute('hidden');"><img src="{% static 'icons/map-fill.svg' %}" class="ms-1 mb-1" width="17" height="17"> location</a>
     {% endif %}
     {% if post.card.is_public %}

@@ -125,12 +125,12 @@
   <main role="main" class="">
     <div class="container-fluid m-0 p-0">
       <div hidden id="id_geo_notification" class="alert alert-warning m-1 p-2">
-        Please allow <b>location access</b> in your device <a href="{% url 'about' %}" class="text-yellow-700">(how?)</a>
+        Please allow <span class="text-dark fw-bold">location access</span> in your device (<a href="{% url 'about' %}" class="text-dark fw-bold">how to turn on location access</a>)
       </div>
       {% if messages %}
       {% for message in messages %}
       <div class="alert alert-{{ message.tags }} m-1 p-2">
-        {{ message }}
+        {{ message | safe }}
       </div>
       {% endfor %}
       {% endif %} 

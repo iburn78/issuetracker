@@ -25,7 +25,7 @@ def register(request):
             user.is_active = True
             user.save()
             username = form.cleaned_data.get('username')
-            messages.success(request, f'account created for {username}!')
+            messages.success(request, f'account created for <b>{username}</b>!')
             send_mail(
                 f'New User ({username}) to issuetracker.info has been added.',
                 f'''{username} is registred at {datetime.datetime.now()}''',

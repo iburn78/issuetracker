@@ -19,6 +19,7 @@ from ..tools import *
 import os
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
+from ..views.post_view import getpage_number
 
 class CardListView(ListView):
     model = Card
@@ -86,7 +87,7 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                 post = get_object_or_404(Post, id=pid)
                 card = get_object_or_404(Card, id=card_id)
                 if post.content != '':
-                    pc = ' ['+ post.content[:15].strip() + '...]'
+                    pc = ' <b class="text-dark">'+ ' '.join(post.content.strip().split()[:3]) + '...</b>'
                 else:
                     pc = ''
                 if (card.is_public and not card.is_official) or (card.is_public and request.user.is_public_card_manager):
@@ -95,8 +96,10 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                     post.save()
                     request.user.is_in_private_mode = False
                     request.user.save()
-                    messages.success(self.request, f"Post{pc} published to public card [{card.title[:15].strip()}...]")
-                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id}))}, status=200)
+                    messages.success(self.request, f"Post{pc} published to public card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
+                    if card.is_geocard and (post.xlongitude == None or post.ylatitude == None): 
+                        messages.info(self.request, f"Post{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
+                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id})+'?page='+str(getpage_number(post.card.id, post.id)))}, status=200)
                 else:
                     return JsonResponse({}, status=400)
             
@@ -104,17 +107,19 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                 post = get_object_or_404(Post, id=pid)
                 card = get_object_or_404(Card, id=card_id)
                 if post.content != '':
-                    pc = ' ['+ post.content[:15].strip() + '...]'
+                    pc = ' <b class="text-dark">'+ ' '.join(post.content.strip().split()[:3]) + '...</b>'
                 else:
                     pc = ''
                 if card.owner == request.user and not card.is_public:
                     if post.card == card: 
-                        messages.success(self.request, f"Post{pc} stayed in the current private card [{card.title[:15].strip()}...]")
+                        messages.success(self.request, f"Post{pc} stayed in the current private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
                     else: 
                         post.card = card
                         post.save()
-                        messages.success(self.request, f"Post{pc} moved to private card [{card.title[:15].strip()}...]")
-                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id}))}, status=200)
+                        messages.success(self.request, f"Post{pc} moved to private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
+                        if card.is_geocard and (post.xlongitude == None or post.ylatitude == None): 
+                            messages.info(self.request, f"Post{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
+                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id})+'?page='+str(getpage_number(post.card.id, post.id)))}, status=200)
                 else: 
                     return JsonResponse({}, status=400)
 

@@ -96,8 +96,13 @@
       </div>
       {% if card.is_geocard %}
       <div class="form-check mb-1">
+        {% if post.xlongitude and post.ylatitude %}
         <input id="id_update_geo" class="form-check-input" type="checkbox" value="update_geo" name="update_geo_data">
         update location data to the current location
+        {% else %}
+        <input id="id_update_geo" class="form-check-input" type="checkbox" value="update_geo" name="update_geo_data" checked>
+        <b>(recommended)</b> update location data to the current location 
+        {% endif %}
       </div>
       {% endif %}
       {% endif %}
@@ -116,8 +121,6 @@
 <script>
 
   function fill_geodata(e) {
-    {% if card.is_geocard %}
-
     {% if update %}
     if (document.getElementById('id_update_geo').checked) {
       e.preventDefault();
@@ -139,7 +142,6 @@
       document.getElementById('id_ylatitude').value = position.coords.latitude;
       document.getElementById('post_cu_form').submit();
     }
-    {% endif %}
   }
 
   function html_or_text_() {

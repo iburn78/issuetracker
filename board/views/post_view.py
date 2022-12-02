@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, resolve
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -14,13 +15,12 @@ from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
 from ..tools import post_image_resize, exception_log, CARDCONTENTLISTVIEW_PAGINATED_BY
-from django.urls import resolve
 from django.views.static import serve
 import os
 from django.utils import timezone
 from PIL import Image
 from django.utils.html import strip_tags
-from django.utils.safestring import mark_safe
+from django.http import HttpResponseRedirect
 
 
 def getpage_number(cid, pid):
@@ -201,7 +201,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         if rev_post.content == '' and rev_post.num_images == 0:
             messages.warning(self.request, "Post deleted - no content and no images")
             rev_post.delete()
-        return redirect('card-content', cid)
+            return redirect('card-content', cid)
+        return HttpResponseRedirect(reverse('card-content', args={cid})+'?page='+str(getpage_number(cid, rev_post.id)))
 
     def test_func(self):
         post = self.get_object()
@@ -286,7 +287,6 @@ class PostImageView(DetailView):
                 else:
                     raise PermissionDenied
     
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
