@@ -174,6 +174,15 @@ class CardContentListView(ListView):
     context_object_name = 'posts'
     paginate_by = CARDCONTENTLISTVIEW_PAGINATED_BY
 
+    def post(self, request, *args, **kwargs):
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
+            return JsonResponse({'xlongitude': self.request.POST.get('xlongitude')}, status=200)
+
+
+
+
+
+
     def get(self, request, *args, **kwargs):
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
         if selected_card.is_public or self.request.user.is_authenticated:
