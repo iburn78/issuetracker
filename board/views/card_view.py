@@ -86,19 +86,21 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
             if request_type == 'publish':
                 post = get_object_or_404(Post, id=pid)
                 card = get_object_or_404(Card, id=card_id)
-                if post.content != '':
-                    pc = ' <b class="text-dark">'+ ' '.join(post.content.strip().split()[:3]) + '...</b>'
+                if post.title != '':
+                    pc = 'Post <b class="text-dark">'+ ' '.join(post.title.strip().split()[:3]) + '...</b>'
+                elif post.content !='' and not post.is_html:
+                    pc = 'Post <b class="text-dark">'+ ' '.join(post.content.strip().split()[:3]) + '...</b>'
                 else:
-                    pc = ''
+                    pc = 'The post'
                 if (card.is_public and not card.is_official) or (card.is_public and request.user.is_public_card_manager):
                     post.card = card
                     post.date_posted = timezone.now() 
                     post.save()
                     request.user.is_in_private_mode = False
                     request.user.save()
-                    messages.success(self.request, f"Post{pc} published to public card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
+                    messages.success(self.request, f"{pc} published to public card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
                     if card.is_geocard and (post.xlongitude == None or post.ylatitude == None): 
-                        messages.info(self.request, f"Post{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
+                        messages.info(self.request, f"{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
                     return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id})+'?page='+str(getpage_number(post.card.id, post.id)))}, status=200)
                 else:
                     return JsonResponse({}, status=400)
@@ -106,19 +108,21 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
             elif request_type == 'move':
                 post = get_object_or_404(Post, id=pid)
                 card = get_object_or_404(Card, id=card_id)
-                if post.content != '':
-                    pc = ' <b class="text-dark">'+ ' '.join(post.content.strip().split()[:3]) + '...</b>'
+                if post.title != '':
+                    pc = 'Post <b class="text-dark">'+ ' '.join(post.title.strip().split()[:3]) + '...</b>'
+                elif post.content !='' and not post.is_html:
+                    pc = 'Post <b class="text-dark">'+ ' '.join(post.content.strip().split()[:3]) + '...</b>'
                 else:
-                    pc = ''
+                    pc = 'The post'
                 if card.owner == request.user and not card.is_public:
                     if post.card == card: 
-                        messages.success(self.request, f"Post{pc} stayed in the current private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
+                        messages.success(self.request, f"{pc} stayed in the current private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
                     else: 
                         post.card = card
                         post.save()
-                        messages.success(self.request, f"Post{pc} moved to private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
+                        messages.success(self.request, f"{pc} moved to private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
                         if card.is_geocard and (post.xlongitude == None or post.ylatitude == None): 
-                            messages.info(self.request, f"Post{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
+                            messages.info(self.request, f"{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
                     return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id})+'?page='+str(getpage_number(post.card.id, post.id)))}, status=200)
                 else: 
                     return JsonResponse({}, status=400)
@@ -176,7 +180,11 @@ class CardContentListView(ListView):
 
     def post(self, request, *args, **kwargs):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
-            return JsonResponse({'xlongitude': self.request.POST.get('xlongitude')}, status=200)
+            print(self.request.POST.get('if_checked'))
+            return JsonResponse({
+                'xlongitude': self.request.POST.get('xlongitude'),
+                'rtarget': request.build_absolute_uri(reverse('login')),             
+            }, status=200)
 
 
 

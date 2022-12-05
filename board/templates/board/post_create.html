@@ -121,6 +121,7 @@
 <script>
 
   function fill_geodata(e) {
+    {% if card.is_geocard %}
     {% if update %}
     if (document.getElementById('id_update_geo').checked) {
       e.preventDefault();
@@ -142,6 +143,9 @@
       document.getElementById('id_ylatitude').value = position.coords.latitude;
       document.getElementById('post_cu_form').submit();
     }
+    {% else %}
+    // no need to submit again
+    {% endif %}
   }
 
   function html_or_text_() {

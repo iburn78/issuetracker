@@ -3,7 +3,7 @@
 {% load static %}
 <div class="container-fluid p-0 m-0">
   <div class="row p-0 m-0 mt-1">
-    <div class="col-7 p-1 m-0">
+    <div class="col-8 p-1 m-0">
       {% if card.is_public %}
       {% if card.is_official %}
       <img src="{% static 'board/IssueTracker_Logo.png' %}" width="24" height="24">
@@ -17,16 +17,16 @@
       {% endif %}
       <b class="KR-font">{{ card.title }}</b>
     </div>
-    <div class="col-5 p-1 m-0">
-      <a href="{% url 'main' %}" type="button" class="float-end btn-close ms-1"></a>
+    <div class="col-4 p-1 m-0 d-flex align-items-center justify-content-end">
+      <a class="text-dark" href="" data-bs-toggle="collapse" data-bs-target="#collapseDesc" id="collapseToggle"><img src="{% static 'icons/textarea-resize.svg' %}" width="27" height="27"></a>
       {% if card.is_official and user.is_public_card_manager %}
-      <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
+      <a class="ms-2 text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% elif not card.is_official and card.is_public %}
-      <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
+      <a class="ms-2 text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% elif not card.is_public and user == card.owner %}
-      <a class="ms-2 float-end text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
+      <a class="ms-2 text-dark" href="{% url 'post-create' card_id %}"><img src="{% static 'icons/pencil-square.svg' %}" width="27" height="27"></a>
       {% endif %}
-      <a class="float-end text-dark" href="" data-bs-toggle="collapse" data-bs-target="#collapseDesc" id="collapseToggle"><img src="{% static 'icons/textarea-resize.svg' %}" width="27" height="27"></a>
+      <a href="{% url 'main' %}" type="button" class="btn-close ms-1"></a>
     </div>
   </div>
 
@@ -34,7 +34,7 @@
   <div class="row p-0 m-0">
     <div class="col p-0 m-0">
       <span id="geo_sorting_label" class="float-end ms-1 me-2 text-muted" style="display:inline-block; width:45px;">recent</span>
-      <label class="switch float-end" style="">
+      <label class="switch float-end">
         <input id="id_geo_sorting_btn" type="checkbox" value="checked" name="geo_sorting" onchange="geo_sorting();">
         <span class="slider round"></span>
       </label> 
@@ -251,13 +251,17 @@
       request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
       request.onreadystatechange = function() {
         if(this.readyState === 4 && this.status === 200) {
-          //
+          let xlongitude = JSON.parse(this.responseText).xlongitude;
+          console.log(xlongitude); 
+          console.log(document.getElementById('id_geo_sorting_btn').checked)
+          // window.location.href = JSON.parse(this.responseText).rtarget;
         }; 
       };
       let formData = new FormData();
       formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
       formData.append('xlongitude', position.coords.longitude);
       formData.append('ylatitude', position.coords.latitude);
+      formData.append('if_checked', document.getElementById('id_geo_sorting_btn').checked);
       request.send(formData);
     }
   }

@@ -9,10 +9,10 @@
       <small class="text-muted">{{ post.date_posted|date:"M d, Y H:i" }}</small>
     </div>
   </div>
-  <div class="col-5 p-0 d-flex align-items-center justify-content-end">
+  <div class="col-4 p-0 d-flex align-items-center justify-content-end">
     {% if post.author == user or post.card.owner == user %}
-    <a class="me-2" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
     <a class="me-2" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
+    <a class="me-2" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
     {% endif %}
     <span id="modal_close_top"></span>
   </div>
@@ -115,7 +115,7 @@
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}
-    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
+    <div class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</div>
   </div>
   {% elif post.image1s %}
   <div class="col-xl-8 p-0 mt-1">
@@ -125,14 +125,14 @@
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}
-    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
+    <div class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</div>
   </div>
   {% else %}
   <div class="col p-0">
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}
-    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
+    <div class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</div>
   </div>
   {% endif %}
 </div>
