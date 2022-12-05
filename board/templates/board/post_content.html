@@ -2,7 +2,7 @@
 
 {% load static %}
 <div class="row m-0 mt-1">
-  <div class="col-7 p-0">
+  <div class="col-8 p-0">
     <div class="clearfix">
       <img class="mt-1 ms-1 float-start user-image-small me-2" src="{{ post.author.profile.image.url }}">
       <a class="text-dark fw-bold" href="{% url 'author-posts' post.author.id %}">{{ post.author }}</a><br>
@@ -11,8 +11,8 @@
   </div>
   <div class="col-4 p-0 d-flex align-items-center justify-content-end">
     {% if post.author == user or post.card.owner == user %}
-    <a class="me-2" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
     <a class="me-2" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
+    <a class="me-2" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
     {% endif %}
     <span id="modal_close_top"></span>
   </div>
@@ -34,9 +34,6 @@
 </div>
 
 <!-- delete collapse part end -->
-
-  {{ post.xlongitude }}
-  {{ post.ylatitude }}
 <div id="divider-bar" class="m-0" style="background-color:{{post.card.card_color}}"></div>
 <div class="row m-0">
   <div class="col my-1 pe-1">

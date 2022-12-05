@@ -33,13 +33,14 @@
   {% if card.is_geocard %}
   <div class="row p-0 m-0">
     <div class="col p-0 m-0">
-      <span id="geo_sorting_label" class="float-end ms-1 me-2 text-muted" style="display:inline-block; width:45px;">recent</span>
+      <span id="geo_sorting_label" class="float-end ms-1 me-2 text-muted" style="display:inline-block; width:45px;">{% if geo_option == 'checked' %}near{% else %}recent{% endif %}</span>
       <label class="switch float-end">
-        <input id="id_geo_sorting_btn" type="checkbox" value="checked" name="geo_sorting" onchange="geo_sorting();">
+        <input id="id_geo_sorting_btn" type="checkbox" value="checked" name="geo_sorting" onchange="geo_sorting();" {{geo_option}}>
         <span class="slider round"></span>
       </label> 
     </div>
   </div>
+  <div id="id_no_geo_notification"></div>
   {% endif %}
 
   <div class="collapse" id="collapseDesc">
@@ -208,21 +209,21 @@
     <div class="col d-flex justify-content-center align-items-center">
       {% if is_paginated %}
       {% if page_obj.has_previous %}
-      <a class="btn btn-outline-light mb-4 me-1" href="?page=1"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
+      <a class="btn btn-outline-light mb-4 me-1" href="" onclick="set_page(event, 1);"><img src="{% static 'icons/caret-left-fill.svg' %}" width="20" height="20"></a>
       {% endif %}
       
       {% for num in page_obj.paginator.page_range %}
       {% if num > page_obj.number|add:'-2' and num < page_obj.number %}
-      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
+      <a class="btn btn-outline-light mb-4 me-1" href="" onclick="set_page(event, {{ num }});"><img src="{% static 'icons/caret-left.svg' %}" width="20" height="20"></a>
       {% elif page_obj.number == num %}
-      <a class="btn btn-outline-light text-dark mb-4 me-1" href="?page={{ num }}">{{ num }}</a>
+      <a class="btn btn-outline-light text-dark mb-4 me-1" href="" onclick="set_page(event, {{ num }});">{{ num }}</a>
       {% elif num > page_obj.number and num < page_obj.number|add:'2' %}
-      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ num }}"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
+      <a class="btn btn-outline-light mb-4 me-1" href="" onclick="set_page(event, {{ num }});"><img src="{% static 'icons/caret-right.svg' %}" width="20" height="20"></a>
       {% endif %}
       {% endfor %}
       
       {% if page_obj.has_next %}
-      <a class="btn btn-outline-light mb-4 me-1" href="?page={{ page_obj.paginator.num_pages }}"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
+      <a class="btn btn-outline-light mb-4 me-1" href="" onclick="set_page(event, {{ page_obj.paginator.num_pages }});"><img src="{% static 'icons/caret-right-fill.svg' %}" width="20" height="20"></a>
       {% endif %}
       {% endif %}
     </div>
@@ -233,40 +234,43 @@
 {% block script %}
 {% include 'board/post_script.html' %}
 <script>
+  function set_page(e, page) {
+    let url = new URL(location.href);
+    url.searchParams.set('page', page);
+    e.target.parentNode.href = url.href;
+  }
+
   function geo_sorting() {
     if (document.getElementById('id_geo_sorting_btn').checked) {
       document.getElementById("geo_sorting_label").innerText = "near";
+    
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(positionShow, positionError);
+      }
     }
     else {
       document.getElementById("geo_sorting_label").innerText = "recent";
+      window.location.href="{% url 'card-content' card.id %}";
     }
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(positionShow, positionError);
-    }
+
     function positionError() {
+      document.getElementById('id_no_geo_notification').innerHTML= 
+      `
+      <div class="alert alert-danger m-1 px-1 py-0" role="alert">
+        Show by nearest posts is not available - please allow location access
+      </div>
+      `
+      document.getElementById("id_geo_sorting_btn").checked = false;
     }
+
     function positionShow(position) {
-      let request = new XMLHttpRequest();
-      request.open("POST", "{% url 'card-content' card.id %}", true);
-      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-      request.onreadystatechange = function() {
-        if(this.readyState === 4 && this.status === 200) {
-          let xlongitude = JSON.parse(this.responseText).xlongitude;
-          console.log(xlongitude); 
-          console.log(document.getElementById('id_geo_sorting_btn').checked)
-          // window.location.href = JSON.parse(this.responseText).rtarget;
-        }; 
-      };
-      let formData = new FormData();
-      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
-      formData.append('xlongitude', position.coords.longitude);
-      formData.append('ylatitude', position.coords.latitude);
-      formData.append('if_checked', document.getElementById('id_geo_sorting_btn').checked);
-      request.send(formData);
+      let url = new URL(location.href);
+      url.searchParams.set('xlongitude', position.coords.longitude);
+      url.searchParams.set('ylatitude', position.coords.latitude);
+      window.location.href = url.href;
     }
+
   }
-
-
 
 
   {% for post in posts %}
@@ -288,7 +292,22 @@
   {{ postmodal_open }}
 
   {% if card.is_geocard %}
-  turn_on_geo()
+  turn_on_geo();
+  // if (navigator.geolocation) {
+  //   navigator.geolocation.getCurrentPosition(geo_on, geo_off);
+  // }
+  // function geo_on(position) { 
+  //   document.getElementById('id_geo_notification').setAttribute('hidden', '');
+  //   if (document.getElementById('id_geo_sorting_btn').checked == false) {
+  //     let url = new URL(location.href);
+  //     url.searchParams.set('xlongitude', position.coords.longitude);
+  //     url.searchParams.set('ylatitude', position.coords.latitude);
+  //     window.location.href = url.href;
+  //   };
+  // }
+  // function geo_off(position) {
+  //   document.getElementById('id_geo_notification').removeAttribute('hidden');
+  // }
   {% endif %}
 
   // below navigation control is not perfect

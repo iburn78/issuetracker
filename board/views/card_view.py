@@ -20,6 +20,7 @@ import os
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from ..views.post_view import getpage_number
+from django.db.models import F, Q
 
 class CardListView(ListView):
     model = Card
@@ -172,24 +173,23 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
+
+def location_valid(x, y): 
+    try: 
+        x = float(x)
+        y = float(y)
+        if not (-180 <= x <= 180) or not (-90 <= y <= 90):
+            return (False, None, None)
+        return (True, x, y)
+    except: 
+        return (False, None, None)
+
+
 class CardContentListView(ListView):
     model = Post
     template_name = 'board/card_content.html'
     context_object_name = 'posts'
     paginate_by = CARDCONTENTLISTVIEW_PAGINATED_BY
-
-    def post(self, request, *args, **kwargs):
-        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "POST":
-            print(self.request.POST.get('if_checked'))
-            return JsonResponse({
-                'xlongitude': self.request.POST.get('xlongitude'),
-                'rtarget': request.build_absolute_uri(reverse('login')),             
-            }, status=200)
-
-
-
-
-
 
     def get(self, request, *args, **kwargs):
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
@@ -199,17 +199,27 @@ class CardContentListView(ListView):
             return redirect('login')
 
     def get_queryset(self):
+        is_geo_valid, xlongitude, ylatitude = location_valid(self.request.GET.get('xlongitude'), self.request.GET.get('ylatitude'))
         selected_card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
-        if (selected_card.is_geocard): 
-            print('GEO CARD!!!!!!!!!!! - need to change order_by....')
-            print('GEO CARD!!!!!!!!!!! - need to change order_by....')
-            print('GEO CARD!!!!!!!!!!! - need to change order_by....')
+
         if selected_card.is_public:
-            return Post.objects.filter(card__id=selected_card.id).order_by('-date_posted')
+            if is_geo_valid: 
+                geo_posts = Post.objects.exclude(Q(xlongitude=None) | Q(ylatitude=None)).filter(card__id=selected_card.id).annotate(
+                    geo_ordering = (F('xlongitude') - xlongitude)*(F('xlongitude') - xlongitude) + (F('ylatitude') - ylatitude)*(F('ylatitude') - ylatitude)
+                ).order_by('geo_ordering', '-date_posted')
+                return geo_posts
+            else: 
+                return Post.objects.filter(card__id=selected_card.id).order_by('-date_posted')
         else:
             if self.request.user.is_authenticated:
                 if self.request.user == selected_card.owner:
-                    return Post.objects.filter(author=self.request.user).filter(card__id=selected_card.id).order_by('-date_posted')
+                    if is_geo_valid: 
+                        geo_posts = Post.objects.exclude(Q(xlongitude=None) | Q(ylatitude=None)).filter(author=self.request.user).filter(card__id=selected_card.id).annotate(
+                            geo_ordering = (F('xlongitude') - xlongitude)*(F('xlongitude') - xlongitude) + (F('ylatitude') - ylatitude)*(F('ylatitude') - ylatitude)
+                        ).order_by('geo_ordering', '-date_posted')
+                        return geo_posts
+                    else: 
+                        return Post.objects.filter(author=self.request.user).filter(card__id=selected_card.id).order_by('-date_posted')
                 else:
                     raise Http404("Page not found")
             else:
@@ -227,6 +237,11 @@ class CardContentListView(ListView):
         context['meta_og_title'] = card.title.strip()
         context['meta_og_desc'] = card.desc.strip()
         context['meta_og_image'] = self.request.build_absolute_uri(card.image.url)
+        is_geo_valid, xlongitude, ylatitude = location_valid(self.request.GET.get('xlongitude'), self.request.GET.get('ylatitude'))
+        if is_geo_valid: 
+            context['geo_option'] = 'checked'
+        else: 
+            context['geo_option'] = ''
         
         post_to_open = self.request.GET.get('post_id') 
         if post_to_open != None:
