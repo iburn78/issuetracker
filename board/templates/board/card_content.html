@@ -297,16 +297,9 @@
   //   navigator.geolocation.getCurrentPosition(geo_on, geo_off);
   // }
   // function geo_on(position) { 
-  //   document.getElementById('id_geo_notification').setAttribute('hidden', '');
-  //   if (document.getElementById('id_geo_sorting_btn').checked == false) {
-  //     let url = new URL(location.href);
-  //     url.searchParams.set('xlongitude', position.coords.longitude);
-  //     url.searchParams.set('ylatitude', position.coords.latitude);
-  //     window.location.href = url.href;
-  //   };
+  //   document.getElementById('id_geo_sorting_btn').checked=true;
   // }
   // function geo_off(position) {
-  //   document.getElementById('id_geo_notification').removeAttribute('hidden');
   // }
   {% endif %}
 

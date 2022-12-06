@@ -40,3 +40,8 @@ Notes:
 - in private mode, if brower access public card through url, it shows public card content in private environment: it should be OK
 - popstate-javascript code (implemented to prevent brower's back button) seems working when a user does an activity in the current page (whatever it is), othwerwise popstate event does not fire: seems this is more reasonable in a sense
 - all the server errors are out-of-memory errors so far (2022-10-24) killed by OOM manager
+- Latitude, Longitude 1 degree: about 111km
+  .0001: 10m
+  .00001: 1m
+  .000001: 10cm
+  .0000001: 1cm
