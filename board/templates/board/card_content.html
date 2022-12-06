@@ -31,7 +31,7 @@
   </div>
 
   {% if card.is_geocard %}
-  <div class="row p-0 m-0">
+  <div class="row p-0 m-0 bg-gray-100">
     <div class="col p-0 m-0">
       <span id="geo_sorting_label" class="float-end ms-1 me-2 text-muted" style="display:inline-block; width:45px;">{% if geo_option == 'checked' %}near{% else %}recent{% endif %}</span>
       <label class="switch float-end">
@@ -77,7 +77,7 @@
       </div>
     </div>
   </div>
-  <div id="divider-bar" style="background-color:{{card.card_color}}"></div>
+  <div id="divider-bar" class="mt-0" style="background-color:{{card.card_color}}"></div>
   <div class="row p-0 m-0">
     {% if not posts %}
     <div class="col m-1 p-0">

@@ -313,6 +313,18 @@
       request.send();
     }
     
+    function turn_on_geo() { 
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(geo_on, geo_off);
+      }
+      function geo_on(position) { 
+        document.getElementById('id_geo_notification').setAttribute('hidden', '');
+      }
+      function geo_off(position) {
+        document.getElementById('id_geo_notification').removeAttribute('hidden');
+      }
+    } 
+
   </script>
   
   {% if user.is_authenticated and user.is_public_card_manager %}
@@ -350,17 +362,6 @@
     add_report_count();
     add_exception_count();
 
-    function turn_on_geo() { 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(geo_on, geo_off);
-      }
-      function geo_on(position) { 
-        document.getElementById('id_geo_notification').setAttribute('hidden', '');
-      }
-      function geo_off(position) {
-        document.getElementById('id_geo_notification').removeAttribute('hidden');
-      }
-    } 
     
   </script>
   {% endif %} 
