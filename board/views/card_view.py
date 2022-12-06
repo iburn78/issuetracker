@@ -19,8 +19,8 @@ from ..tools import *
 import os
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
-from ..views.post_view import getpage_number
 from django.db.models import F, Q
+
 
 class CardListView(ListView):
     model = Card
@@ -102,7 +102,7 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                     messages.success(self.request, f"{pc} published to public card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
                     if card.is_geocard and (post.xlongitude == None or post.ylatitude == None): 
                         messages.info(self.request, f"{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
-                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id})+'?page='+str(getpage_number(post.card.id, post.id)))}, status=200)
+                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id}))}, status=200)
                 else:
                     return JsonResponse({}, status=400)
             
@@ -117,14 +117,17 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
                     pc = 'The post'
                 if card.owner == request.user and not card.is_public:
                     if post.card == card: 
+                        # this case does not happen 
                         messages.success(self.request, f"{pc} stayed in the current private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
+                        return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id}))}, status=200)
                     else: 
                         post.card = card
+                        post.date_posted = timezone.now() 
                         post.save()
                         messages.success(self.request, f"{pc} moved to private card <b class='text-dark'>{' '.join(card.title.strip().split()[:3])}...</b>")
                         if card.is_geocard and (post.xlongitude == None or post.ylatitude == None): 
                             messages.info(self.request, f"{pc} doesn't have location data - <b><a href='{reverse('post-update', args={post.id})}' class='text-dark'>click here to update</a></b>")
-                    return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id})+'?page='+str(getpage_number(post.card.id, post.id)))}, status=200)
+                        return JsonResponse({"rtarget": request.build_absolute_uri(reverse('card-content', args={post.card.id}))}, status=200)
                 else: 
                     return JsonResponse({}, status=400)
 
@@ -145,6 +148,10 @@ class CardSelectView(LoginRequiredMixin, CardListView):  # a view for creating a
 
         context['request_type'] = self.request.GET.get('rt')
         context['target_pid'] = self.request.GET.get('pid')
+        try:
+            context['move_origin_cid'] = int(self.request.GET.get('cid'))
+        except:
+            context['move_origin_cid'] = ""
 
         return context
 
@@ -173,7 +180,6 @@ class CardCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-
 def location_valid(x, y): 
     try: 
         x = float(x)
@@ -192,11 +198,30 @@ class CardContentListView(ListView):
     paginate_by = CARDCONTENTLISTVIEW_PAGINATED_BY
 
     def get(self, request, *args, **kwargs):
+        if 'post_id' in kwargs: 
+            pid_tocheck = kwargs.get('post_id')
+            ps = self.get_queryset()
+            for i, p in enumerate(ps):
+                if p.id == pid_tocheck: 
+                    page_num = int(i/CARDCONTENTLISTVIEW_PAGINATED_BY)+1
+                    return HttpResponseRedirect(reverse('card-content', args={kwargs.get('card_id')})+"?page="+str(page_num)+"&post_id="+str(pid_tocheck))
+            return HttpResponseRedirect(reverse('card-content', args={kwargs.get('card_id')}))
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest' and request.method == "GET":
+            pid_tocheck = request.GET.get('pid_tocheck')
+            ps = self.get_queryset()
+            page_num = 0
+            for i, p in enumerate(ps):
+                if str(p.id) == pid_tocheck: 
+                    page_num = int(i/CARDCONTENTLISTVIEW_PAGINATED_BY)+1
+            return JsonResponse({"page_num": page_num}, status=200)
+        
         selected_card = get_object_or_404(Card, id=kwargs.get('card_id'))
         if selected_card.is_public or self.request.user.is_authenticated:
             return super().get(request, *args, **kwargs)
         else:
             return redirect('login')
+
 
     def get_queryset(self):
         is_geo_valid, xlongitude, ylatitude = location_valid(self.request.GET.get('xlongitude'), self.request.GET.get('ylatitude'))
@@ -247,6 +272,7 @@ class CardContentListView(ListView):
         if post_to_open != None:
             context['postmodal_open'] = 'postmodal_open('+str(post_to_open)+'); window.history.replaceState(null, null, window.location.pathname);'
         return context
+
 
 
 class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):

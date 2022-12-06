@@ -51,6 +51,7 @@ urlpatterns = [
     path('api/report/counter/', ReportView.as_view(), name = 'report-counter'),
     path('api/exception/counter/', exception_counter, name = 'exception-counter'),
     path('api/user/modechange/', user_mode_change, name = 'user-mode-change'),
+    path('api/card_content_post_page/<int:card_id>/<int:post_id>', CardContentListView.as_view(), name = 'card-content-post-page'),
 
     path('api/search/path/', search_path, name = 'search-path'),
     path('api/search/card/', SearchView_Card.as_view(), name = 'search-card'),

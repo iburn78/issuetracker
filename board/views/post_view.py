@@ -14,7 +14,7 @@ from ..models import Card, Post
 from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
-from ..tools import post_image_resize, exception_log, CARDCONTENTLISTVIEW_PAGINATED_BY
+from ..tools import post_image_resize, exception_log
 from django.views.static import serve
 import os
 from django.utils import timezone
@@ -22,12 +22,6 @@ from PIL import Image
 from django.utils.html import strip_tags
 from django.http import HttpResponseRedirect
 
-
-def getpage_number(cid, pid):
-    ps = Post.objects.filter(card_id = cid).order_by('-date_posted')
-    for i, p in enumerate(ps):
-        if p.id == pid: 
-            return int(i/CARDCONTENTLISTVIEW_PAGINATED_BY)+1
 
 def postimageview(request, *args, **kwargs): 
     template_name = "board/image_view.html"
@@ -202,7 +196,12 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             messages.warning(self.request, "Post deleted - no content and no images")
             rev_post.delete()
             return redirect('card-content', cid)
-        return HttpResponseRedirect(reverse('card-content', args={cid})+'?page='+str(getpage_number(cid, rev_post.id)))
+
+        print(reverse('card-content-post-page', args={cid, rev_post.id}))
+        print(reverse('card-content-post-page', args={cid, rev_post.id}))
+        print(reverse('card-content-post-page', args={cid, rev_post.id}))
+
+        return HttpResponseRedirect(reverse('card-content-post-page', kwargs={'card_id': cid, 'post_id': rev_post.id}))
 
     def test_func(self):
         post = self.get_object()
@@ -297,9 +296,6 @@ class PostImageView(DetailView):
         context['meta_og_desc'] = strip_tags(post.get_preview_text()).strip()
         if post.image1s != '':
             context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
-        pn = getpage_number(post.card.id, post.id)
-        if pn != None:
-            context['page_num'] = pn
         return context
 
 

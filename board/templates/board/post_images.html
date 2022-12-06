@@ -38,11 +38,7 @@
   <div class="container-fluid">
     <div class="row">
       <div class="col">
-        {% if page_num %}
-        <a href="{% url 'card-content' post.card.id %}?page={{page_num}}&post_id={{post.id}}" type="button" class="btn-close m-2 ms-0"></a>
-        {% else %}
-        <a href="{% url 'card-content' post.card.id %}" type="button" class="btn-close m-2 ms-0"></a>
-        {% endif %}
+        <a href="" type="button" class="btn-close m-2 ms-0" onclick="back_to_post(event)"></a>
       </div>
     </div>
     <div class="row">
@@ -55,4 +51,24 @@
       {% endfor %}
     </div>
   </div>
+  <script>
+    function back_to_post(e) {
+      let request = new XMLHttpRequest();
+      request.open("GET", "{% url 'card-content' post.card.id %}?pid_tocheck={{post.id}}", true);
+      request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+      request.onreadystatechange = function() {
+        if(this.readyState === 4 && this.status === 200) {
+          let page_num = JSON.parse(this.responseText).page_num;
+          if (page_num == 0) {
+            window.location.href = "{% url 'card-content' post.card.id %}"; 
+          }
+          else {
+            window.location.href = "{% url 'card-content' post.card.id %}?page="+page_num+"&post_id={{post.id}}";
+          }
+        };
+      };
+      request.send();
+    }
+
+  </script>
 </body>
