@@ -1,7 +1,34 @@
 {% extends "board/base.html" %}
 {% block content %}
 {% load static %}
-<div class="container-fluid p-0 m-0">
+<script>
+  {% if card.is_geocard %}
+  //turn_on_geo(); // this function execution is merged below geo_loading_notification card_content_entire_div
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(geo_on, geo_off);
+  }
+  function geo_on(position) { 
+    document.getElementById('id_geo_notification').setAttribute('hidden', '');
+    if ('{{mode}}' != 'recent' && document.getElementById('id_geo_sorting_btn').checked == false) {
+      document.getElementById('card_content_entire_div').setAttribute('hidden', ''); 
+      document.getElementById('geo_loading_notification').innerHTML = 
+       `<div style="margin-top: 50px; text-align:center;">
+        <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+        </div>
+        <div style="text-align:center;">
+          <b>loading</b>
+        </div>
+        `;
+      //document.getElementById('id_geo_sorting_btn').click(); 
+    };
+  }
+  function geo_off(position) {
+    document.getElementById('id_geo_notification').removeAttribute('hidden');
+  }
+  {% endif %}
+</script>
+<div id='geo_loading_notification' class="m-0 p-0"></div>
+<div id='card_content_entire_div' class="container-fluid p-0 m-0">
   <div class="row p-0 m-0 mt-1">
     <div class="col-8 p-1 m-0">
       {% if card.is_public %}
@@ -250,7 +277,7 @@
     }
     else {
       document.getElementById("geo_sorting_label").innerText = "recent";
-      window.location.href="{% url 'card-content' card.id %}";
+      window.location.href="{% url 'card-content' card.id %}?mode=recent";
     }
 
     function positionError() {
@@ -265,6 +292,8 @@
 
     function positionShow(position) {
       let url = new URL(location.href);
+      url.searchParams.delete('page');
+      url.searchParams.delete('mode');
       url.searchParams.set('xlongitude', position.coords.longitude);
       url.searchParams.set('ylatitude', position.coords.latitude);
       window.location.href = url.href;
@@ -292,15 +321,17 @@
   {{ postmodal_open }}
 
   {% if card.is_geocard %}
-  turn_on_geo();
-  // if (navigator.geolocation) {
-  //   navigator.geolocation.getCurrentPosition(geo_on, geo_off);
-  // }
-  // function geo_on(position) { 
-  //   document.getElementById('id_geo_sorting_btn').checked=true;
-  // }
-  // function geo_off(position) {
-  // }
+
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(geo_on_, geo_off_);
+  }
+  function geo_on_(position) { 
+    if ('{{mode}}' != 'recent' && document.getElementById('id_geo_sorting_btn').checked == false) {
+      document.getElementById('id_geo_sorting_btn').click(); 
+    };
+  }
+  function geo_off_(position) {
+  }
   {% endif %}
 
   // below navigation control is not perfect

@@ -271,6 +271,9 @@ class CardContentListView(ListView):
         post_to_open = self.request.GET.get('post_id') 
         if post_to_open != None:
             context['postmodal_open'] = 'postmodal_open('+str(post_to_open)+'); window.history.replaceState(null, null, window.location.pathname);'
+
+        context['mode'] = self.request.GET.get('mode') 
+
         return context
 
 
