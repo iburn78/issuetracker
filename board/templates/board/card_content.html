@@ -1,34 +1,16 @@
 {% extends "board/base.html" %}
 {% block content %}
 {% load static %}
-<script>
-  {% if card.is_geocard %}
-  //turn_on_geo(); // this function execution is merged below geo_loading_notification card_content_entire_div
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(geo_on, geo_off);
-  }
-  function geo_on(position) { 
-    document.getElementById('id_geo_notification').setAttribute('hidden', '');
-    if ('{{mode}}' != 'recent' && document.getElementById('id_geo_sorting_btn').checked == false) {
-      document.getElementById('card_content_entire_div').setAttribute('hidden', ''); 
-      document.getElementById('geo_loading_notification').innerHTML = 
-       `<div style="margin-top: 50px; text-align:center;">
-        <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
-        </div>
-        <div style="text-align:center;">
-          <b>loading</b>
-        </div>
-        `;
-      //document.getElementById('id_geo_sorting_btn').click(); 
-    };
-  }
-  function geo_off(position) {
-    document.getElementById('id_geo_notification').removeAttribute('hidden');
-  }
-  {% endif %}
-</script>
-<div id='geo_loading_notification' class="m-0 p-0"></div>
-<div id='card_content_entire_div' class="container-fluid p-0 m-0">
+<div id='geo_loading_notification' class="m-0 p-0" {% if not card.is_geocard %}hidden{% endif %}>
+  <div style="margin-top: 50px; text-align:center;">
+    <!-- <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div> -->
+    <div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </div>
+  <div style="text-align:center;">
+    <b>loading</b>
+  </div>
+</div>
+<div id='card_content_entire_div' class="container-fluid p-0 m-0" {% if card.is_geocard %}hidden{% endif %}>
   <div class="row p-0 m-0 mt-1">
     <div class="col-8 p-1 m-0">
       {% if card.is_public %}
@@ -320,18 +302,29 @@
   };
   {{ postmodal_open }}
 
-  {% if card.is_geocard %}
 
+  {% if card.is_geocard %}
+  //turn_on_geo(); // this function execution is merged below geo_loading_notification card_content_entire_div
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(geo_on_, geo_off_);
+    navigator.geolocation.getCurrentPosition(geo_on, geo_off);
   }
-  function geo_on_(position) { 
+  function geo_on(position) { 
+    // document.getElementById('id_geo_notification').setAttribute('hidden', '');
     if ('{{mode}}' != 'recent' && document.getElementById('id_geo_sorting_btn').checked == false) {
       document.getElementById('id_geo_sorting_btn').click(); 
+    } else {
+    document.getElementById('geo_loading_notification').setAttribute('hidden','');
+    document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
     };
   }
-  function geo_off_(position) {
+  function geo_off(position) {
+    document.getElementById('id_geo_notification').removeAttribute('hidden');
+    document.getElementById('geo_loading_notification').setAttribute('hidden','');
+    document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
   }
+  {% else %}
+    // document.getElementById('geo_loading_notification').setAttribute('hidden','');
+    // document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
   {% endif %}
 
   // below navigation control is not perfect
