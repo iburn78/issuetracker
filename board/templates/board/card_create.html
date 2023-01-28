@@ -9,8 +9,16 @@
         <div id="card-title-legend" class="border-bottom m-0 p-1 h4 fw-bold" style="background-color: {{ bg_color }}">{{c_u}} card</div>
         <div class="col-lg-6 m-0 p-1">
           Title* {{ form.title }}
+
           Desc {{ form.desc }}
           {{ form.card_color.as_hidden }}
+
+          <div>
+          <label class="switch mt-1 ">
+            {{ form.is_geocard }} 
+            <span class="slider round"></span>
+          </label> <b id="geo_or_regular" class="small">regular</b>
+          </div>
           
           {% if user.is_public_card_manager %}
           {% if c_u == "Create" %}
@@ -195,6 +203,15 @@
       };
     };
   }
+
+  function geo_checked(){
+    if (document.getElementById('id_is_geocard').checked) {
+      document.getElementById('geo_or_regular').innerHTML = `<i class='bi bi-map-fill'></i> GEO (location based) card`; 
+    } else {
+      document.getElementById('geo_or_regular').innerHTML = "regular"; 
+    }
+  }
+  geo_checked();
   
 </script>
 {% endblock script %}

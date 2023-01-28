@@ -17,11 +17,9 @@ urlpatterns = [
     path('card_select/', CardSelectView.as_view(), name='card-select'),
     path('about/', about, name='about'),
     path('new_card/', CardCreateView.as_view(), name='card-create'),
-    # card-content url is hard coded in post move / publish javascript
     path('card/<int:card_id>/', CardContentListView.as_view(), name='card-content'),
     path('card/<int:pk>/update/', CardUpdateView.as_view(), name='card-update'),
     path('card/<int:pk>/delete/', CardDeleteView.as_view(), name='card-delete'),
-    # post-create url is hard coded in card-selection-for-new-post javascript
     path('card/<int:card_id>/new_post/', PostCreateView.as_view(), name='post-create'),
     path('post_delete/<int:pk>/', PostDeleteView.as_view(), name='post-delete'),
     path('post_update/<int:pk>/', PostUpdateView.as_view(), name='post-update'),
@@ -53,6 +51,7 @@ urlpatterns = [
     path('api/report/counter/', ReportView.as_view(), name = 'report-counter'),
     path('api/exception/counter/', exception_counter, name = 'exception-counter'),
     path('api/user/modechange/', user_mode_change, name = 'user-mode-change'),
+    path('api/card_content_post_page/<int:card_id>/<int:post_id>', CardContentListView.as_view(), name = 'card-content-post-page'),
 
     path('api/search/path/', search_path, name = 'search-path'),
     path('api/search/card/', SearchView_Card.as_view(), name = 'search-card'),

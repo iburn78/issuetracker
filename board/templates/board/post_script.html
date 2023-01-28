@@ -1,6 +1,6 @@
 {% load static %}
 <script>
-  function vote_click(id, up_down, object) {
+  function vote_click(id, up_down, object, public = true) {
     let request = new XMLHttpRequest();
     request.open("POST", "{% url 'vote' %}", true);
     request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
@@ -12,7 +12,10 @@
         let fill_down = "{% static 'icons/down-arrow.svg' %}";
         let fill_up = "{% static 'icons/up-arrow.svg' %}";
         let num_likes = obj.likes.length;
-        let num_likes_sen = `<img src='${fill_up}' width='17' height='17'> ` + num_likes;
+        let num_likes_sen = `<img src='${fill_up}' width='17' height='17'> `;
+        if (public) {
+          num_likes_sen += num_likes;
+        };
         if (num_likes == 0){
           num_likes = "";
           num_likes_sen = ""
@@ -35,13 +38,20 @@
         if(object === 'comment') {
           size = 18;
         };
-        vote_meter_text = 
-        `
-        <span class="p-0 m-0 me-1 float-end">${num_dislikes}</span>
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down', '${object}')"><img src='${fill_down}' width="${size}" height="${size}"></span>
-        <span class="p-0 m-0 me-1 float-end">${num_likes}</span>
-        <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up', '${object}')"><img src='${fill_up}' width="${size}" height="${size}"></span>
-        `
+        if (public) {
+          vote_meter_text = 
+          `
+          <span class="p-0 m-0 me-1 float-end">${num_dislikes}</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'down', '${object}')"><img src='${fill_down}' width="${size}" height="${size}"></span>
+          <span class="p-0 m-0 me-1 float-end">${num_likes}</span>
+          <span class="p-0 m-0 float-end" onclick="vote_click(${id}, 'up', '${object}')"><img src='${fill_up}' width="${size}" height="${size}"></span>
+          `
+        } else {
+          vote_meter_text = 
+          `
+          <span class="p-0 m-0 me-1 float-end" onclick="vote_click(${id}, 'up', '${object}', false)"><img src='${fill_up}' width="${size}" height="${size}"></span>
+          `
+        }
         document.getElementById("vote_meter_"+object+id).innerHTML= vote_meter_text;
       };
     };
@@ -93,7 +103,7 @@
         let num_comments = JSON.parse(this.responseText).commentscount;
         if (num_allreplies>0){
           if (allrepliescounter != null) {
-            allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> ` + num_allreplies;
+            allrepliescounter.innerHTML = `<img src="{% static 'icons/chat-left.svg' %}" class="ms-2" width="17" height="17"> ` + num_allreplies;
           }
         }
         else{

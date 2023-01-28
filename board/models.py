@@ -1,4 +1,6 @@
+from tokenize import blank_re
 from django.db import models
+from django.forms import FloatField
 from django.utils import timezone
 from django.urls import reverse
 from taggit.managers import TaggableManager
@@ -65,6 +67,7 @@ class Card(models.Model):
         max_length=30, default='rgb(233, 236, 239)')  # gray-200
     is_public = models.BooleanField(default=False)
     is_official = models.BooleanField(default=False)
+    is_geocard = models.BooleanField(default=False)
 
     def delete(self, *args, **kwargs):
         name = str(self.image.name)
@@ -125,6 +128,8 @@ class Post(models.Model):
     title = models.CharField(blank=True, max_length=70)
     is_html = models.BooleanField(default=False)
     tags = TaggableManager(blank=True)
+    xlongitude = models.FloatField(blank=True, null=True)
+    ylatitude = models.FloatField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -150,7 +155,7 @@ class Post(models.Model):
         return super().delete(*args, **kwargs)
 
     def get_preview_text(self):
-        res = ' '.join(self.content[:155].split('\n')[:5])
+        res = ' '.join(self.content[:170].splitlines())
         return res
 
     def __str__(self):

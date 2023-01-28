@@ -1,7 +1,3 @@
-const [entry] = performance.getEntriesByType("navigation");
-if (entry["type"] === "back_forward")
-    location.reload();
-
 function init() {
   document.body.addEventListener('click', menu_close, true);
 };
@@ -22,3 +18,8 @@ function menu_close(event) {
   }
 };
 
+// below navigation control is not perfect
+const _type = performance.getEntriesByType("navigation")[0].type;
+if (_type == "back_forward") {
+  location.reload();
+};

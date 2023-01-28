@@ -17,7 +17,7 @@
     {% endif %}
     {% endif %}
   </div>
-  <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off" onsubmit="holdon(event)">
+  <form method="POST" class="p-1" enctype="multipart/form-data" autocomplete="off" id="post_cu_form" onsubmit="holdon(event)">
     {% csrf_token %}
     <fieldset>
       <p class="m-0 p-0">Title</p>
@@ -87,14 +87,27 @@
       </div>
       <p class="m-0 p-0">Tags</p>
       <p class="mb-1 m-0 p-0">{{ form.tags }}</p>
+      {{ form.xlongitude.as_hidden}} 
+      {{ form.ylatitude.as_hidden}}
       {% if update %}
-      <div class="form-check mb-2">
-        <input class="form-check-input" type="checkbox" value="checked" name="update_date_posted">
+      <div class="form-check mb-1">
+        <input class="form-check-input" type="checkbox" value="update_date" name="update_date_posted">
         update date posted
       </div>
+      {% if card.is_geocard %}
+      <div class="form-check mb-1">
+        {% if post.xlongitude and post.ylatitude %}
+        <input id="id_update_geo" class="form-check-input" type="checkbox" value="update_geo" name="update_geo_data">
+        update location data to the current location
+        {% else %}
+        <input id="id_update_geo" class="form-check-input" type="checkbox" value="update_geo" name="update_geo_data" checked>
+        <b>(recommended)</b> update location data to the current location 
+        {% endif %}
+      </div>
+      {% endif %}
       {% endif %}
       <div id="holdon_area">
-        <button id="post-cu-button" class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit">
+        <button id="post-cu-button" class="btn btn-primary btn-sm mb-2 me-1 float-end" type="submit" onclick="fill_geodata(event)">
           {% if update %}Update{% else %}Create{% endif %}
         </button>
       </div>
@@ -102,9 +115,38 @@
     </fieldset>
   </form>
 </div>
+<div id="placeholder"></div>
 {% endblock content %}
 {% block script %}
 <script>
+
+  function fill_geodata(e) {
+    {% if card.is_geocard %}
+    {% if update %}
+    if (document.getElementById('id_update_geo').checked) {
+      e.preventDefault();
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(positionShow, positionError);
+      }
+    }
+    {% else %}
+    e.preventDefault();
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(positionShow, positionError);
+    }
+    {% endif %}
+    function positionError() {
+      document.getElementById('post_cu_form').submit();
+    }
+    function positionShow(position) {
+      document.getElementById('id_xlongitude').value = position.coords.longitude;
+      document.getElementById('id_ylatitude').value = position.coords.latitude;
+      document.getElementById('post_cu_form').submit();
+    }
+    {% else %}
+    // no need to submit again
+    {% endif %}
+  }
 
   function html_or_text_() {
     const hot = document.getElementById('id_html_or_text');
@@ -369,5 +411,10 @@
     </div>
     `
   }; 
+
+  {% if card.is_geocard %}
+  turn_on_geo()
+  {% endif %}
+
 </script>
 {% endblock script %}

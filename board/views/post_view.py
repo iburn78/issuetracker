@@ -1,4 +1,5 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse, resolve
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import (
@@ -13,20 +14,14 @@ from ..models import Card, Post
 from ..forms import PostForm, CommentForm
 # use info, success, warning to make it consistent with bootstrap5
 from django.contrib import messages
-from ..tools import post_image_resize, exception_log, CARDCONTENTLISTVIEW_PAGINATED_BY
-from django.urls import resolve
+from ..tools import post_image_resize, exception_log
 from django.views.static import serve
 import os
 from django.utils import timezone
 from PIL import Image
 from django.utils.html import strip_tags
+from django.http import HttpResponseRedirect
 
-
-def getpage_number(cid, pid):
-    ps = Post.objects.filter(card_id = cid).order_by('-date_posted')
-    for i, p in enumerate(ps):
-        if p.id == pid: 
-            return int(i/CARDCONTENTLISTVIEW_PAGINATED_BY)+1
 
 def postimageview(request, *args, **kwargs): 
     template_name = "board/image_view.html"
@@ -112,7 +107,6 @@ class PostCreateView(CreateView):
             form.instance.image5, form.instance.image6, form.instance.image7] = images
 
         form.instance.author = self.request.user
-        print(self.request.POST.get('html_or_text'))
         if self.request.POST.get('html_or_text')=='html':
             form.instance.is_html = True;
         else:
@@ -121,13 +115,13 @@ class PostCreateView(CreateView):
         new_post = form.save(commit=False)
         new_post.save()
         form.save_m2m()
+        
         post_image_resize(new_post)
         return redirect('card-content', self.kwargs.get('card_id'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['card'] = get_object_or_404(
-            Card, id=self.kwargs.get('card_id'))
+        context['card'] = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         context['num_images'] = 0
         context['image_range'] = list(range(1, 8))
         context['html_or_text'] = ""
@@ -177,7 +171,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                     exception_log(text)
 
         form.instance.num_images = len(images)
-        if self.request.POST.get('update_date_posted')=='checked':
+      
+        if self.request.POST.get('update_date_posted')=='update_date':
             form.instance.date_posted = timezone.now()
         for i in range(len(images), 7):
             images.append("")
@@ -193,13 +188,20 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         rev_post = form.save(commit=False)
         rev_post.save()
         form.save_m2m()
+
         post_image_resize(rev_post)
         
         cid = self.get_object().card.id
         if rev_post.content == '' and rev_post.num_images == 0:
             messages.warning(self.request, "Post deleted - no content and no images")
             rev_post.delete()
-        return redirect('card-content', cid)
+            return redirect('card-content', cid)
+
+        print(reverse('card-content-post-page', args={cid, rev_post.id}))
+        print(reverse('card-content-post-page', args={cid, rev_post.id}))
+        print(reverse('card-content-post-page', args={cid, rev_post.id}))
+
+        return HttpResponseRedirect(reverse('card-content-post-page', kwargs={'card_id': cid, 'post_id': rev_post.id}))
 
     def test_func(self):
         post = self.get_object()
@@ -285,7 +287,6 @@ class PostImageView(DetailView):
                     raise PermissionDenied
     
 
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = self.get_object()
@@ -295,9 +296,6 @@ class PostImageView(DetailView):
         context['meta_og_desc'] = strip_tags(post.get_preview_text()).strip()
         if post.image1s != '':
             context['meta_og_image'] = self.request.build_absolute_uri(post.image1s.url)
-        pn = getpage_number(post.card.id, post.id)
-        if pn != None:
-            context['page_num'] = pn
         return context
 
 

@@ -1,11 +1,11 @@
 {% extends "board/base.html" %}
 {% block content %}
 {% load static %}
-<div class="container-fluid m-0 p-0">
+<div class="container-fluid m-0 p-0 mt-1">
   <div class="row m-0 p-0">
   <div class="col m-0 p-0">
   {% if search_target == 'mylikes' %}
-  <span class="m-1"><span class="fw-bold">my liked posts:</span></span>
+  <span class="m-1"><span class="fw-bold">my likes{% if user.is_in_private_mode %} in my cards{% endif %}:</span></span>
   {% elif search_target == 'authorposts' %}
   <span class="m-1">posts of <span class="fw-bold">{{ authorname }}</span> 
     {% if cid %} 
@@ -56,9 +56,14 @@
             
             <div class="d-flex">
               {% if post.card.is_public %}
-              <span id="listpagecounter{{post.id}}" class="float-end me-2 small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17"> {{ post.likes.count }}{%endif%}</span>
+              <span id="listpagecounter{{post.id}}" class="float-end small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17" style="margin-right:2px;">{{ post.likes.count }}{%endif%}</span>
+              {% else %}
+              <span id="listpagecounter{{post.id}}" class="float-end small text-muted">{% if post.likes.count > 0 %}<img src="{% static 'icons/up-arrow.svg' %}" width="17" height="17">{%endif%}</span>
               {% endif %}
-              <span id="allrepliescounter{{post.id}}" class="float-end me-1 small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
+              <span id="allrepliescounter{{post.id}}" class="float-end small text-muted">{% if post.comment_set.count > 0 %}<img src="{% static 'icons/chat-left.svg' %}" class="ms-2" width="17" height="17"> {{ post.comment_set.count }}{%endif%}</span>
+              {% if post.card.is_geocard and post.xlongitude and post.ylatitude %}
+              <span class=""><img src="{% static 'icons/map-fill.svg' %}" class="ms-1 mb-1" width="13" height="13"></span>
+              {% endif %}
             </div>
           </div>
           
@@ -67,7 +72,7 @@
             {% if post.title != '' %}
             <p class="article-content text-dark text-break fw-bold fs-6 bg-gray-100 m-0 mb-1 p-0">{{ post.title }}</p>
             {% endif %}
-            <p class="article-content text-dark mb-1 text-break">{{ post.get_preview_text|truncatechars:150|striptags }}</p>
+            <p class="article-content text-dark mb-1 text-break">{{ post.content|truncatechars:150|striptags }}</p>
           </a>
           <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}

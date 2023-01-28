@@ -1,18 +1,18 @@
 <!-- this html is for to-be included in post_detail.html and card_content.html -->
 
 {% load static %}
-<div class="row m-0">
-  <div class="col-7 p-0">
+<div class="row m-0 mt-1">
+  <div class="col-8 p-0">
     <div class="clearfix">
       <img class="mt-1 ms-1 float-start user-image-small me-2" src="{{ post.author.profile.image.url }}">
       <a class="text-dark fw-bold" href="{% url 'author-posts' post.author.id %}">{{ post.author }}</a><br>
       <small class="text-muted">{{ post.date_posted|date:"M d, Y H:i" }}</small>
     </div>
   </div>
-  <div class="col-5 p-0 d-flex align-items-center justify-content-end">
+  <div class="col-4 p-0 d-flex align-items-center justify-content-end">
     {% if post.author == user or post.card.owner == user %}
-    <a class="me-2 float-end" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
-    <a class="me-2 float-end" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
+    <a class="me-2" href="{% url 'post-update' post.id %}"><img src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
+    <a class="me-2" data-bs-toggle="collapse" data-bs-target="#delete_post{{post.id}}"><img src="{% static 'icons/trash.svg' %}" width="24" height="24"></a>
     {% endif %}
     <span id="modal_close_top"></span>
   </div>
@@ -34,7 +34,6 @@
 </div>
 
 <!-- delete collapse part end -->
-
 <div id="divider-bar" class="m-0" style="background-color:{{post.card.card_color}}"></div>
 <div class="row m-0">
   <div class="col my-1 pe-1">
@@ -113,7 +112,7 @@
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}
-    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
+    <div class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</div>
   </div>
   {% elif post.image1s %}
   <div class="col-xl-8 p-0 mt-1">
@@ -123,20 +122,27 @@
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}
-    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
+    <div class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</div>
   </div>
   {% else %}
   <div class="col p-0">
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}
-    <p class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</p>
+    <div class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</div>
   </div>
   {% endif %}
 </div>
 
+<div hidden id="id_coord{{post.id}}" class="alert alert-warning p-1 m-1" role="alert" onclick="event.preventDefault(); document.getElementById('id_coord{{post.id}}').setAttribute('hidden', '');">
+  x: {{ post.xlongitude }}, y: {{ post.ylatitude }} <!-- LATER IMPLEMENT THIS AS A MAP -->
+</div>
+
 <div class="row m-0 mt-1 bg-gray-100">
   <div class="col p-1 m-0">
+    {% if card.is_geocard and post.xlongitude and post.ylatitude %}
+    <a href="" class="small text-muted" onclick="event.preventDefault(); document.getElementById('id_coord{{post.id}}').removeAttribute('hidden');"><img src="{% static 'icons/map-fill.svg' %}" class="ms-1 mb-1" width="17" height="17"> location</a>
+    {% endif %}
     {% if post.card.is_public %}
     <a href class="p-0 m-0 ms-2 me-1 float-end" data-bs-toggle="collapse" data-bs-target="#post_options{{post.id}}"><img src="{% static 'icons/three-dots.svg' %}" width="22" height="22"></a>
     <span id="vote_meter_post{{post.id}}">
@@ -160,10 +166,17 @@
       <span class="p-0 m-0 float-end"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
       {% endif %}
     </span>
-    <a href class="p-0 m-0 me-2 float-end" onclick="share_post(event, {{post.id}}, '{{post.get_preview_text|truncatechars:30|striptags}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
+    <a href class="p-0 m-0 me-2 float-end" onclick="share_post(event, {{post.id}}, '{{post.content|truncatechars:30|striptags}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
     {% else %}
-    <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" onclick="">publish</a>
-    <a href="{% url 'card-select' %}?rt=move&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" onclick="">move</a>
+    <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" style="width: 40px;" onclick="">pub</a>
+    <a href="{% url 'card-select' %}?rt=move&cid={{card.id}}&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" style="width: 40px;" onclick="">mov</a>
+    <span id="vote_meter_post{{post.id}}">
+      {% if user in post.likes.all %}
+      <span class="p-0 m-0 me-1 float-end" onclick="vote_click({{post.id}}, 'up', 'post', false)"><img src="{% static 'icons/up-arrow-fill.svg' %}" width="22" height="22"></span>
+      {% else %}
+      <span class="p-0 m-0 me-1 float-end" onclick="vote_click({{post.id}}, 'up', 'post', false)"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
+      {% endif %}
+    </span>
     {% endif %}
   </div>
 </div>

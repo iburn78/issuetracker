@@ -238,9 +238,9 @@ class SearchView_MyLikes(LoginRequiredMixin, ListView):
     
     def get_queryset(self):
         if self.request.user.is_authenticated and self.request.user.is_in_private_mode:
-            self.request.user.is_in_private_mode = False
-            self.request.user.save()
-        return self.request.user.liked_post_set.distinct().order_by('-date_posted')
+            return self.request.user.liked_post_set.filter(card__is_public=False).distinct().order_by('-date_posted')
+        elif self.request.user.is_authenticated:
+            return self.request.user.liked_post_set.filter(card__is_public=True).distinct().order_by('-date_posted')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
