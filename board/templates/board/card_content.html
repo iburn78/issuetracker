@@ -333,7 +333,14 @@
   window.addEventListener('popstate', (e) => {
     e.preventDefault();
     history.pushState(null, null, window.top.location.pathname + window.top.location.search);
-    document.querySelectorAll(".modal.show #modal_close_top .btn-close").forEach((e) => e.click());
+
+    let postclosebtns = document.querySelectorAll(".modal.show #modal_close_top .btn-close");
+    if (postclosebtns.length > 0) { postclosebtns.forEach(e => e.click()); }
+    else { 
+      cardclosebtn = document.querySelector("#card_content_entire_div .btn-close");
+      if (cardclosebtn != null) { cardclosebtn.click(); }        
+      else { }
+    }
     // document.getElementById('backbutton_notification').innerText = 'message'; 
   });
 
