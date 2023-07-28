@@ -333,6 +333,7 @@
   window.addEventListener('popstate', (e) => {
     e.preventDefault();
     history.pushState(null, null, window.top.location.pathname + window.top.location.search);
+    document.querySelectorAll(".modal.show #modal_close_top .btn-close").forEach((e) => e.click());
     // document.getElementById('backbutton_notification').innerText = 'message'; 
   });
 
