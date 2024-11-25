@@ -36,9 +36,9 @@ class Command(BaseCommand):
         if kwargs['privatize']:
             card_keyword = kwargs.get('privatize')
             try: 
-                card = Card.objects.get(title__icontains=card_keyword)  # Use `icontains` for case-insensitive search
+                card = Card.objects.filter(is_public=True).get(title__icontains=card_keyword)  # Use `icontains` for case-insensitive search
             except ObjectDoesNotExist:
-                self.stdout.write(self.style.ERROR(f"No card found with the keyword."))
+                self.stdout.write(self.style.ERROR(f"No card found with the keyword or there is no public card."))
                 return None
             except MultipleObjectsReturned:
                 self.stdout.write(self.style.ERROR(f"Multiple cards found with the keyword."))
