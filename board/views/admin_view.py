@@ -66,7 +66,7 @@ class ReportView(LoginRequiredMixin, ListView):
 
 
 def exception_view(request):
-    exp_file = os.path.join(settings.BASE_DIR, 'etc/exception_log.txt')
+    exp_file = os.path.join(settings.BASE_DIR, 'etc', 'exception_log.txt')
     if request.user.is_authenticated and request.user.is_public_card_manager:
         if request.method == "GET":
             with open(exp_file) as exp_log:
@@ -87,6 +87,6 @@ def exception_view(request):
 def exception_counter(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         if request.GET.get('request_type') == 'count':
-            exp_file = os.path.join(settings.BASE_DIR, 'etc/exception_log.txt')
+            exp_file = os.path.join(settings.BASE_DIR, 'etc', 'exception_log.txt')
             with open(exp_file) as exp_log:
                 return JsonResponse({'exception_count': len(exp_log.readlines())}, status=200)

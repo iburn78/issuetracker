@@ -167,6 +167,6 @@ def exception_log(text):
 
 
 def exception_count(): 
-    exp_file = os.path.join(settings.BASE_DIR, 'etc/exception_log.txt')
+    exp_file = os.path.join(settings.BASE_DIR, 'etc', 'exception_log.txt')
     with open(exp_file) as exp_log:
         return len(exp_log.readlines())
