@@ -6,6 +6,10 @@ from board.models import Card, Post
 from django.core.files import File
 from board.tools import *
 
+# the following code creates only basic posts:
+# should not try to assign likes, dislikes, tags as they require m2m save. 
+# also the author is fixed with id = 1
+
 author_ID = 1
 class Command(BaseCommand):
     help = "Creating a Post with images for the author Andy"
