@@ -64,6 +64,15 @@
         {% if post.image7s %}
         <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="6"></button>
         {% endif %}
+        {% if post.image8s %}
+        <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="7"></button>
+        {% endif %}
+        {% if post.image9s %}
+        <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="8"></button>
+        {% endif %}
+        {% if post.image10s %}
+        <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="9"></button>
+        {% endif %}
       </div>
       <div class="carousel-inner">
         <div class="carousel-item active">
@@ -95,6 +104,21 @@
         {% if post.image7s %}
         <div class="carousel-item">
           <a href="{% url 'post-images' post.id %}"><img src="{{ post.image7s.url }}" class="d-block w-100 rounded"></a>
+        </div>
+        {% endif %}
+        {% if post.image8s %}
+        <div class="carousel-item">
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image8s.url }}" class="d-block w-100 rounded"></a>
+        </div>
+        {% endif %}
+        {% if post.image9s %}
+        <div class="carousel-item">
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image9s.url }}" class="d-block w-100 rounded"></a>
+        </div>
+        {% endif %}
+        {% if post.image10s %}
+        <div class="carousel-item">
+          <a href="{% url 'post-images' post.id %}"><img src="{{ post.image10s.url }}" class="d-block w-100 rounded"></a>
         </div>
         {% endif %}
       </div>

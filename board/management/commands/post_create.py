@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('card_id', type=int, help="ID of the Card to associate the post with")
-        parser.add_argument('images', nargs='+', type=str, help="Paths to local images (up to 7)")
+        parser.add_argument('images', nargs='+', type=str, help="Paths to local images (up to 10)")
 
     def handle(self, *args, **options):
         card_id = options['card_id']
@@ -35,14 +35,14 @@ class Command(BaseCommand):
             card=card,
             author=user,
             content="CONTENT HAS TO BE GIVEN",
-            num_images=min(len(image_paths), 7),
+            num_images=min(len(image_paths), 10),
             is_html=False,
         )
 
         # Step 4: Attach Images
-        image_fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7']
+        image_fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7', 'image8', 'image9', 'image10']
         open_files = []
-        for i, img_path in enumerate(image_paths[:7]):  # Max 7 images
+        for i, img_path in enumerate(image_paths[:10]):  # Max 10 images
             if not os.path.exists(img_path):
                 self.stdout.write(self.style.WARNING(f"Image path does not exist: {img_path}"))
                 continue

@@ -44,7 +44,11 @@
     <div class="row">
       {% for img in images %}
       <div class="col-auto d-flex justify-content-left align-items-top m-1">
+        {% if forloop.counter == 10 %}
+        <i class="bi bi-dash-square me-1 text-dark"></i>
+        {% else %}
         <i class="bi bi-{{forloop.counter}}-square me-1 text-dark"></i>
+        {% endif %}
         <a href="{% url 'postimage-view' post.id forloop.counter %}">
         <img src="{{img.url}}" class="post-images-list"></a>
       </div>

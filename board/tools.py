@@ -86,9 +86,9 @@ def card_image_resize(form):
 
 
 def post_image_resize(post) -> None:
-    images = [post.image1, post.image2, post.image3, post.image4, post.image5, post.image6, post.image7]
-    th_images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s]
-    for i in range(0, 7):
+    images = [post.image1, post.image2, post.image3, post.image4, post.image5, post.image6, post.image7, post.image8 ,post.image9, post.image10]
+    th_images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s, post.image8s, post.image9s, post.image10s]
+    for i in range(0, 10):
         try:
             if th_images[i].name != "":
                 th_images[i].delete()

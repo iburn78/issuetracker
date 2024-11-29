@@ -43,7 +43,11 @@
       <div id="image_preview_section" class="row m-0 p-0 row-cols-auto text-muted">
         {% for img in image_range %}
         <div {% if forloop.counter > num_images %}hidden{% endif %} id="image-preview{{forloop.counter}}-div" class="col m-0 p-0 align-top">
+          {% if forloop.counter == 10 %}
+          <i class="bi bi-dash-square-fill me-1 text-dark"></i>
+          {% else %}
           <i class="bi bi-{{forloop.counter}}-square-fill me-1 text-dark"></i>
+          {% endif %}
           <div class="row m-0 p-0">
             <div class="col m-0 p-0">
             {% if forloop.counter <= num_images %}
@@ -57,7 +61,7 @@
               {% if forloop.counter > 1%}
               <button class="btn btn-sm px-1 py-0 mt-1 mb-2" onclick="move_left(event, {{forloop.counter}})"><img src="{% static 'icons/chevron-left.svg' %}" width="14" height="14"></button>
               {% endif %}
-              {% if forloop.counter < 7%}
+              {% if forloop.counter < 10%}
               <button class="btn btn-sm px-1 py-0 mt-1 mb-2 me-1" onclick="move_right(event, {{forloop.counter}})"><img src="{% static 'icons/chevron-right.svg'%}" width="14" height="14"></button>
               {% endif %}
             </div>
@@ -73,6 +77,9 @@
       {{ form.image5_input }}
       {{ form.image6_input }}
       {{ form.image7_input }}
+      {{ form.image8_input }}
+      {{ form.image9_input }}
+      {{ form.image10_input }}
       <input hidden id="id_mimages" type="file" multiple name="mimages" class="form-control" accept="image/*" onchange="updatePreview_multi(this)" >
       <input hidden id="id_mimage_keys" type="text" name="mimage_keys" class="form-control">
       <div class="d-flex align-items-center ms-0 m-1 mt-2">
@@ -184,6 +191,9 @@
       case 'E': return '5';
       case 'F': return '6';
       case 'G': return '7';
+      case 'H': return '8';
+      case 'I': return '9';
+      case 'J': return '10';   
       default: return '';
     }
   }
@@ -197,23 +207,35 @@
       case 'e': return '5';
       case 'f': return '6';
       case 'g': return '7';
+      case 'h': return '8';
+      case 'i': return '9';
+      case 'j': return '10';   
       default: return '';
     }
   }
 
   function charnum_in_nth(n) {
     let c = mik.value[n-1];
-    if ( c > 0 && c < 8) {
+    if ( c > 0 && c < 10) { 
       return c;
     }
+    else if ( c == 0 ) {
+      return 10;
+    } 
     else {
       return low_to_num(c) + CAP_to_num(c);
     }
   }
 
   function num_to_loc(s, n) { // s: mik.value, n: integer 
+    if (n == 10) {
+      m = 0; 
+    }
+    else {
+      m = n;
+    }
     for (i=0; i<s.length; i++) {
-      if (s[i] == n || s[i] == CAP[n-1] || s[i] == low[n-1]) {
+      if (s[i] == m || s[i] == CAP[n-1] || s[i] == low[n-1]) {
         return i+1;
       }
     }
@@ -221,15 +243,15 @@
   }
 
   // logic of mik
-  // ABCDEFG: orignal images or replaced images
-  // abcdefg: deleted images
-  // 1234567: multiple selection images
+  // ABCDEFGHIJ: orignal images or replaced images
+  // abcdefghij: deleted images
+  // 1234567890: multiple selection images             
   
-  const CAP = 'ABCDEFG';
-  const low = 'abcdefg';
+  const CAP = 'ABCDEFGHIJ';
+  const low = 'abcdefghij';
 
   const mik = document.getElementById('id_mimage_keys');
-  mik.value = CAP.substring(0, {{num_images}})+low.substring({{num_images}}, 7);
+  mik.value = CAP.substring(0, {{num_images}})+low.substring({{num_images}}, 10); 
 
   function addimg(event, n) {
     event.preventDefault();
@@ -246,10 +268,11 @@
     delimg_(n);
     
     let t = mik.value[n-1];
-    if ( t > 0 && t < 8) {
+    if ( t > 0 && t < 10) {
       mik.value = mik.value.replace(t, low[t-1]);
-    }
-    else {
+    } else if ( t == 0 ) { // 10
+      mik.value = mik.value.replace(t, low[9]);
+    } else {
       mik.value = mik.value.replace(t, t.toLowerCase());
     }
   }
@@ -271,13 +294,13 @@
   }
 
   function delimg_all() {
-    for (i=1; i<8; i++) {
+    for (i=1; i<=10; i++) {
       delimg_(i)
     }
   }
   
   function updatePreview(input, num_text) {
-    let n = num_text[5]; 
+    let n = num_text.match(/\d+/)[0]
     let loc = num_to_loc(mik.value, n);
     let reader = new FileReader();
     reader.readAsDataURL(input.files[0]);
@@ -291,10 +314,11 @@
       bsCollapse.hide();
     }
     let t = mik.value[loc-1];
-    if ( t > 0 && t < 8) {
+    if ( t > 0 && t < 10) {
       mik.value = mik.value.replace(t, CAP[t-1]);
-    }
-    else {
+    } else if ( t == 0 ) { // 10
+      mik.value = mik.value.replace(t, CAP[9]);
+    } else {
       mik.value = mik.value.replace(t, t.toUpperCase());
     }
     let del_checkbox = document.getElementById("image"+n+"_input-clear_id");
@@ -307,10 +331,10 @@
     const files = input.files;
     const arr = Array.from(files);
     delimg_all(); 
-    mik.value = '1234567'.substring(0, arr.length)+low.substring(arr.length, 7);
+    mik.value = '1234567890'.substring(0, arr.length)+low.substring(arr.length, 10); 
     
     arr.forEach((file, index) => {
-      if (index < 7) {
+      if (index < 10) {
         let n = (index+1).toString();
         let reader = new FileReader();
         reader.readAsDataURL(file);

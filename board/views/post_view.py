@@ -36,6 +36,9 @@ def postimageview(request, *args, **kwargs):
     elif img_no == 5: target = post.image5.url
     elif img_no == 6: target = post.image6.url
     elif img_no == 7: target = post.image7.url
+    elif img_no == 8: target = post.image8.url
+    elif img_no == 9: target = post.image9.url
+    elif img_no == 10: target = post.image10.url     
     else: 
         raise PermissionDenied
     context['post'] = post
@@ -76,15 +79,19 @@ class PostCreateView(CreateView):
     def form_valid(self, form):
         images = []
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
-                           form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
+                           form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], 
+                           form.cleaned_data['image7_input'], form.cleaned_data['image8_input'], form.cleaned_data['image9_input'], form.cleaned_data['image10_input']]
         
         mkeys = list(form.cleaned_data['mimage_keys'])
-        mimages_input = self.request.FILES.getlist('mimages')[:7] # multiple file selection does not perform image validation
+        mimages_input = self.request.FILES.getlist('mimages')[:10] # multiple file selection does not perform image validation
 
-        AN = {'A': 1, 'B': 2, 'C':3, 'D':4, 'E':5, 'F':6, 'G':7}
+        AN = {'A': 1, 'B': 2, 'C':3, 'D':4, 'E':5, 'F':6, 'G':7, 'H':8, 'I':9, 'J':10}
         for i in range(0, len(mkeys)): 
             if mkeys[i].isdigit():
-                img = mimages_input[int(mkeys[i])-1]
+                l = int(mkeys[i])
+                if l == 0: 
+                    l = 10
+                img = mimages_input[l-1]
                 try: 
                     Image.open(img)
                     images.append(img)
@@ -100,11 +107,11 @@ class PostCreateView(CreateView):
             return redirect('post-create', self.kwargs.get('card_id'))
 
         form.instance.num_images = len(images)
-        for i in range(len(images), 7):
+        for i in range(len(images), 10):
             images.append("")
             
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
-            form.instance.image5, form.instance.image6, form.instance.image7] = images
+            form.instance.image5, form.instance.image6, form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10] = images
 
         form.instance.author = self.request.user
         if self.request.POST.get('html_or_text')=='html':
@@ -123,7 +130,7 @@ class PostCreateView(CreateView):
         context = super().get_context_data(**kwargs)
         context['card'] = get_object_or_404(Card, id=self.kwargs.get('card_id'))
         context['num_images'] = 0
-        context['image_range'] = list(range(1, 8))
+        context['image_range'] = list(range(1, 11))  
         context['html_or_text'] = ""
         return context
 
@@ -139,17 +146,23 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def form_valid(self, form):
         images = []
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
-                           form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], form.cleaned_data['image7_input']]
+                           form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], 
+                           form.cleaned_data['image7_input'], form.cleaned_data['image8_input'], form.cleaned_data['image9_input'], form.cleaned_data['image10_input']]
 
         original_images = [form.instance.image1, form.instance.image2, form.instance.image3,
-                           form.instance.image4, form.instance.image5, form.instance.image6, form.instance.image7]
+                           form.instance.image4, form.instance.image5, form.instance.image6, 
+                           form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10]
         
         mkeys = list(form.cleaned_data['mimage_keys'])
-        mimages_input = self.request.FILES.getlist('mimages')[:7]
-        AN = {'A': 1, 'B': 2, 'C':3, 'D':4, 'E':5, 'F':6, 'G':7}
+        mimages_input = self.request.FILES.getlist('mimages')[:10]
+
+        AN = {'A': 1, 'B': 2, 'C':3, 'D':4, 'E':5, 'F':6, 'G':7, 'H':8, 'I':9, 'J':10}
         for i in range(0, len(mkeys)): 
-            if mkeys[i].isdigit(): 
-                img = mimages_input[int(mkeys[i])-1]
+            if mkeys[i].isdigit():
+                l = int(mkeys[i])
+                if l == 0: 
+                    l = 10
+                img = mimages_input[l-1]
                 try: 
                     Image.open(img)
                     images.append(img)
@@ -174,11 +187,11 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
       
         if self.request.POST.get('update_date_posted')=='update_date':
             form.instance.date_posted = timezone.now()
-        for i in range(len(images), 7):
+        for i in range(len(images), 10):
             images.append("")
 
         [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
-            form.instance.image5, form.instance.image6, form.instance.image7] = images
+            form.instance.image5, form.instance.image6, form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10] = images
 
         form.instance.author = self.get_object().author
         if self.request.POST.get('html_or_text')=='html':
@@ -217,8 +230,8 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         num_images = post.num_images
         context['num_images'] = num_images
         simages = [post.image1s, post.image2s, post.image3s, 
-            post.image4s, post.image5s, post.image6s, post.image7s]
-        context['image_range'] = simages[0:num_images] + list(range(num_images+1, 8))
+            post.image4s, post.image5s, post.image6s, post.image7s, post.image8s, post.image9s, post.image10s]
+        context['image_range'] = simages[0:num_images] + list(range(num_images+1, 11))  
         if post.is_html:
             context['html_or_text'] = 'checked'
         else:
@@ -234,6 +247,9 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         initial['image5_input'] = self.object.image5
         initial['image6_input'] = self.object.image6
         initial['image7_input'] = self.object.image7
+        initial['image8_input'] = self.object.image8
+        initial['image9_input'] = self.object.image9
+        initial['image10_input'] = self.object.image10
         return initial
 
 
@@ -290,7 +306,7 @@ class PostImageView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         post = self.get_object()
-        images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s]
+        images = [post.image1s, post.image2s, post.image3s, post.image4s, post.image5s, post.image6s, post.image7s, post.image8s, post.image9s, post.image10s]
         context['images'] = images[0:post.num_images]
         context['meta_og_title'] = post.title.strip()
         context['meta_og_desc'] = strip_tags(post.get_preview_text()).strip()

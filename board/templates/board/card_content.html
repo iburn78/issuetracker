@@ -149,6 +149,27 @@
                 </a>
               </div>
               {% endif %}
+              {% if post.image8s %}
+              <div class="carousel-item">
+                <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+                  <img class="img-fluid post-list-image" src="{{ post.image8s.url }}">
+                </a>
+              </div>
+              {% endif %}
+              {% if post.image9s %}
+              <div class="carousel-item">
+                <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+                  <img class="img-fluid post-list-image" src="{{ post.image9s.url }}">
+                </a>
+              </div>
+              {% endif %}
+              {% if post.image10s %}
+              <div class="carousel-item">
+                <a href="" data-bs-toggle="modal" data-bs-target="#collapsePost{{post.id}}">
+                  <img class="img-fluid post-list-image" src="{{ post.image10s.url }}">
+                </a>
+              </div>
+              {% endif %}
             </div>
           </div>
         </div>

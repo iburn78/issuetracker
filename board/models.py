@@ -116,6 +116,9 @@ class Post(models.Model):
     image5 = models.ImageField(upload_to=path_to_imgs, blank=True)
     image6 = models.ImageField(upload_to=path_to_imgs, blank=True)
     image7 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image8 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image9 = models.ImageField(upload_to=path_to_imgs, blank=True)
+    image10 = models.ImageField(upload_to=path_to_imgs, blank=True)
 
     image1s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
     image2s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
@@ -124,6 +127,9 @@ class Post(models.Model):
     image5s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
     image6s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
     image7s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image8s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image9s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
+    image10s = models.ImageField(upload_to=path_to_imgs_th, blank=True)
 
     title = models.CharField(blank=True, max_length=70)
     is_html = models.BooleanField(default=False)
@@ -135,9 +141,9 @@ class Post(models.Model):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        images = [self.image1, self.image2, self.image3, self.image4, self.image5, self.image6, self.image7]
-        th_images = [self.image1s, self.image2s, self.image3s, self.image4s, self.image5s, self.image6s, self.image7s]
-        for i in range(0, 7):
+        images = [self.image1, self.image2, self.image3, self.image4, self.image5, self.image6, self.image7, self.image8, self.image9, self.image10]
+        th_images = [self.image1s, self.image2s, self.image3s, self.image4s, self.image5s, self.image6s, self.image7s, self.image8s, self.image9s, self.image10s]
+        for i in range(0, 10):
             try:
                 if images[i].name != "":
                     images[i].delete()
