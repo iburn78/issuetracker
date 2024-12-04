@@ -71,7 +71,11 @@
         <a class="me-2 float-end" href="{% url 'card-update' card_id %}"><img class="js-toggle-except" src="{% static 'icons/gear-fill.svg' %}" width="24" height="24"></a>
         {% endif %}
         {% if card.desc %}
+        {% if card.is_public %}
+        {{ card.desc | safe }}
+        {% else %}
         {{ card.desc }}
+        {% endif %}
         {% else %}
         <span class="text-muted">no card description</span>
         {% endif %}
