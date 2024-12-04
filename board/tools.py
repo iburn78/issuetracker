@@ -7,6 +7,7 @@ from django.core.files.base import ContentFile
 from django.utils import timezone
 from pathlib import Path
 from random import random
+from unicodedata import normalize
 
 
 
@@ -75,6 +76,9 @@ def card_image_resize(form):
             exception_log(text)
         img = Image.open(form.cleaned_data['image_input'])
         filename = os.path.basename(form.cleaned_data['image_input'].name)
+
+    # **Normalize the filename to handle non-ASCII characters**
+    filename = normalize('NFC', filename) 
 
     img_io = BytesIO()
     ft = img.format
@@ -155,6 +159,8 @@ def post_image_resize(post) -> None:
             img = ImageOps.exif_transpose(img)
             img.save(img_io, format=ft)
             fn = os.path.basename(images[i].file.name)
+            # Normalize the filename to handle non-ASCII characters
+            fn = normalize('NFC', fn)  
             fnr = Path(fn).stem + '_' + rnd + Path(fn).suffix
             th_images[i].save(fnr, ContentFile(img_io.getvalue()))
 
