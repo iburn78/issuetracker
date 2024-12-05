@@ -21,14 +21,16 @@ def filename_gen_userid(userid, filename):
     for ch in userid:
         res += str(ord(ch))
     current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-    random_number = str(randint(1000, 9999))
-    return f"{res}_{current_datetime}_{random_number}_{filename}"
+    random_number = str(randint(10000, 99999))
+    ext = os.path.splitext(filename)[1]
+    return f"{res}_{current_datetime}_{random_number}{ext}"
 
 def filename_gen_randomize(userid, filename):
     res = str(abs(hash(str(userid))))[:7]
     current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
-    random_number = str(randint(1000, 9999))
-    return f"{res}_{current_datetime}_{random_number}_{filename}"
+    random_number = str(randint(10000, 99999))
+    ext = os.path.splitext(filename)[1]
+    return f"{res}_{current_datetime}_{random_number}{ext}"
 
 def path_to_card_imgs(instance, filename):
     if instance.is_public == True: 
