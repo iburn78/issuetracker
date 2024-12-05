@@ -143,7 +143,6 @@ class PostCreateView(CreateView):
                 # Rollback if there's an error in any part of the transaction
                 exception_log(f"Error in form_valid transaction: {e}")
                 messages.error(self.request, "There was an error processing your request.")
-                transaction.rollback()  # Explicitly rollback the transaction if something goes wrong
                 return redirect('post-create', self.kwargs.get('card_id'))
 
     def get_context_data(self, **kwargs):
@@ -250,7 +249,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             except Exception as e:
                 # Rollback if there's an error in any part of the transaction
                 exception_log(f"Error in form_valid transaction: {e}")
-                transaction.rollback()  # Explicitly rollback the transaction if something goes wrong
                 messages.error(self.request, "There was an error processing your request.")
                 return redirect('post-update', self.get_object().id)
 
