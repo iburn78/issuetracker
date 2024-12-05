@@ -69,7 +69,7 @@ def profile(request):
                 messages.success(request, 'Your account has been updated')
                 return redirect('profile')
         else:
-            messages.error(request, "There was an error with your form submission.")
+            messages.warning(request, "There was an error with your form submission.")
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile, initial={'picture': request.user.profile.image})

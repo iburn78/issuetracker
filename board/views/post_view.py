@@ -126,12 +126,15 @@ class PostCreateView(CreateView):
                         img_content = ContentFile(img.read())  # Read the image content
                         getattr(form.instance, f'image{idx+1}').save(filename, img_content)
 
+
                 form.instance.author = self.request.user
                 if self.request.POST.get('html_or_text')=='html':
                     form.instance.is_html = True;
                 else:
                     form.instance.is_html = False;
+                exception_log(f"location 1: {form.instance}")
                 form.instance.card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
+                exception_log(f"location 2: {form.instance.card}")
                 new_post = form.save(commit=False)
                 new_post.save()
                 form.save_m2m()
@@ -140,9 +143,8 @@ class PostCreateView(CreateView):
                 return redirect('card-content', self.kwargs.get('card_id'))
 
             except Exception as e:
-                # Rollback if there's an error in any part of the transaction
                 exception_log(f"Error in form_valid transaction: {e}")
-                messages.error(self.request, "There was an error processing your request.")
+                messages.warning(self.request, "There was an error processing your request.")
                 return redirect('post-create', self.kwargs.get('card_id'))
 
     def get_context_data(self, **kwargs):
@@ -249,7 +251,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             except Exception as e:
                 # Rollback if there's an error in any part of the transaction
                 exception_log(f"Error in form_valid transaction: {e}")
-                messages.error(self.request, "There was an error processing your request.")
+                messages.warning(self.request, "There was an error processing your request.")
                 return redirect('post-update', self.get_object().id)
 
 
