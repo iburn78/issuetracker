@@ -163,7 +163,7 @@ def post_image_resize(post) -> None:
 def exception_log(text):
     print("----->>>>>> ", text)
     logfilepath = os.path.join(settings.BASE_DIR, 'etc')
-    with open(os.path.join(logfilepath, 'exception_log.txt'), 'a') as logfile:
+    with open(os.path.join(logfilepath, 'exception_log.txt'), 'a', encoding='utf-8') as logfile:
         now = timezone.now().strftime("[%Y-%m-%d %H:%M:%S]")
         logfile.write(now + " " + text + "\n")
 
