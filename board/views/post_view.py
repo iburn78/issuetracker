@@ -117,6 +117,7 @@ class PostCreateView(CreateView):
 
         # Start atomic transaction
         with transaction.atomic():  # Start atomic block to ensure all actions are done atomically
+            exception_log(f"location 0: {form.instance}")
             try:
                 # Rename and save images with simple names (image1, image2, etc.)
                 for idx, img in enumerate(images):
