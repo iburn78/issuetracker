@@ -88,5 +88,5 @@ def exception_counter(request):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         if request.GET.get('request_type') == 'count':
             exp_file = os.path.join(settings.BASE_DIR, 'etc', 'exception_log.txt')
-            with open(exp_file) as exp_log:
+            with open(exp_file, 'r', encoding='utf-8') as exp_log:
                 return JsonResponse({'exception_count': len(exp_log.readlines())}, status=200)
