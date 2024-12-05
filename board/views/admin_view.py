@@ -69,7 +69,7 @@ def exception_view(request):
     exp_file = os.path.join(settings.BASE_DIR, 'etc', 'exception_log.txt')
     if request.user.is_authenticated and request.user.is_public_card_manager:
         if request.method == "GET":
-            with open(exp_file) as exp_log:
+            with open(exp_file, 'r', encoding='utf-8') as exp_log:
                 lines = []
                 for line in exp_log:
                     lines.append(line)
