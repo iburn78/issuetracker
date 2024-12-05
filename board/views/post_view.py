@@ -119,15 +119,12 @@ class PostCreateView(CreateView):
         with transaction.atomic():  # Start atomic block to ensure all actions are done atomically
             try:
                 # Rename and save images with simple names (image1, image2, etc.)
-                # for idx, img in enumerate(images):
-                #     if img:  # Only process if img is not empty
-                #         _, ext = os.path.splitext(img.name)
-                #         filename = f"image{idx+1}{ext}"
-                #         img_content = ContentFile(img.read())  # Read the image content
-                #         getattr(form.instance, f'image{idx+1}').save(filename, img_content)
-
-                [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
-                    form.instance.image5, form.instance.image6, form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10] = images
+                for idx, img in enumerate(images):
+                    if img:  # Only process if img is not empty
+                        _, ext = os.path.splitext(img.name)
+                        filename = f"image{idx+1}{ext}"
+                        img_content = ContentFile(img.read())  # Read the image content
+                        getattr(form.instance, f'image{idx+1}').save(filename, img_content)
 
                 form.instance.author = self.request.user
                 if self.request.POST.get('html_or_text')=='html':
