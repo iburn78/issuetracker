@@ -5,6 +5,7 @@ from users.models import User
 from board.models import Card, Post
 from django.core.files import File
 from board.tools import *
+from django.db import transaction
 
 # the following code creates only basic posts:
 # should not try to assign likes, dislikes, tags as they require m2m save. 
@@ -38,24 +39,26 @@ class Command(BaseCommand):
             num_images=min(len(image_paths), 10),
             is_html=False,
         )
+        with transaction.atomic():
+            # Step 4: Attach Images
+            image_fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7', 'image8', 'image9', 'image10']
+            open_files = []
+            for i, img_path in enumerate(image_paths[:10]):  # Max 10 images
+                if not os.path.exists(img_path):
+                    self.stdout.write(self.style.WARNING(f"Image path does not exist: {img_path}"))
+                    continue
+                img_file = open(img_path, 'rb')
+                open_files.append(img_file)
+                _, ext = os.path.splitext(img_path)
+                filename = f"image{i+1}{ext}"
+                setattr(post, image_fields[i], File(img_file, name=filename))
 
-        # Step 4: Attach Images
-        image_fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7', 'image8', 'image9', 'image10']
-        open_files = []
-        for i, img_path in enumerate(image_paths[:10]):  # Max 10 images
-            if not os.path.exists(img_path):
-                self.stdout.write(self.style.WARNING(f"Image path does not exist: {img_path}"))
-                continue
-            img_file = open(img_path, 'rb')
-            open_files.append(img_file)
-            setattr(post, image_fields[i], File(img_file, name=Path(img_path).name))
+            # Step 5: Save the Post
+            post.save()
 
-        # Step 5: Save the Post
-        post.save()
+            # Step 6: Resize Images
+            post_image_resize(post)  # Resize and process images (e.g., create thumbnails)
 
-        # Step 6: Resize Images
-        post_image_resize(post)  # Resize and process images (e.g., create thumbnails)
-
-        self.stdout.write(self.style.SUCCESS(f"Post created successfully with ID {post.id}!"))
-        for file_obj in open_files:
-            file_obj.close()
+            self.stdout.write(self.style.SUCCESS(f"Post created successfully with ID {post.id}!"))
+            for file_obj in open_files:
+                file_obj.close()

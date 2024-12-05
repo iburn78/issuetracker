@@ -20,7 +20,7 @@ import os
 from django.http import JsonResponse, HttpResponseRedirect
 from django.utils import timezone
 from django.db.models import F, Q
-
+from django.db import transaction
 
 class CardListView(ListView):
     model = Card
@@ -163,14 +163,15 @@ class CardCreateView(LoginRequiredMixin, CreateView):
     template_name = 'board/card_create.html'
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
-        card_image_resize(form)
-        new_card = form.save(commit=False)
-        new_card.save()
-        form.save_m2m()
-        if self.request.user.is_authenticated:
-            self.request.user.is_in_private_mode = not new_card.is_public
-            self.request.user.save()
+        with transaction.atomic():
+            form.instance.owner = self.request.user
+            card_image_resize(form)
+            new_card = form.save(commit=False)
+            new_card.save()
+            form.save_m2m()
+            if self.request.user.is_authenticated:
+                self.request.user.is_in_private_mode = not new_card.is_public
+                self.request.user.save()
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
@@ -284,12 +285,13 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'board/card_create.html'
 
     def form_valid(self, form):
-        card_image_resize(form)
-        newcard = form.save(commit=False)
-        if form.cleaned_data['toggle_official']:
-            newcard.is_official = not newcard.is_official
-        newcard.save()
-        form.save_m2m()
+        with transaction.atomic():
+            card_image_resize(form)
+            newcard = form.save(commit=False)
+            if form.cleaned_data['toggle_official']:
+                newcard.is_official = not newcard.is_official
+            newcard.save()
+            form.save_m2m()
         return super().form_valid(form)
 
     def get_success_url(self):

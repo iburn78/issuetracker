@@ -8,10 +8,11 @@ from users.models import User
 from .tools import *
 import os
 from django.conf import settings
-from random import choice
+from random import choice, randint
 from os.path import join as path_join
 from os import listdir
 from os.path import isfile
+from datetime import datetime
 
 
 def filename_gen_userid(userid, filename):
@@ -19,11 +20,15 @@ def filename_gen_userid(userid, filename):
     res = ""
     for ch in userid:
         res += str(ord(ch))
-    return res[:7]+"_"+filename
+    current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
+    random_number = str(randint(1000, 9999))
+    return f"{res}_{current_datetime}_{random_number}_{filename}"
 
 def filename_gen_randomize(userid, filename):
-    res = str(abs(hash(str(userid))))
-    return res[:7]+"_"+filename
+    res = str(abs(hash(str(userid))))[:7]
+    current_datetime = datetime.now().strftime("%Y%m%d%H%M%S")
+    random_number = str(randint(1000, 9999))
+    return f"{res}_{current_datetime}_{random_number}_{filename}"
 
 def path_to_card_imgs(instance, filename):
     if instance.is_public == True: 

@@ -15,6 +15,7 @@ from django.core.files.base import ContentFile
 import os
 from board.tools import USER_DEFAULT_IMAGES
 PROFILE_PIC_MAXSIZE = 2000
+from django.db import transaction
 
 
 def register(request):
@@ -46,25 +47,29 @@ def profile(request):
         p_form = ProfileUpdateForm(
             request.POST, request.FILES, instance=request.user.profile, initial={'picture': request.user.profile.image})
         if u_form.is_valid() and p_form.is_valid():
-            u_form.save()
-            if p_form.cleaned_data['picture'] != p_form.instance.image:
-                user_img = str(p_form.instance.image)
-                if os.path.basename(os.path.dirname(user_img)) != USER_DEFAULT_IMAGES: 
-                    try:
-                        p_form.instance.image.delete()
-                    except: 
-                        text = "Exception in delete profile pic - view fuction profile(): " + user_img
-                        exception_log(text)
-                with Image.open(p_form.cleaned_data['picture']) as img:
-                    img_io = BytesIO()
-                    ft = img.format
-                    img = image_resize(PROFILE_PIC_MAXSIZE, img)
-                    img = ImageOps.exif_transpose(img)
-                    img.save(img_io, format=ft)
-                    p_form.instance.image.save(os.path.basename(p_form.cleaned_data['picture'].name), ContentFile(img_io.getvalue()))
-            p_form.save()
-            messages.success(request, 'Your account has been updated')
-            return redirect('profile')
+            with transaction.atomic():  # Begin atomic block
+                u_form.save()
+                if p_form.cleaned_data['picture'] != p_form.instance.image:
+                    user_img = str(p_form.instance.image)
+                    if os.path.basename(os.path.dirname(user_img)) != USER_DEFAULT_IMAGES: 
+                        try:
+                            p_form.instance.image.delete()
+                        except: 
+                            text = "Exception in delete profile pic - view fuction profile(): " + user_img
+                            exception_log(text)
+                    with Image.open(p_form.cleaned_data['picture']) as img:
+                        img_io = BytesIO()
+                        ft = img.format
+                        img = image_resize(PROFILE_PIC_MAXSIZE, img)
+                        img = ImageOps.exif_transpose(img)
+                        new_filename = f"{request.user.id}_image{os.path.splitext(p_form.cleaned_data['picture'].name)[1]}"
+                        img.save(img_io, format=ft)
+                        p_form.instance.image.save(new_filename, ContentFile(img_io.getvalue()))
+                p_form.save()
+                messages.success(request, 'Your account has been updated')
+                return redirect('profile')
+        else:
+            messages.error(request, "There was an error with your form submission.")
     else:
         u_form = UserUpdateForm(instance=request.user)
         p_form = ProfileUpdateForm(instance=request.user.profile, initial={'picture': request.user.profile.image})

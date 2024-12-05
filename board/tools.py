@@ -6,9 +6,8 @@ from io import BytesIO
 from django.core.files.base import ContentFile
 from django.utils import timezone
 from pathlib import Path
-from random import random
-from unicodedata import normalize
-
+from random import random, choices
+from string import ascii_letters, digits
 
 
 USER_UPLOADS = 'uploaded' # to be included in .gitignore
@@ -53,7 +52,7 @@ def image_resize(maxsize, img: Image) -> Image:
 
 def card_image_resize(form):
     if form.cleaned_data['image_input'] == None:
-        def_img = form.cleaned_data['default_img']
+        def_img = form.cleaned_data['default_img']  
         image_path = os.path.basename(os.path.dirname(form.instance.image.file.name))
         path_check_private = os.path.basename(CARD_UPLOADED_IMGS)
         path_check_public = os.path.basename(CARD_PUBLIC_UPLOADED_IMGS)
@@ -75,10 +74,9 @@ def card_image_resize(form):
             text = "Exception in delete cared image - card_image_resize: " + name
             exception_log(text)
         img = Image.open(form.cleaned_data['image_input'])
-        filename = os.path.basename(form.cleaned_data['image_input'].name)
-
-    # **Normalize the filename to handle non-ASCII characters**
-    filename = normalize('NFC', filename) 
+        # filename = os.path.basename(form.cleaned_data['image_input'].name)
+        _, ext = os.path.splitext(form.cleaned_data['image_input'].name)
+        filename = ''.join(choices(ascii_letters + digits, k=7)) + ext
 
     img_io = BytesIO()
     ft = img.format
@@ -159,8 +157,6 @@ def post_image_resize(post) -> None:
             img = ImageOps.exif_transpose(img)
             img.save(img_io, format=ft)
             fn = os.path.basename(images[i].file.name)
-            # Normalize the filename to handle non-ASCII characters
-            fn = normalize('NFC', fn)  
             fnr = Path(fn).stem + '_' + rnd + Path(fn).suffix
             th_images[i].save(fnr, ContentFile(img_io.getvalue()))
 
