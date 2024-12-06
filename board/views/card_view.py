@@ -163,9 +163,10 @@ class CardCreateView(LoginRequiredMixin, CreateView):
     template_name = 'board/card_create.html'
 
     def form_valid(self, form):
+        form.instance.owner = self.request.user
+        card_image_resize(form)
+
         with transaction.atomic():
-            form.instance.owner = self.request.user
-            card_image_resize(form)
             new_card = form.save(commit=False)
             new_card.save()
             form.save_m2m()
@@ -285,8 +286,9 @@ class CardUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     template_name = 'board/card_create.html'
 
     def form_valid(self, form):
+        card_image_resize(form)
+
         with transaction.atomic():
-            card_image_resize(form)
             newcard = form.save(commit=False)
             if form.cleaned_data['toggle_official']:
                 newcard.is_official = not newcard.is_official

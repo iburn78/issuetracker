@@ -111,38 +111,32 @@ class PostCreateView(CreateView):
         form.instance.num_images = len(images)
         for i in range(len(images), 10):
             images.append("")
-            
-        # [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
-        #     form.instance.image5, form.instance.image6, form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10] = images
+
+        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
+            form.instance.image5, form.instance.image6, form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10] = images
+
+        form.instance.author = self.request.user
+        if self.request.POST.get('html_or_text')=='html':
+            form.instance.is_html = True;
+        else:
+            form.instance.is_html = False;
+        form.instance.card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
 
         # Start atomic transaction
-        with transaction.atomic():  # Start atomic block to ensure all actions are done atomically
+        with transaction.atomic():  
             try:
-                # Rename and save images with simple names (image1, image2, etc.)
-                for idx, img in enumerate(images):
-                    if img:  # Only process if img is not empty
-                        _, ext = os.path.splitext(img.name)
-                        filename = f"image{idx+1}{ext}"
-                        img_content = ContentFile(img.read())  # Read the image content
-                        getattr(form.instance, f'image{idx+1}').save(filename, img_content)
-
-                form.instance.author = self.request.user
-                if self.request.POST.get('html_or_text')=='html':
-                    form.instance.is_html = True;
-                else:
-                    form.instance.is_html = False;
-                form.instance.card = get_object_or_404(Card, id=self.kwargs.get('card_id'))
                 new_post = form.save(commit=False)
                 new_post.save()
                 form.save_m2m()
-        
-                post_image_resize(new_post)
-                return redirect('card-content', self.kwargs.get('card_id'))
 
             except Exception as e:
+                # Rollback if there's an error in any part of the transaction
                 exception_log(f"Error in form_valid transaction: {e}")
                 messages.warning(self.request, "There was an error processing your request.")
                 return redirect('post-create', self.kwargs.get('card_id'))
+
+        post_image_resize(new_post)
+        return redirect('card-content', self.kwargs.get('card_id'))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -166,10 +160,38 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], 
                            form.cleaned_data['image7_input'], form.cleaned_data['image8_input'], form.cleaned_data['image9_input'], form.cleaned_data['image10_input']]
-
+        # print('-------------------------------------------')
+        # print(img_field_input)
+        # print('-------------------------------------------')
+        # print(img_field_input[0])
+        # print(type(img_field_input[0]))
+        # print(img_field_input[0].name)
+        # print(img_field_input[0].file)
+        # print('-------------------------------------------')
+        # print(img_field_input[1])
+        # print(type(img_field_input[0]))
+        # print(img_field_input[1].name)
+        # print(img_field_input[1].file)
+        # print('-------------------------------------------')
         original_images = [form.instance.image1, form.instance.image2, form.instance.image3,
                            form.instance.image4, form.instance.image5, form.instance.image6, 
                            form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10]
+        # print('-------------------------------------------')
+        # print('-------------------------------------------')
+        # print('-------------------------------------------')
+        # print('-------------------------------------------')
+        # print(original_images)
+        # print('-------------------------------------------')
+        # print(original_images[0])
+        # print(type(original_images[0]))
+        # print(original_images[0].name)
+        # print(original_images[0].file)
+        # print('-------------------------------------------')
+        # print(original_images[1])
+        # print(type(original_images[1]))
+        # print(original_images[1].name)
+        # print(original_images[1].file)
+        # print('-------------------------------------------')
         
         mkeys = list(form.cleaned_data['mimage_keys'])
         mimages_input = self.request.FILES.getlist('mimages')[:10]
@@ -191,6 +213,16 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             else: 
                 pass
 
+        for i, img in enumerate(img_field_input):
+            if img_field_input[i] != original_images[i]:
+                try:
+                    if original_images[i].name != "":
+                        original_images[i].delete()
+                except:
+                    text = "Exception in delete th_images - class PostUpdateView delete(): " + \
+                        original_images[i].name
+                    exception_log(text)
+
         form.instance.num_images = len(images)
     
         if self.request.POST.get('update_date_posted')=='update_date':
@@ -198,58 +230,42 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         for i in range(len(images), 10):
             images.append("")
 
-        # [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
-        #     form.instance.image5, form.instance.image6, form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10] = images
+        [form.instance.image1, form.instance.image2, form.instance.image3, form.instance.image4,
+            form.instance.image5, form.instance.image6, form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10] = images
 
-        img_content_list = []        
-        for img in images:
-            if img:  # Only process if img is not empty
-                img_content_list.append(ContentFile(img.read())) 
+        form.instance.author = self.get_object().author
+        if self.request.POST.get('html_or_text')=='html':
+            form.instance.is_html = True;
+        else:
+            form.instance.is_html = False;
 
         # Start atomic transaction
-        with transaction.atomic():  # Start atomic block to ensure all actions are done atomically
+        with transaction.atomic():  
             try:
-                # Delete prevously saved images from disk
-                for img in original_images:
-                    try: 
-                        if img and img.name:
-                            img.delete(save=False)
-                    except Exception as e: 
-                        exception_log(f"Error deleting image {img.name} in post {self.get_object().id}: {e}")
-
-                # Rename and save images with simple names (image1, image2, etc.)
-                for idx, img in enumerate(images):
-                    if img:  # Only process if img is not empty
-                        _, ext = os.path.splitext(img.name)
-                        filename = f"image{idx+1}{ext}"
-                        getattr(form.instance, f'image{idx+1}').save(filename, img_content_list[idx])
-        
-                form.instance.author = self.get_object().author
-                if self.request.POST.get('html_or_text')=='html':
-                    form.instance.is_html = True;
-                else:
-                    form.instance.is_html = False;
                 rev_post = form.save(commit=False)
                 rev_post.save()
                 form.save_m2m()
-
-                post_image_resize(rev_post)
-        
-                cid = self.get_object().card.id
-                if rev_post.content == '' and rev_post.num_images == 0:
-                    messages.warning(self.request, "Post deleted - no content and no images")
-                    rev_post.delete()
-                    return redirect('card-content', cid)
-
-                print(reverse('card-content-post-page', args={cid, rev_post.id}))
-
-                return HttpResponseRedirect(reverse('card-content-post-page', kwargs={'card_id': cid, 'post_id': rev_post.id}))
 
             except Exception as e:
                 # Rollback if there's an error in any part of the transaction
                 exception_log(f"Error in form_valid transaction: {e}")
                 messages.warning(self.request, "There was an error processing your request.")
                 return redirect('post-update', self.get_object().id)
+
+        post_image_resize(rev_post)
+
+        # print(rev_post.image1.name)
+        # print(rev_post.image2.name)
+        # print(rev_post.image1s.name)
+        # print(rev_post.image2s.name)
+        
+        cid = self.get_object().card.id
+        if rev_post.content == '' and rev_post.num_images == 0:
+            messages.warning(self.request, "Post deleted - no content and no images")
+            rev_post.delete()
+            return redirect('card-content', cid)
+
+        return HttpResponseRedirect(reverse('card-content-post-page', kwargs={'card_id': cid, 'post_id': rev_post.id}))
 
 
     def test_func(self):

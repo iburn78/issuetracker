@@ -39,26 +39,27 @@ class Command(BaseCommand):
             num_images=min(len(image_paths), 10),
             is_html=False,
         )
-        with transaction.atomic():
             # Step 4: Attach Images
-            image_fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7', 'image8', 'image9', 'image10']
-            open_files = []
-            for i, img_path in enumerate(image_paths[:10]):  # Max 10 images
-                if not os.path.exists(img_path):
-                    self.stdout.write(self.style.WARNING(f"Image path does not exist: {img_path}"))
-                    continue
-                img_file = open(img_path, 'rb')
-                open_files.append(img_file)
-                _, ext = os.path.splitext(img_path)
-                filename = f"image{i+1}{ext}"
-                setattr(post, image_fields[i], File(img_file, name=filename))
+        image_fields = ['image1', 'image2', 'image3', 'image4', 'image5', 'image6', 'image7', 'image8', 'image9', 'image10']
+        open_files = []
+        for i, img_path in enumerate(image_paths[:10]):  # Max 10 images
+            if not os.path.exists(img_path):
+                self.stdout.write(self.style.WARNING(f"Image path does not exist: {img_path}"))
+                raise Exception("CHECK IMAGE PATH")
+            img_file = open(img_path, 'rb')
+            open_files.append(img_file)
+            _, ext = os.path.splitext(img_path)
+            filename = f"image{i+1}{ext}"
+            setattr(post, image_fields[i], File(img_file, name=filename))
 
+        with transaction.atomic():
             # Step 5: Save the Post
             post.save()
+
+            for file_obj in open_files:
+                file_obj.close()
 
             # Step 6: Resize Images
             post_image_resize(post)  # Resize and process images (e.g., create thumbnails)
 
             self.stdout.write(self.style.SUCCESS(f"Post created successfully with ID {post.id}!"))
-            for file_obj in open_files:
-                file_obj.close()
