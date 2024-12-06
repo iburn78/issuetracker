@@ -192,6 +192,7 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         # print(original_images[1].name)
         # print(original_images[1].file)
         # print('-------------------------------------------')
+        exception_log('post updated')
         
         mkeys = list(form.cleaned_data['mimage_keys'])
         mimages_input = self.request.FILES.getlist('mimages')[:10]
