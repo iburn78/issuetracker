@@ -5,6 +5,7 @@ from os.path import join as pj
 from io import BytesIO
 from django.core.files.base import ContentFile
 from django.utils import timezone
+from django.utils.timezone import localtime
 from pathlib import Path
 from random import random, choices
 from string import ascii_letters, digits
@@ -164,7 +165,7 @@ def exception_log(text):
     print("----->>>>>> ", text)
     logfilepath = os.path.join(settings.BASE_DIR, 'etc')
     with open(os.path.join(logfilepath, 'exception_log.txt'), 'a', encoding='utf-8') as logfile:
-        now = timezone.now().strftime("[%Y-%m-%d %H:%M:%S]")
+        now = localtime(timezone.now()).strftime("[%Y-%m-%d %H:%M:%S]")
         logfile.write(now + " " + text + "\n")
 
 
