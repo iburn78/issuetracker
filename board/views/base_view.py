@@ -14,9 +14,6 @@ from django.template.defaulttags import register
 
 
 def test(request):
-    if request.method == "POST": 
-        files = request.FILES.getlist('image')
-        print(files)
     return render(request, 'board/test.html')
 
 def about(request):

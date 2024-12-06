@@ -160,39 +160,10 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         img_field_input = [form.cleaned_data['image1_input'], form.cleaned_data['image2_input'], form.cleaned_data['image3_input'],
                            form.cleaned_data['image4_input'], form.cleaned_data['image5_input'], form.cleaned_data['image6_input'], 
                            form.cleaned_data['image7_input'], form.cleaned_data['image8_input'], form.cleaned_data['image9_input'], form.cleaned_data['image10_input']]
-        # print('-------------------------------------------')
-        # print(img_field_input)
-        # print('-------------------------------------------')
-        # print(img_field_input[0])
-        # print(type(img_field_input[0]))
-        # print(img_field_input[0].name)
-        # print(img_field_input[0].file)
-        # print('-------------------------------------------')
-        # print(img_field_input[1])
-        # print(type(img_field_input[0]))
-        # print(img_field_input[1].name)
-        # print(img_field_input[1].file)
-        # print('-------------------------------------------')
+
         original_images = [form.instance.image1, form.instance.image2, form.instance.image3,
                            form.instance.image4, form.instance.image5, form.instance.image6, 
                            form.instance.image7, form.instance.image8, form.instance.image9, form.instance.image10]
-        # print('-------------------------------------------')
-        # print('-------------------------------------------')
-        # print('-------------------------------------------')
-        # print('-------------------------------------------')
-        # print(original_images)
-        # print('-------------------------------------------')
-        # print(original_images[0])
-        # print(type(original_images[0]))
-        # print(original_images[0].name)
-        # print(original_images[0].file)
-        # print('-------------------------------------------')
-        # print(original_images[1])
-        # print(type(original_images[1]))
-        # print(original_images[1].name)
-        # print(original_images[1].file)
-        # print('-------------------------------------------')
-        exception_log('post updated')
         
         mkeys = list(form.cleaned_data['mimage_keys'])
         mimages_input = self.request.FILES.getlist('mimages')[:10]
@@ -254,11 +225,6 @@ class PostUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
                 return redirect('post-update', self.get_object().id)
 
         post_image_resize(rev_post)
-
-        # print(rev_post.image1.name)
-        # print(rev_post.image2.name)
-        # print(rev_post.image1s.name)
-        # print(rev_post.image2s.name)
         
         cid = self.get_object().card.id
         if rev_post.content == '' and rev_post.num_images == 0:
