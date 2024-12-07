@@ -27,6 +27,9 @@ Search related:
 - author search: search authors with more than one public post
 - taggedpost search: search tags with whole word match 
 
+HTML
+- Only public card desc, using HTML is allowed
+
 Upgrades:
 - python 3.8 or 3.9 
 - pip upgrade to 22
