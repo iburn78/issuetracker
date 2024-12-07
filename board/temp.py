@@ -65,4 +65,5 @@ for item in res:
     target_to_delete += item+' '
 
 
+# use sudo to manually delete files....
 print(target_to_delete)
