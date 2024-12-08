@@ -281,15 +281,26 @@ class PostDetailView(DetailView):
     def get(self, request, *args, **kwargs):
         post = get_object_or_404(Post, id=self.kwargs.get('pk'))
         if post.card.is_public:
+            self.increase_view_count_once(request, post)
             return super().get(request, *args, **kwargs)
         else:
             if not self.request.user.is_authenticated:
                 return redirect('login')
             else:
                 if self.request.user == post.card.owner:
+                    self.increase_view_count_once(request, post)
                     return super().get(request, *args, **kwargs)
                 else:
                     raise PermissionDenied
+
+    def increase_view_count_once(self, request, post):
+        """Increment view counts for Post and Card only once per session."""
+        viewed_posts = request.session.get('viewed_posts', [])
+        if post.id not in viewed_posts:
+            post.increase_view_count()  # Update Post and Card counters
+            viewed_posts.append(post.id)
+            request.session['viewed_posts'] = viewed_posts
+            request.session.set_expiry(86400)  # Optional: 24-hour session expiry
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

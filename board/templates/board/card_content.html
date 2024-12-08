@@ -38,7 +38,7 @@
       <a href="{% url 'main' %}" type="button" class="btn-close ms-1"></a>
     </div>
   </div>
-
+  
   {% if card.is_geocard %}
   <div class="row p-0 m-0 bg-gray-100">
     <div class="col p-0 m-0">
@@ -51,7 +51,7 @@
   </div>
   <div id="id_no_geo_notification"></div>
   {% endif %}
-
+  
   <div class="collapse" id="collapseDesc">
     <div id="divider-bar" style="background-color:{{card.card_color}}"></div>
     <div class="row p-0 m-0">
@@ -80,7 +80,9 @@
         <span class="text-muted">no card description</span>
         {% endif %}
         <div class="alert alert-warning mt-2 px-1 py-0" role="alert">
-          <div>{{ card.post_set.count }} posts {% if card.is_public %} ({{ author_count }} authors) {% endif %} </div>
+          <span>Total views </span>
+          <span id="card-view-count">{{ card.view_count }}</span>
+          <span> with {{ card.post_set.count }} posts {% if card.is_public %} ({{ author_count }} authors) {% endif %} </span>
         </div>
         <div class="float-end">by <b>{{ card.owner }}</b></div>
         {% if card.is_geocard %}
@@ -212,10 +214,15 @@
             {% endif %}
             <p class="article-content text-dark mb-1 text-break">{{ post.content|truncatechars:150|striptags }}</p>
           </a>
-          <div class="col float-end m-0 p-1">
-            {% for tag in post.tags.all %}
-            <a href="{% url 'tag-posts' tag.id %}?cid={{card.id}}" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
-            {% endfor %}
+          <div class="d-flex flex-column m-0">
+            <span id="view-count-{{ post.id }}" class="text-muted" style="font-size: 0.9rem; margin-top: 1px;">
+              views: {{ post.view_count }}
+            </span>
+            <div class="col ms-auto m-0 p-1">
+              {% for tag in post.tags.all %}
+              <a href="{% url 'tag-posts' tag.id %}?cid={{card.id}}" class="badge bg-gray-200 text-dark">#{{ tag }}</a>
+              {% endfor %}
+            </div>
           </div>
         </div>
       </div>
@@ -273,11 +280,11 @@
     url.searchParams.set('page', page);
     e.target.parentNode.href = url.href;
   }
-
+  
   function geo_sorting() {
     if (document.getElementById('id_geo_sorting_btn').checked) {
       document.getElementById("geo_sorting_label").innerText = "near";
-    
+      
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(positionShow, positionError);
       }
@@ -286,7 +293,7 @@
       document.getElementById("geo_sorting_label").innerText = "recent";
       window.location.href="{% url 'card-content' card.id %}?mode=recent";
     }
-
+    
     function positionError() {
       document.getElementById('id_no_geo_notification').innerHTML= 
       `
@@ -296,7 +303,7 @@
       `
       document.getElementById("id_geo_sorting_btn").checked = false;
     }
-
+    
     function positionShow(position) {
       let url = new URL(location.href);
       url.searchParams.delete('page');
@@ -305,10 +312,10 @@
       url.searchParams.set('ylatitude', position.coords.latitude);
       window.location.href = url.href;
     }
-
+    
   }
-
-
+  
+  
   {% for post in posts %}
   render_comments({{post.id}}, 1);
   {% endfor %}
@@ -316,18 +323,18 @@
     e.innerHTML = '<button type="button" class="float-end btn-close me-2" data-bs-dismiss="modal"></button>';
   });
   //document.querySelectorAll("#modal_close_middle").forEach(e => {
-    //e.innerHTML = '<a href="" class="text-muted small float-end mx-2" data-bs-dismiss="modal">close</a>';
+  //e.innerHTML = '<a href="" class="text-muted small float-end mx-2" data-bs-dismiss="modal">close</a>';
   //});
   // document.querySelectorAll("#modal_close_bottom").forEach(e => {
-    //   e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a><br><br>';
-    // });
-
+  //   e.innerHTML = '<a href="" class="text-muted small float-end mt-1 mx-2" data-bs-dismiss="modal">close</a><br><br>';
+  // });
+  
   function postmodal_open(id) {
     document.getElementById('post_modal'+id).click();
   };
   {{ postmodal_open }}
-
-
+  
+  
   {% if card.is_geocard %}
   //turn_on_geo(); // this function execution is merged below geo_loading_notification card_content_entire_div
   if (navigator.geolocation) {
@@ -338,8 +345,8 @@
     if ('{{mode}}' != 'recent' && document.getElementById('id_geo_sorting_btn').checked == false) {
       document.getElementById('id_geo_sorting_btn').click(); 
     } else {
-    document.getElementById('geo_loading_notification').setAttribute('hidden','');
-    document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
+      document.getElementById('geo_loading_notification').setAttribute('hidden','');
+      document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
     };
   }
   function geo_off(position) {
@@ -348,17 +355,17 @@
     document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
   }
   {% else %}
-    // document.getElementById('geo_loading_notification').setAttribute('hidden','');
-    // document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
+  // document.getElementById('geo_loading_notification').setAttribute('hidden','');
+  // document.getElementById('card_content_entire_div').removeAttribute('hidden'); 
   {% endif %}
-
+  
   // below navigation control is not perfect
   // <div id="backbutton_notification" class="bg-blue-200"></div>
   history.pushState(null, null, window.top.location.pathname + window.top.location.search);
   window.addEventListener('popstate', (e) => {
     e.preventDefault();
     history.pushState(null, null, window.top.location.pathname + window.top.location.search);
-
+    
     let postclosebtns = document.querySelectorAll(".modal.show #modal_close_top .btn-close");
     if (postclosebtns.length > 0) { postclosebtns.forEach(e => e.click()); }
     else { 
@@ -368,6 +375,51 @@
     }
     // document.getElementById('backbutton_notification').innerText = 'message'; 
   });
-
+  
+  
+  document.addEventListener('DOMContentLoaded', function () {
+    // Add event listeners to all modal trigger links
+    const modalTriggerLinks = document.querySelectorAll('[data-bs-toggle="modal"]');
+    
+    modalTriggerLinks.forEach(link => {
+      link.addEventListener('click', function (event) {
+        // Extract post ID by removing the "#collapsePost" part from the data-bs-target attribute
+        const postId = this.getAttribute('data-bs-target').replace('#collapsePost', '');
+        
+        // Send an AJAX POST request to increase the view count
+        fetch("{% url 'increase-post-view' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: `post_id=${postId}`
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Update the view count dynamically
+            const viewCountElements = document.querySelectorAll(`#view-count-${postId}`);  
+            viewCountElements.forEach(element => {
+              if (element) {
+                element.textContent = `views: ${data.view_count}`; 
+              }
+            });
+            const cardViewCountElement = document.getElementById(`card-view-count`);
+            if (cardViewCountElement) {
+              cardViewCountElement.textContent = data.cview_count;
+            }
+          } else {
+            console.error('Error:', data.error);
+          }
+        })
+        .catch(error => console.error('AJAX Error:', error));
+      });
+    });
+  });
+  
+  
+  
+  
 </script>
 {% endblock script %}

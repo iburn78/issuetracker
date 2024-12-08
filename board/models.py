@@ -75,6 +75,7 @@ class Card(models.Model):
     is_public = models.BooleanField(default=False)
     is_official = models.BooleanField(default=False)
     is_geocard = models.BooleanField(default=False)
+    view_count = models.PositiveIntegerField(default=0) 
 
     def delete(self, *args, **kwargs):
         name = str(self.image.name)
@@ -105,6 +106,11 @@ class Card(models.Model):
 
     def get_absolute_url(self):
         return reverse('main')
+
+    def increase_view_count(self):
+        """Increment Card view count."""
+        self.view_count += 1
+        self.save(update_fields=['view_count'])  # Efficient database update
 
 
 
@@ -143,6 +149,7 @@ class Post(models.Model):
     tags = TaggableManager(blank=True)
     xlongitude = models.FloatField(blank=True, null=True)
     ylatitude = models.FloatField(blank=True, null=True)
+    view_count = models.PositiveIntegerField(default=0) 
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -179,6 +186,12 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('card-content', kwargs={'card_id': self.card.id})
+
+    def increase_view_count(self):
+        """Increment Post and its parent Card view count."""
+        self.view_count += 1
+        self.save(update_fields=['view_count'])  # Update Post view count
+        self.card.increase_view_count()  # Update the Card view count
 
 
 class Comment(models.Model):

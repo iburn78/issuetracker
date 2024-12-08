@@ -57,4 +57,7 @@ urlpatterns = [
     path('api/search/card/', SearchView_Card.as_view(), name = 'search-card'),
     path('api/search/post/', SearchView_Post.as_view(), name = 'search-post'),
     path('api/search/author/', SearchView_Author.as_view(), name = 'search-author'),
+    
+    path('api/increase-post-view/', IncreasePostViewCount.as_view(), name='increase-post-view'),
+
 ]

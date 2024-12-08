@@ -32,9 +32,12 @@
             <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'down')"><img src="{% static 'icons/chevron-right.svg'%}" width="16" height="16"></span>
             <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
             <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
-            <p class="card-text card-text-size">
-              {{ card.desc }}
-            </p>
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="card-text card-text-size mb-0">
+                {{ card.desc }}
+              </p>
+              <span class="ms-2 text-muted" style="font-size: 0.9rem;">({{ card.view_count }})</span>
+            </div>
           </div>
         </a>
       </div>
@@ -78,9 +81,16 @@
             <span class="pub-icon-style float-end" style="margin-right:0px;" onclick="move_card(event, {{card.id}}, 'up')"><img src="{% static 'icons/chevron-left.svg' %}" width="16" height="16"></span>
             {% endif %}
             <h5 class="card-title card-title-size KR-font">{{ card.title }}</h5>
-            <p class="card-text card-text-size">
+            <!-- Use flexbox to align the description left and view count right -->
+            <div class="d-flex justify-content-between align-items-center">
+              <p class="card-text card-text-size mb-0">
+                {{ card.desc | safe }}
+              </p>
+              <span class="ms-2 text-muted" style="font-size: 0.9rem;">({{ card.view_count }})</span>
+            </div>
+            <!-- <p class="card-text card-text-size">
               {{ card.desc | safe }}
-            </p>
+            </p> -->
           </div>
         </a>
       </div>

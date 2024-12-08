@@ -155,3 +155,23 @@ class CommentMgmtView(View):
             else:
                 return JsonResponse({}, status=400)
     
+
+class IncreasePostViewCount(View):
+    """Handle AJAX requests to increment Post view count."""
+    def post(self, request, *args, **kwargs):
+        post_id = request.POST.get('post_id')
+        if post_id:
+            post = get_object_or_404(Post, id=post_id)
+
+            # Session logic to ensure only one increment per session
+            viewed_posts = request.session.get('viewed_posts', [])
+            if post.id not in viewed_posts:
+                post.increase_view_count()  # Increment the Post view count
+                viewed_posts.append(post.id)
+                request.session['viewed_posts'] = viewed_posts
+                request.session.set_expiry(86400)  # Optional: 24-hour expiry
+            
+            # Return the updated view count
+            return JsonResponse({'success': True, 'view_count': post.view_count, 'cview_count': post.card.view_count})
+        
+        return JsonResponse({'success': False, 'error': 'Invalid post ID'}, status=400)
