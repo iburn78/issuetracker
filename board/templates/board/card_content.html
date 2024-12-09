@@ -215,7 +215,7 @@
             <p class="article-content text-dark mb-1 text-break">{{ post.content|truncatechars:150|striptags }}</p>
           </a>
           <div class="d-flex flex-column m-0">
-            <span id="view-count-{{ post.id }}" class="text-muted" style="font-size: 0.9rem; margin-top: 1px;">
+            <span id="view-count-{{ post.id }}" class="text-muted" style="font-size: 0.9rem; margin-top: 1px; white-space: nowrap;">
               views: {{ post.view_count }}
             </span>
             <div class="col ms-auto m-0 p-1">
