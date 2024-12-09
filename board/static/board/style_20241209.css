@@ -950,7 +950,7 @@ a.article-title:hover {
   -o-object-fit: cover;
      object-fit: cover;
   width: 100%;
-  height: 400px;
+  height: 320px;
   overflow: hidden;
   border-radius: 8px;
 }
@@ -1305,4 +1305,4 @@ input:checked + .slider:before {
   100% {
     opacity: 0;
   }
-}/*# sourceMappingURL=style_20221209.css.map */
+}/*# sourceMappingURL=style_20241209.css.map */
