@@ -48,7 +48,7 @@
 <div class="row m-0">
   {% if post.image1s and post.image2s %}
   {% if post.image1s.width >= post.image1s.height %}
-  <div class="col mt-1 p-0">
+  <div class="col-12 mt-1 p-0">
   {% else %}
   <div class="col-xl-8 mt-1 p-0">
   {% endif %}
@@ -140,7 +140,7 @@
     </div>
   </div>
   {% if post.image1s.width >= post.image1s.height %}
-  <div class="col p-0">
+  <div class="col-12 p-0">
   {% else %}
   <div class="col-xl-4 p-0">
   {% endif %}
@@ -151,14 +151,14 @@
   </div>
   {% elif post.image1s %}
   {% if post.image1s.width >= post.image1s.height %}
-  <div class="col mt-1 p-0">
+  <div class="col-12 mt-1 p-0">
   {% else %}
   <div class="col-xl-8 mt-1 p-0">
   {% endif %}
     <a href="{% url 'post-images' post.id %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
   {% if post.image1s.width >= post.image1s.height %}
-  <div class="col p-0">
+  <div class="col-12 p-0">
   {% else %}
   <div class="col-xl-4 p-0">
   {% endif %}
