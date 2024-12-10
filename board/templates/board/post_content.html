@@ -50,7 +50,7 @@
   {% if post.image1s.width >= post.image1s.height %}
   <div class="col-12 mt-1 p-0">
   {% else %}
-  <div class="col-xl-8 mt-1 p-0">
+  <div class="col-lg-8 mt-1 p-0">
   {% endif %}
     <div id="carousel_indicators{{post.id}}" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
@@ -142,7 +142,7 @@
   {% if post.image1s.width >= post.image1s.height %}
   <div class="col-12 p-0">
   {% else %}
-  <div class="col-xl-4 p-0">
+  <div class="col-lg-4 p-0">
   {% endif %}
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
@@ -153,14 +153,14 @@
   {% if post.image1s.width >= post.image1s.height %}
   <div class="col-12 mt-1 p-0">
   {% else %}
-  <div class="col-xl-8 mt-1 p-0">
+  <div class="col-lg-8 mt-1 p-0">
   {% endif %}
     <a href="{% url 'post-images' post.id %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
   {% if post.image1s.width >= post.image1s.height %}
   <div class="col-12 p-0">
   {% else %}
-  <div class="col-xl-4 p-0">
+  <div class="col-lg-4 p-0">
   {% endif %}
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
