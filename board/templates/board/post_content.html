@@ -47,7 +47,11 @@
 </div>
 <div class="row m-0">
   {% if post.image1s and post.image2s %}
+  {% if post.image1s.width >= post.image1s.height %}
+  <div class="col mt-1 p-0">
+  {% else %}
   <div class="col-xl-8 mt-1 p-0">
+  {% endif %}
     <div id="carousel_indicators{{post.id}}" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-indicators">
         <button type="button" data-bs-target="#carousel_indicators{{post.id}}" data-bs-slide-to="0" class="active"></button>
@@ -135,17 +139,29 @@
       </button>
     </div>
   </div>
+  {% if post.image1s.width >= post.image1s.height %}
+  <div class="col p-0">
+  {% else %}
   <div class="col-xl-4 p-0">
+  {% endif %}
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}
     <div class="article-content m-2 text-break">{% if post.is_html %}{{ post.content | safe }}{% else %}{{ post.content }}{% endif %}</div>
   </div>
   {% elif post.image1s %}
-  <div class="col-xl-8 p-0 mt-1">
+  {% if post.image1s.width >= post.image1s.height %}
+  <div class="col mt-1 p-0">
+  {% else %}
+  <div class="col-xl-8 mt-1 p-0">
+  {% endif %}
     <a href="{% url 'post-images' post.id %}"><img src="{{ post.image1s.url }}" class="d-block w-100 rounded"></a>
   </div>
+  {% if post.image1s.width >= post.image1s.height %}
+  <div class="col p-0">
+  {% else %}
   <div class="col-xl-4 p-0">
+  {% endif %}
     {% if post.title != '' %}
     <p class="article-content m-2 text-break fw-bold fs-5">{{ post.title }}</p>
     {% endif %}

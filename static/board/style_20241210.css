@@ -950,7 +950,7 @@ a.article-title:hover {
   -o-object-fit: cover;
      object-fit: cover;
   width: 100%;
-  height: 320px;
+  height: 275px;
   overflow: hidden;
   border-radius: 8px;
 }
@@ -1305,4 +1305,11 @@ input:checked + .slider:before {
   100% {
     opacity: 0;
   }
-}/*# sourceMappingURL=style_20241209.css.map */
+}
+/* Custom modal width for larger screens */
+@media (min-width: 992px) { /* lg and larger screens 992 */
+  .modal-custom-width {
+    max-width: 992px; /* Set your preferred max-width */
+    margin: auto; /* Center the modal */
+  }
+}/*# sourceMappingURL=style_20241210.css.map */
