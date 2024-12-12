@@ -1,7 +1,7 @@
 {% if cards %}
 {% load static %}
 <div class="container-fluid m-0 p-0">
-  <p class="ms-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in <span class="fw-bold text-danger">
+  <p class="ms-1 mb-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatewords:4}}</span> in <span class="fw-bold text-danger">
     <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a></span>:</p>
   <div class="row m-0 p-0">
     {% for card in cards %}

@@ -3,7 +3,7 @@
 <div class="container-fluid m-0 p-0">
   
   {% if search_model == 'post' %}
-  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in posts of <span class="fw-bold text-danger">
+  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatewords:4}}</span> in posts of <span class="fw-bold text-danger">
     {% if cid == '' %}
     <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a>
     {% else %}
@@ -11,7 +11,7 @@
     {% endif %}
   </span>:</p>
   {% elif search_model == 'taggedpost' %}
-  <p class="m-1">posts with tag <span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in <span class="fw-bold text-danger">
+  <p class="m-1">posts with tag <span class="fw-bold fst-italic me-1">{{search_term|truncatewords:4}}</span> in <span class="fw-bold text-danger">
     {% if cid == '' %}
     <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a>
     {% else %}
@@ -19,7 +19,7 @@
     {% endif %}
   </span>:</p>
   {% elif search_model == 'tag' %}
-  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatechars:15}}</span> in tags in <span class="fw-bold text-danger">
+  <p class="m-1"><span class="fw-bold fst-italic me-1">{{search_term|truncatewords:4}}</span> in tags in <span class="fw-bold text-danger">
     {% if cid == '' %}
     <a href="{% url 'main' %}" style="color:inherit;">{% if user.is_in_private_mode %}my{% else %}public{% endif %} cards</a>
     {% else %}
@@ -76,7 +76,7 @@
             {% if post.title != '' %}
             <p class="article-content text-dark text-break fw-bold fs-6 bg-gray-100 m-0 mb-1 p-0">{{ post.title }}</p>
             {% endif %}
-            <p class="article-content text-dark mb-1 text-break">{{ post.content|striptags|truncatechars:150 }}</p>
+            <p class="article-content text-dark mb-1 text-break">{{ post.content|striptags|truncatewords:30 }}</p>
           </a>
           <div class="col float-end m-0 p-1">
             {% for tag in post.tags.all %}

@@ -209,7 +209,7 @@
       <span class="p-0 m-0 float-end"><img src="{% static 'icons/up-arrow.svg' %}" width="22" height="22"></span>
       {% endif %}
     </span>
-    <a href class="p-0 m-0 me-2 float-end" onclick="share_post(event, {{post.id}}, '{{post.content|striptags|truncatechars:30}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
+    <a href class="p-0 m-0 me-2 float-end" onclick="share_post(event, {{post.id}}, '{{post.content|striptags|truncatewords:7}}')"><img src="{% static 'icons/share.svg' %}" width="22" height="22"></a>
     {% else %}
     <a href="{% url 'card-select' %}?rt=publish&pid={{post.id}}" class="btn btn-outline bg-orange-400 btn-sm float-end px-1 py-0 m-0 fw-bold" style="width: 40px;" onclick="">pub</a>
     <a href="{% url 'card-select' %}?rt=move&cid={{card.id}}&pid={{post.id}}" class="btn btn-outline bg-yellow-500 btn-sm float-end px-1 py-0 m-0 mx-1 fw-bold" style="width: 40px;" onclick="">mov</a>
