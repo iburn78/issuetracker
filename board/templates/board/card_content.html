@@ -212,7 +212,7 @@
             {% if post.title != '' %}
             <p class="article-content text-dark text-break fw-bold bg-gray-100 fs-6 m-0 mb-1 p-0">{{ post.title }}</p>
             {% endif %}
-            <p class="article-content text-dark mb-1 text-break">{{ post.content|striptags|truncatewords:30 }}</p>
+            <p class="article-content trunc_class text-dark mb-1 text-break">{{ post.content|striptags }}</p>
           </a>
           <div class="d-flex flex-column m-0">
             <span id="view-count-{{ post.id }}" class="text-muted" style="font-size: 0.9rem; margin-top: 1px; white-space: nowrap;">
@@ -420,6 +420,21 @@
   
   
   
+  document.addEventListener("DOMContentLoaded", function () {
+    const maxWords = 30;
+    
+    document.querySelectorAll(".trunc_class").forEach((element) => {
+      let originalText = element.textContent;
+      // Replace newlines with a unique placeholder
+      let words = originalText.replace(/\n/g, "__NEWLINE__").split(/\s+/);
+      
+      if (words.length > maxWords) {
+        // Truncate text and restore newlines
+        let res = words.slice(0, maxWords).join(" ") + "…";
+        element.textContent = res.replace(/__NEWLINE__/g, "\n");
+      }
+    });
+  });
   
 </script>
 {% endblock script %}
