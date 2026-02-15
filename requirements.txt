@@ -10,6 +10,7 @@ django-taggit==3.0.0
 django-tinymce==3.3.0
 docutils==0.14
 jmespath==0.9.4
+mod-wsgi==5.0.2
 numpy==1.21.6
 opencv-python==4.5.5.64
 Pillow==9.2.0
