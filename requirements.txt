@@ -1,5 +1,6 @@
 asgiref==3.5.2
 autopep8==1.5.7
+backports.zoneinfo==0.2.1
 beautifulsoup4==4.10.0
 botocore==1.12.197
 bs4==0.0.1
@@ -10,7 +11,7 @@ django-taggit==3.0.0
 django-tinymce==3.3.0
 docutils==0.14
 jmespath==0.9.4
-numpy
+numpy==1.20.2
 opencv-python==4.6.0.66
 Pillow==9.2.0
 protobuf==3.10.0
