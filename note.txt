@@ -1,0 +1,5 @@
+> modify hostname -I in 
+1) sudo vim /etc/apache2/sites-available/issuetracker.conf
+   > sudo systemctl restart apache2
+
+2) issuetracker/settings.py/ ALLOWED_HOSTS

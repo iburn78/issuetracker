@@ -32,7 +32,7 @@ SECRET_KEY = config.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', 'issuetracker.info']
+ALLOWED_HOSTS = ['localhost', 'issuetracker.info', '10.245.110.101']
 # Application definition
 
 INSTALLED_APPS = [
